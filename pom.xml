@@ -25,7 +25,6 @@
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
         <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
-        <tinkar-starter-data.version>1.9.0</tinkar-starter-data.version>
         <tinkar-core.version>1.95.0</tinkar-core.version>
         <maven-plugin-api.version>3.9.7</maven-plugin-api.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -43,6 +42,8 @@
         <origin.namespace>3094dbd1-60cf-44a6-92e3-0bb32ca4d3de</origin.namespace>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
         <starterSet>GUDID_StarterData.zip</starterSet>
+        <fieldCategoriesStarterSetLocation>${user.home}/Downloads</fieldCategoriesStarterSetLocation>
+        <fieldCategoriesStarterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</fieldCategoriesStarterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>gudid</dataStore>
 

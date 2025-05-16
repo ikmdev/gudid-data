@@ -96,18 +96,34 @@
                 <groupId>dev.ikm.maven.tinkar</groupId>
                 <artifactId>tinkar-maven-plugin</artifactId>
                 <version>${maven-artifacts.version}</version>
-                <configuration>
-                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                    <fileset>
-                        <directory>${starterSetLocation}</directory>
-                        <includes>
-                            <include>**/${starterSet}</include>
-                        </includes>
-                    </fileset>
-                </configuration>
                 <executions>
                     <execution>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${fieldCategoriesStarterSetLocation}</directory>
+                                <includes>
+                                    <include>**/${fieldCategoriesStarterSet}</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
                         <id>load-data</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${starterSetLocation}</directory>
+                                <includes>
+                                    <include>**/${starterSet}</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                        <id>load-data2</id>
                         <phase>install</phase>
                         <goals>
                             <goal>load-data</goal>
