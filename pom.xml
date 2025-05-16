@@ -16,7 +16,7 @@
         <module>gudid-starterdata</module>
 <!--        <module>gudid-pipeline</module>-->
 <!--        <module>gudid-integration</module>-->
-<!--        <module>gudid-export</module>-->
+        <module>gudid-export</module>
     </modules>
 
     <properties>
@@ -37,7 +37,7 @@
         <jupiter.version>5.12.0</jupiter.version>
         <!-- origin -->
 <!--        <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>-->
-<!--        <source.version>TBD</source.version>-->
+        <source.version>2025-05-01</source.version>
 <!--        <source.zip>${user.home}/Downloads/TBD.zip</source.zip>-->
         <origin.namespace>3094dbd1-60cf-44a6-92e3-0bb32ca4d3de</origin.namespace>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
