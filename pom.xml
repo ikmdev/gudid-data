@@ -13,6 +13,7 @@
 
     <modules>
 <!--        <module>plugin</module>-->
+        <module>gudid-origin</module>
         <module>gudid-starterdata</module>
 <!--        <module>gudid-pipeline</module>-->
 <!--        <module>gudid-integration</module>-->
@@ -34,18 +35,22 @@
         <maven-plugin-plugin.version>3.13.0</maven-plugin-plugin.version>
         <maven-clean-plugin.version>3.3.1</maven-clean-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <jupiter.version>5.12.0</jupiter.version>
         <!-- origin -->
-<!--        <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>-->
-        <source.version>2025-05-01</source.version>
-<!--        <source.zip>${user.home}/Downloads/TBD.zip</source.zip>-->
-        <origin.namespace>3094dbd1-60cf-44a6-92e3-0bb32ca4d3de</origin.namespace>
+        <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>
+        <source.version>20250501</source.version>
+        <source.zip>${user.home}/Downloads/gudid_full_release_${source.version}.zip</source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
         <starterSet>GUDID_StarterData.zip</starterSet>
         <fieldCategoriesStarterSetLocation>${user.home}/Downloads</fieldCategoriesStarterSetLocation>
         <fieldCategoriesStarterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</fieldCategoriesStarterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>gudid</dataStore>
+
+        <packager.name>IKM Dev</packager.name>
+        <origin.url>https://accessgudid.nlm.nih.gov/download</origin.url>
+        <origin.namespace>3094dbd1-60cf-44a6-92e3-0bb32ca4d3de</origin.namespace>
 
         <!-- starter data -->
         <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
