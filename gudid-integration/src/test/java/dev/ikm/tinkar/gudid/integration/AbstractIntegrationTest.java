@@ -1,7 +1,5 @@
 package dev.ikm.tinkar.gudid.integration;
 
-import dev.ikm.maven.RxnormData;
-import dev.ikm.maven.RxnormUtility;
 import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
