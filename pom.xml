@@ -16,9 +16,9 @@
         <module>gudid-origin</module>
         <module>gudid-starterdata</module>
         <module>gudid-pipeline</module>
+<!--        <module>gudid-owl-transform</module> -->     
+<!--        <module>gudid-reasoner</module> -->   
 <!--        <module>gudid-integration</module> -->
-<!--        <module>gudid-reasoner</module> -->
-<!--        <module>gudid-owl-transform</module> -->
         <module>gudid-export</module>
     </modules>
 
