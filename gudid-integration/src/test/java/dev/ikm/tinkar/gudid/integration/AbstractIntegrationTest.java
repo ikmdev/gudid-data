@@ -52,28 +52,8 @@ public abstract class AbstractIntegrationTest {
      * @return File status, either Found/NotFound
      * @throws IOException
      */
-    protected int processOwlFile(String sourceFilePath, String errorFile) throws IOException {
-        int notFound = 0;
-        String owlContent = readFile(sourceFilePath);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(errorFile))) {
-            // Process the OWL content to extract class declarations and annotations
-            List<RxnormData> rxnormConcepts = RxnormUtility.extractRxnormData(owlContent);
-            LOG.info("Found " + rxnormConcepts.size() + " class declarations in the OWL file");
-
-            // Compare concepts for each class
-            for (RxnormData rxnormConcept : rxnormConcepts) {
-                if (!assertOwlElement(rxnormConcept)) {
-                    notFound++;
-                    LOG.info("Element rxnormConcept NOT Found: " + rxnormConcept.toString());
-                    bw.write(rxnormConcept.toString());
-                    bw.newLine();
-                }
-            }
-        }
-
-        LOG.info("We found file: " + sourceFilePath);
-        LOG.info("RxNormConcepts Not Found: " + notFound);
-        return notFound;
+    protected int processFile(String sourceFilePath, String errorFile) throws IOException {
+        return -1;
     }
 
     /**
@@ -94,8 +74,8 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected UUID conceptUuid(String id) {
-        return RxnormUtility.generateUUID(UUID.fromString(namespaceString), id + "rxnorm");
+        return null;
     }
 
-    protected abstract boolean assertOwlElement(RxnormData rxnormData);
+    protected abstract boolean assertOwlElement();
 }
