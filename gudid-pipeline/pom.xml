@@ -12,7 +12,7 @@
     <artifactId>gudid-pipeline</artifactId>
     <packaging>jar</packaging>
 
-    <name>rxnorm-pipeline</name>
+    <name>gudid-pipeline</name>
     <url>http://maven.apache.org</url>
 
     <properties>
