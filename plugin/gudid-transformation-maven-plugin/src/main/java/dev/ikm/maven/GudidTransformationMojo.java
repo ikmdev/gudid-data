@@ -16,10 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -41,35 +42,30 @@ public class GudidTransformationMojo extends AbstractMojo {
     private boolean skipUnzip;
 
     private UUID namespace;
-    private GudidUtility gudidUtility;
 
     // Define processing order based on dependencies
     private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
-            "foiclass.txt",     // Creates FDA product code concepts first
-            "Device.txt",       // Creates device concepts and mappings
-            "Identifiers.txt",  // Uses device mappings
-            "ProductCodes.txt"  // Uses both device and FDA product code mappings
+            "foi/foiclass.txt",       // Creates FDA product code concepts first
+            "gudid/Device.txt",       // Creates device concepts and mappings
+            "gudid/Identifiers.txt",  // Uses device mappings
+            "gudid/ProductCodes.txt"  // Uses both device and FDA product code mappings
     );
 
     public void execute() throws MojoExecutionException {
         try {
             this.namespace = UUID.fromString(namespaceString);
-            this.gudidUtility = new GudidUtility(namespace);
 
             File datastore = new File(datastorePath);
             LOG.info("inputDirectoryPath: " + inputDirectoryPath);
             File inputFileOrDirectory;
             if (skipUnzip) {
-                // Let lucene shut down???
-                //Thread.sleep(10000);
                 inputFileOrDirectory = new File(inputDirectoryPath);
             } else {
-                String unzippedData = unzipRawData(inputDirectoryPath);
+                File unzippedData = unzipRawData(inputDirectoryPath);
                 LOG.info("unzippedData: " + unzippedData);
-                inputFileOrDirectory = new File(unzippedData);
+                inputFileOrDirectory = new File(unzippedData, "src");
             }
             LOG.info("inputFileOrDirectory: " + inputFileOrDirectory);
-            validateInputDirectory(inputFileOrDirectory);
 
             transformFiles(datastore, inputFileOrDirectory);
         } catch (IllegalArgumentException e) {
@@ -79,7 +75,7 @@ public class GudidTransformationMojo extends AbstractMojo {
         }
     }
 
-    private String unzipRawData(String zipFilePath) throws IOException {
+    private File unzipRawData(String zipFilePath) throws IOException {
         File outputDirectory = new File(dataOutputPath);
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath))) {
             ZipEntry zipEntry;
@@ -100,38 +96,7 @@ public class GudidTransformationMojo extends AbstractMojo {
                 zis.closeEntry();
             }
         }
-        File terminologyFolder = searchTerminologyFolder(outputDirectory);
-
-        if (terminologyFolder != null) {
-            return terminologyFolder.getAbsolutePath();
-        } else {
-            throw new FileNotFoundException("The 'Terminology' folder could not be found...");
-        }
-    }
-
-    private static File searchTerminologyFolder(File dir) {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isDirectory() && file.getName().equals("Terminology") &&
-                            file.getParentFile().getName().equals("Full")) {
-                        return file;
-                    }
-                    File found = searchTerminologyFolder(file);
-                    if (found != null) {
-                        return found;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private void validateInputDirectory(File inputFileOrDirectory) throws MojoExecutionException {
-        if (!inputFileOrDirectory.exists()) {
-            throw new RuntimeException("Invalid input directory or file. Directory or file does not exist");
-        }
+        return outputDirectory;
     }
 
     /**
@@ -184,30 +149,6 @@ public class GudidTransformationMojo extends AbstractMojo {
                 LOG.warn("Skipping missing file: " + fileName);
             }
         }
-
-        // Process any additional .txt files not in the main processing order
-        processRemainingFiles(inputDirectory, composer);
-    }
-
-    private void processRemainingFiles(File inputDirectory, Composer composer) {
-        File[] allFiles = inputDirectory.listFiles((dir, name) ->
-                name.endsWith(".txt") && !FILE_PROCESSING_ORDER.contains(name));
-
-        if (allFiles != null && allFiles.length > 0) {
-            LOG.info("Processing additional files...");
-            Arrays.stream(allFiles)
-                    .forEach(file -> processIndividualFile(file, composer));
-        }
-    }
-
-    private void processFilesFromInput(File inputFileOrDirectory, Composer composer) {
-        if (inputFileOrDirectory.isDirectory()) {
-            Arrays.stream(inputFileOrDirectory.listFiles())
-                    .filter(file -> file.getName().endsWith(".txt"))
-                    .forEach(file -> processIndividualFile(file, composer));
-        } else if (inputFileOrDirectory.isFile() && inputFileOrDirectory.getName().endsWith(".txt")) {
-            processIndividualFile(inputFileOrDirectory, composer);
-        }
     }
 
     private void processIndividualFile(File file, Composer composer) {
@@ -232,24 +173,17 @@ public class GudidTransformationMojo extends AbstractMojo {
     private Transformer getTransformer(String fileName) {
         String lowerFileName = fileName.toLowerCase();
 
-        if (lowerFileName.equals("foiclass.txt")) {
-            return new FoiClassTransformer(namespace, gudidUtility);
-        } else if (lowerFileName.equals("device.txt")) {
-            return new DeviceTransformer(namespace, gudidUtility);
-        } else if (lowerFileName.equals("identifiers.txt")) {
-            return new GudidIdentifierTransformer(namespace, gudidUtility);
-        } else if (lowerFileName.equals("productcodes.txt")) {
-            return new ProductCodeTransformer(namespace, gudidUtility);
+        if (lowerFileName.contains("foiclass.txt")) {
+            return new FoiClassTransformer(namespace);
+        } else if (lowerFileName.contains("device.txt")) {
+            return new DeviceTransformer(namespace);
+        } else if (lowerFileName.contains("identifiers.txt")) {
+            return new GudidIdentifierTransformer(namespace);
+        } else if (lowerFileName.contains("productcodes.txt")) {
+            return new ProductCodeTransformer(namespace);
         }
 
         return null;
     }
 
-    public UUID getNamespace() {
-        return namespace;
-    }
-
-    public GudidUtility getGudidUtility() {
-        return gudidUtility;
-    }
 }
