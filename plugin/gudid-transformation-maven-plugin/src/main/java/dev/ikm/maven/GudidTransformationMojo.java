@@ -19,8 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -42,10 +41,20 @@ public class GudidTransformationMojo extends AbstractMojo {
     private boolean skipUnzip;
 
     private UUID namespace;
+    private GudidUtility gudidUtility;
+
+    // Define processing order based on dependencies
+    private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
+            "foiclass.txt",     // Creates FDA product code concepts first
+            "Device.txt",       // Creates device concepts and mappings
+            "Identifiers.txt",  // Uses device mappings
+            "ProductCodes.txt"  // Uses both device and FDA product code mappings
+    );
 
     public void execute() throws MojoExecutionException {
         try {
             this.namespace = UUID.fromString(namespaceString);
+            this.gudidUtility = new GudidUtility(namespace);
 
             File datastore = new File(datastorePath);
             LOG.info("inputDirectoryPath: " + inputDirectoryPath);
@@ -62,7 +71,7 @@ public class GudidTransformationMojo extends AbstractMojo {
             LOG.info("inputFileOrDirectory: " + inputFileOrDirectory);
             validateInputDirectory(inputFileOrDirectory);
 
-            transformFile(datastore, inputFileOrDirectory);
+            transformFiles(datastore, inputFileOrDirectory);
         } catch (IllegalArgumentException e) {
             throw new MojoExecutionException("Invalid namespace for UUID formatting");
         } catch (IOException e) {
@@ -131,19 +140,29 @@ public class GudidTransformationMojo extends AbstractMojo {
      * @param datastore            location of datastore to write entities to
      * @param inputFileOrDirectory directory containing snomed files
      */
-    public void transformFile(File datastore, File inputFileOrDirectory) {
-        LOG.info("########## Snomed Transformer Starting...");
+    /**
+     * Transforms GUDID files in the specified directory
+     *
+     * @param datastore location of datastore to write entities to
+     * @param inputDirectory directory containing GUDID files
+     */
+    public void transformFiles(File datastore, File inputDirectory) {
+        LOG.info("########## GUDID Transformer Starting...");
         initializeDatastore(datastore);
 
         EntityService.get().beginLoadPhase();
         try {
-            Composer composer = new Composer("Snomed Transformer Composer");
-            processFilesFromInput(inputFileOrDirectory, composer);
+            Composer composer = new Composer("GUDID Transformer Composer");
+            processFilesInOrder(inputDirectory, composer);
             composer.commitAllSessions();
+            LOG.info("GUDID transformation completed successfully");
+        } catch (Exception e) {
+            LOG.error("Error during GUDID transformation", e);
+            throw new RuntimeException("GUDID transformation failed", e);
         } finally {
             EntityService.get().endLoadPhase();
             PrimitiveData.stop();
-            LOG.info("########## Snomed Transformer Finishing...");
+            LOG.info("########## GUDID Transformer Finishing...");
         }
     }
 
@@ -152,6 +171,33 @@ public class GudidTransformationMojo extends AbstractMojo {
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName(controllerName);
         PrimitiveData.start();
+    }
+
+    private void processFilesInOrder(File inputDirectory, Composer composer) {
+        LOG.info("Processing GUDID files in dependency order...");
+
+        for (String fileName : FILE_PROCESSING_ORDER) {
+            File file = new File(inputDirectory, fileName);
+            if (file.exists() && file.isFile()) {
+                processIndividualFile(file, composer);
+            } else {
+                LOG.warn("Skipping missing file: " + fileName);
+            }
+        }
+
+        // Process any additional .txt files not in the main processing order
+        processRemainingFiles(inputDirectory, composer);
+    }
+
+    private void processRemainingFiles(File inputDirectory, Composer composer) {
+        File[] allFiles = inputDirectory.listFiles((dir, name) ->
+                name.endsWith(".txt") && !FILE_PROCESSING_ORDER.contains(name));
+
+        if (allFiles != null && allFiles.length > 0) {
+            LOG.info("Processing additional files...");
+            Arrays.stream(allFiles)
+                    .forEach(file -> processIndividualFile(file, composer));
+        }
     }
 
     private void processFilesFromInput(File inputFileOrDirectory, Composer composer) {
@@ -178,22 +224,32 @@ public class GudidTransformationMojo extends AbstractMojo {
     }
 
     /**
-     * Checks files for matching keywords and uses appropriate transformer
+     * Returns appropriate transformer based on filename
      *
-     * @param fileName File for Transformer match
+     * @param fileName File name to match against transformers
+     * @return Transformer instance or null if no match found
      */
     private Transformer getTransformer(String fileName) {
-        if (fileName.contains("Concept")) {
-            return new ConceptTransformer(namespace);
-        } else if (fileName.contains("Definition")) {
-            return new DefinitionTransformer(namespace);
-        } else if (fileName.contains("Description")) {
-            return new DescriptionTransformer(namespace);
-        } else if (fileName.contains("Identifier")) {
-            return new IdentifierTransformer(namespace);
-        } else if (fileName.contains("OWLExpression")) {
-            return new AxiomSyntaxTransformer(namespace);
+        String lowerFileName = fileName.toLowerCase();
+
+        if (lowerFileName.equals("foiclass.txt")) {
+            return new FoiClassTransformer(namespace, gudidUtility);
+        } else if (lowerFileName.equals("device.txt")) {
+            return new DeviceTransformer(namespace, gudidUtility);
+        } else if (lowerFileName.equals("identifiers.txt")) {
+            return new GudidIdentifierTransformer(namespace, gudidUtility);
+        } else if (lowerFileName.equals("productcodes.txt")) {
+            return new ProductCodeTransformer(namespace, gudidUtility);
         }
+
         return null;
+    }
+
+    public UUID getNamespace() {
+        return namespace;
+    }
+
+    public GudidUtility getGudidUtility() {
+        return gudidUtility;
     }
 }
