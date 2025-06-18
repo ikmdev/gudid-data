@@ -212,7 +212,16 @@ public class GudidUtility {
     }
 
     public EntityProxy.Concept getUserConcept() {
-        return EntityProxy.Concept.make("AccessGUDID Author", UuidT5Generator.get(namespace, "AccessGUDID Author"));
+        return EntityProxy.Concept.make("GUDID Author", UuidT5Generator.get(namespace, "GUDID Author"));
+    }
+
+    public EntityProxy.Concept getModuleConcept() {
+        String loincModuleStr = "GUDID Module";
+        return makeConceptProxy(loincModuleStr);
+    }
+
+    public EntityProxy.Concept makeConceptProxy(String description) {
+        return EntityProxy.Concept.make(description, UuidT5Generator.get(namespace, description));
     }
 
 }

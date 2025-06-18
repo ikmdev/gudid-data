@@ -47,24 +47,24 @@ public class DeviceTransformer extends AbstractTransformer {
         }
         EntityProxy.Concept author = gudidUtility.getUserConcept();
         EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
+        EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
-                    .limit(1000)
+                    .limit(10000)
                     .map(row -> row.split("\\|"))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
                         long time = LocalDate.parse(data[PUBLIC_VERSION_DATE]).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-                        EntityProxy.Concept deviceKeyConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PUBLIC_DEVICE_RECORD_KEY])));
-                        EntityProxy.Concept deviceIdConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
+                        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PUBLIC_DEVICE_RECORD_KEY])));
 
-                        Session session = composer.open(status, time, author, deviceKeyConcept, path);
+                        Session session = composer.open(status, time, author, module, path);
 
                         session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                                .concept(deviceIdConcept)
+                                .concept(concept)
                                 .attach((Identifier identifier) -> identifier
                                         .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                                        .identifier(deviceIdConcept.asUuidArray()[0].toString())
+                                        .identifier(concept.asUuidArray()[0].toString())
                                 )
 //                                .attach((Identifier identifier) -> identifier
 //                                        .source(TinkarTerm.SCTID)
