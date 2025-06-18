@@ -1,5 +1,7 @@
 package dev.ikm.maven;
 
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
+import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -208,4 +210,9 @@ public class GudidUtility {
         LOG.info("  PrimaryDI mappings: {}", getPrimaryDIMappingCount());
         LOG.info("  Product Code mappings: {}", getProductCodeMappingCount());
     }
+
+    public EntityProxy.Concept getUserConcept() {
+        return EntityProxy.Concept.make("AccessGUDID Author", UuidT5Generator.get(namespace, "AccessGUDID Author"));
+    }
+
 }
