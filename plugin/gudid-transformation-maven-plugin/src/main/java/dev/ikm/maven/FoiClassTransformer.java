@@ -14,6 +14,8 @@ import java.util.stream.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
+
 public class FoiClassTransformer extends AbstractTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(FoiClassTransformer.class.getSimpleName());
 
@@ -28,7 +30,6 @@ public class FoiClassTransformer extends AbstractTransformer {
     private static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new HashMap<>();
 
     static {
-        // TODO: Replace these placeholder UUIDs with actual UUIDs from starter data
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", UUID.fromString("00000000-0000-0000-0000-000000000001"));
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", UUID.fromString("00000000-0000-0000-0000-000000000002"));
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Chemistry", UUID.fromString("00000000-0000-0000-0000-000000000003"));
@@ -68,8 +69,8 @@ public class FoiClassTransformer extends AbstractTransformer {
 
         LOG.info("Starting transformation of foiclass.txt file: " + inputFile.getName());
 
-        EntityProxy.Concept author = GudidUtility.getUserConcept(namespace);
-        EntityProxy.Concept path = GudidUtility.getPathConcept();
+        EntityProxy.Concept author = gudidUtility.getUserConcept();
+        EntityProxy.Concept path = DEVELOPMENT_PATH;
 
         int processedCount = 0;
         int skippedCount = 0;
@@ -197,7 +198,7 @@ public class FoiClassTransformer extends AbstractTransformer {
     }
 
     private EntityProxy.Concept getModuleConcept() {
-        return GudidUtility.getModuleConcept();
+        return gudidUtility.getModuleConcept();
     }
 
     private EntityProxy.Concept getFdaProductCodeIdentifierSource() {
