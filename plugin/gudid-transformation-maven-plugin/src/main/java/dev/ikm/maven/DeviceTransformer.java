@@ -1,7 +1,6 @@
 package dev.ikm.maven;
 
 import dev.ikm.tinkar.common.id.PublicIds;
-import dev.ikm.tinkar.common.util.time.DateTimeUtil;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
@@ -20,6 +19,7 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static dev.ikm.tinkar.terms.TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE;
@@ -52,9 +52,9 @@ public class DeviceTransformer extends AbstractTransformer {
         EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
+        AtomicInteger conceptCount = new AtomicInteger();
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
-                    .limit(10000) // TODO
                     .map(row -> row.split("\\|"))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
@@ -63,21 +63,32 @@ public class DeviceTransformer extends AbstractTransformer {
 
                         Session session = composer.open(status, time, author, module, path);
 
-                        createConcept(session, concept);
+                        createConcept(session, concept, data[PUBLIC_DEVICE_RECORD_KEY]);
                         createDescriptionSemantic(session, concept, data[BRAND_NAME] + " " + data[VERSION_MODEL_NUMBER], TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE);
 
+                        if (conceptCount.incrementAndGet() % 1000 == 0) {
+                            LOG.info("committed concepts: {}", conceptCount.get());
+                            composer.commitSession(session);
+                        }
                     });
+
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            LOG.info("committed concepts: {}", conceptCount.get());
         }
     }
 
-    private void createConcept(Session session, EntityProxy.Concept concept) {
+    private void createConcept(Session session, EntityProxy.Concept concept, String publicDeviceRecordKey) {
         session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
                 .concept(concept)
                 .attach((Identifier identifier) -> identifier
                         .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
                         .identifier(concept.asUuidArray()[0].toString())
+                )
+                .attach((Identifier identifier) -> identifier
+                        .source(EntityProxy.Concept.make("Public Device Record Key", UuidT5Generator.get(namespace, publicDeviceRecordKey)))
+                        .identifier(publicDeviceRecordKey)
                 )
         );
     }
