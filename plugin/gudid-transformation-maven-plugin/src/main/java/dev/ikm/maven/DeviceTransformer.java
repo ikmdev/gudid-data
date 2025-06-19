@@ -6,6 +6,7 @@ import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
+import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
 import dev.ikm.tinkar.composer.template.Identifier;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
@@ -20,6 +21,8 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.stream.Stream;
+
+import static dev.ikm.tinkar.terms.TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE;
 
 public class DeviceTransformer extends AbstractTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(DeviceTransformer.class.getSimpleName());
@@ -51,30 +54,56 @@ public class DeviceTransformer extends AbstractTransformer {
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
-                    .limit(10000)
+                    .limit(10000) // TODO
                     .map(row -> row.split("\\|"))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
                         long time = LocalDate.parse(data[PUBLIC_VERSION_DATE]).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-                        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PUBLIC_DEVICE_RECORD_KEY])));
+                        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
 
                         Session session = composer.open(status, time, author, module, path);
 
-                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                                .concept(concept)
-                                .attach((Identifier identifier) -> identifier
-                                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                                        .identifier(concept.asUuidArray()[0].toString())
-                                )
-//                                .attach((Identifier identifier) -> identifier
-//                                        .source(TinkarTerm.SCTID)
-//                                        .identifier(data[ID])
-//                                )
-                        );
+                        createConcept(session, concept);
+                        createDescriptionSemantic(session, concept, data[BRAND_NAME] + " " + data[VERSION_MODEL_NUMBER], TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE);
+
                     });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private void createConcept(Session session, EntityProxy.Concept concept) {
+        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                .concept(concept)
+                .attach((Identifier identifier) -> identifier
+                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                        .identifier(concept.asUuidArray()[0].toString())
+                )
+        );
+    }
+
+    private void createDescriptionSemantic(Session session, EntityProxy.Concept concept, String description, EntityProxy.Concept descriptionType) {
+        String typeStr = descriptionType.equals(FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE) ? "FQN" :
+                descriptionType.equals(TinkarTerm.REGULAR_NAME_DESCRIPTION_TYPE) ? "Regular" : "Definition";
+
+        EntityProxy.Semantic semantic = EntityProxy.Semantic.make(
+                PublicIds.of(UuidT5Generator.get(namespace, concept.publicId().asUuidArray()[0] + description + typeStr + "DESC")));
+
+        try {
+            session.compose((SemanticAssembler semanticAssembler) -> semanticAssembler
+                    .semantic(semantic)
+                    .pattern(TinkarTerm.DESCRIPTION_PATTERN)
+                    .reference(concept)
+                    .fieldValues(fieldValues -> fieldValues
+                            .with(TinkarTerm.ENGLISH_LANGUAGE)
+                            .with(description)
+                            .with(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                            .with(descriptionType)
+                    ));
+        } catch (Exception e) {
+            LOG.error("Error creating " + typeStr + " description semantic for concept: " + concept, e);
+        }
+    }
+
 
 }

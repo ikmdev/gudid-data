@@ -1,5 +1,6 @@
 package dev.ikm.maven;
 
+import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
@@ -216,12 +217,7 @@ public class GudidUtility {
     }
 
     public EntityProxy.Concept getModuleConcept() {
-        String loincModuleStr = "GUDID Module";
-        return makeConceptProxy(loincModuleStr);
-    }
-
-    public EntityProxy.Concept makeConceptProxy(String description) {
-        return EntityProxy.Concept.make(description, UuidT5Generator.get(namespace, description));
+        return EntityProxy.Concept.make(PublicIds.of("8449f4f5-1a96-478a-864a-232f3afa0ee6"));
     }
 
 }
