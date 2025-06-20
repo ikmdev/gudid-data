@@ -55,6 +55,7 @@ public class GudidUtility {
         DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("HIBCC", "HIBCC Device Identifier");
         DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("ICCBBA", "ICCBBA Device Identifier");
         DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("GS1", "GS1 Device Identifier");
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("NDC/NHRIC", "NDC/NHRIC Device Identifier");
     }
 
     public GudidUtility(UUID namespace) {
@@ -218,6 +219,11 @@ public class GudidUtility {
 
     public EntityProxy.Concept getModuleConcept() {
         return EntityProxy.Concept.make(PublicIds.of("8449f4f5-1a96-478a-864a-232f3afa0ee6"));
+    }
+
+    public EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
+        String issuingAgencyName = getDeviceIdIssuingAgencyName(deviceIdIssuingAgencyCode);
+        return EntityProxy.Concept.make(issuingAgencyName, UuidT5Generator.get(namespace, issuingAgencyName));
     }
 
 }
