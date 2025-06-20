@@ -44,11 +44,6 @@ public class DeviceTransformer extends AbstractTransformer {
         if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
             throw new RuntimeException("Concept input file is either null or invalid.");
         }
-        EntityProxy.Concept author = gudidUtility.getUserConcept();
-        EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
-        EntityProxy.Concept module = gudidUtility.getModuleConcept();
-
-        EntityProxy.Concept publicDeviceRecordKey = EntityProxy.Concept.make("Public Device Record Key", UuidT5Generator.get(namespace, "Public Device Record Key"));
 
         long sessionTime = DateTimeUtil.compressedDateParse("20250501"); // TODO
 
@@ -58,7 +53,8 @@ public class DeviceTransformer extends AbstractTransformer {
                     .map(row -> row.split("\\|"))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
-                        Session session = composer.open(status, sessionTime, author, module, path);
+                        Session session = composer.open(status, sessionTime, GudidUtility.CONCEPT_GUDID_AUTHOR,
+                                GudidUtility.CONCEPT_GUDID_MODULE, TinkarTerm.DEVELOPMENT_PATH);
 
                         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
 
@@ -74,7 +70,7 @@ public class DeviceTransformer extends AbstractTransformer {
                                         .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                                 )
                                 .attach((Identifier identifier) -> identifier
-                                        .source(publicDeviceRecordKey)
+                                        .source(GudidUtility.CONCEPT_PUBLIC_DEVICE_RECORD_KEY)
                                         .identifier(data[PUBLIC_DEVICE_RECORD_KEY])
                                 )
                         );
