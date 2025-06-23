@@ -34,8 +34,8 @@ public class GudidIdentifierTransformer extends AbstractTransformer {
         if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
             throw new RuntimeException("Concept input file is either null or invalid.");
         }
-        Session session = composer.open(State.ACTIVE, GudidUtility.CONCEPT_GUDID_AUTHOR,
-                GudidUtility.CONCEPT_GUDID_MODULE, TinkarTerm.DEVELOPMENT_PATH);
+        Session session = composer.open(State.ACTIVE, gudidUtility.getAuthorConcept(),
+                gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
 
         AtomicInteger identiferCount = new AtomicInteger();
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {

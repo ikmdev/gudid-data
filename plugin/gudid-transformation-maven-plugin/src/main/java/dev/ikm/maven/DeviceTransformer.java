@@ -53,8 +53,8 @@ public class DeviceTransformer extends AbstractTransformer {
                     .map(row -> row.split("\\|"))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
-                        Session session = composer.open(status, sessionTime, GudidUtility.CONCEPT_GUDID_AUTHOR,
-                                GudidUtility.CONCEPT_GUDID_MODULE, TinkarTerm.DEVELOPMENT_PATH);
+                        Session session = composer.open(status, sessionTime, gudidUtility.getAuthorConcept(),
+                                gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
 
                         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
 
@@ -70,7 +70,7 @@ public class DeviceTransformer extends AbstractTransformer {
                                         .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                                 )
                                 .attach((Identifier identifier) -> identifier
-                                        .source(GudidUtility.CONCEPT_PUBLIC_DEVICE_RECORD_KEY)
+                                        .source(gudidUtility.getPublicDeviceRecordKeyConcept())
                                         .identifier(data[PUBLIC_DEVICE_RECORD_KEY])
                                 )
                         );

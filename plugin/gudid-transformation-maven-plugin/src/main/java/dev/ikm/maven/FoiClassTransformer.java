@@ -1,24 +1,26 @@
 package dev.ikm.maven;
 
-import dev.ikm.tinkar.common.id.*;
+import dev.ikm.tinkar.common.id.PublicIds;
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
-import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
 import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
+import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
 import dev.ikm.tinkar.composer.template.Identifier;
 import dev.ikm.tinkar.composer.template.StatedAxiom;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
-import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
-
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.stream.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_PATTERN;
@@ -81,7 +83,7 @@ public class FoiClassTransformer extends AbstractTransformer {
 
         LOG.info("Starting transformation of foiclass.txt file: " + inputFile.getName());
 
-        EntityProxy.Concept author = gudidUtility.getUserConcept();
+        EntityProxy.Concept author = gudidUtility.getAuthorConcept();
         EntityProxy.Concept path = DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
