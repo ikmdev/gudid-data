@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,10 +88,13 @@ public class FoiClassTransformer extends AbstractTransformer {
         EntityProxy.Concept path = DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
+        // Create session with ACTIVE state
+        Session session = composer.open(State.ACTIVE, author, module, path);
+
         AtomicInteger processedCount = new AtomicInteger(0);
         AtomicInteger skippedCount = new AtomicInteger(0);
 
-        try (Stream<String> lines = Files.lines(inputFile.toPath())) {
+        try (Stream<String> lines = Files.lines(inputFile.toPath(), Charset.forName("windows-1252"))) {
             lines.skip(1) // skip header line
                     .map(row -> row.split("\\|", -1)) // -1 to preserve empty trailing fields
                     .forEach(data -> {
@@ -119,9 +123,6 @@ public class FoiClassTransformer extends AbstractTransformer {
                                 skippedCount.incrementAndGet();
                                 return;
                             }
-
-                            // Create session with ACTIVE state
-                            Session session = composer.open(State.ACTIVE, author, module, path);
 
                             // Create the FDA Product Code concept
                             createFdaProductCodeConcept(session, medicalSpecialty, productCode, deviceName);
