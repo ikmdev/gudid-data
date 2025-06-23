@@ -32,6 +32,7 @@
                     <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
                     <inputDirectoryPath>${user.home}/.m2/repository/dev/ikm/gudid/gudid-origin/${project.version}/gudid-origin-${project.version}-data.zip</inputDirectoryPath>
                     <dataOutputPath>${project.build.directory}</dataOutputPath>
+                    <sourceVersion>${source.version}</sourceVersion>
                 </configuration>
                 <executions>
                     <execution>

@@ -1,7 +1,8 @@
 package dev.ikm.maven;
 
+import dev.ikm.tinkar.common.id.PublicId;
 import dev.ikm.tinkar.common.id.PublicIds;
-import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
+import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GudidUtility {
     private static final Logger LOG = LoggerFactory.getLogger(GudidUtility.class);
+
+    private static EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("6ba0e420-bc2d-4461-882e-d3822ba1f768"));
+    private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("8449f4f5-1a96-478a-864a-232f3afa0ee6"));
+    private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("9af79099-e708-41d7-ac64-5b6e6addb67f"));
 
     private final UUID namespace;
 
@@ -50,11 +55,10 @@ public class GudidUtility {
         MEDICAL_SPECIALTY_MAPPINGS.put("TX", "Clinical Toxicology");
         MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty"); // Default for blank values
 
-        // Initialize device ID issuing agency mappings (these may need to be expanded based on actual data)
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("FDA", "FDA Device Identifier");
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("HIBCC", "HIBCC Device Identifier");
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("ICCBBA", "ICCBBA Device Identifier");
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("GS1", "GS1 Device Identifier");
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("HIBCC", "3d9e2e17-210c-446f-9e72-cb7668e4909d");
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("ICCBBA", "63a52e8e-36cd-467b-bcce-a94b2e69ae67");
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("GS1", "9c887c19-dcdc-44ea-9851-75930669d192");
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("NDC/NHRIC", "b9142e18-ccbd-426f-820b-2cd33b7680ea");
     }
 
     public GudidUtility(UUID namespace) {
@@ -73,16 +77,6 @@ public class GudidUtility {
             return MEDICAL_SPECIALTY_MAPPINGS.get("");
         }
         return fullName;
-    }
-
-    // Device ID Issuing Agency Mappings
-    public String getDeviceIdIssuingAgencyName(String agency) {
-        String agencyName = DEVICE_ID_ISSUING_AGENCY_MAPPINGS.get(agency == null ? "" : agency.trim());
-        if (agencyName == null) {
-            LOG.warn("Unknown device ID issuing agency: '{}', using as-is", agency);
-            return agency == null ? "Unknown Agency" : agency.trim();
-        }
-        return agencyName;
     }
 
     // Runtime mapping management for PrimaryDI to PublicDeviceRecordKey
@@ -212,12 +206,36 @@ public class GudidUtility {
         LOG.info("  Product Code mappings: {}", getProductCodeMappingCount());
     }
 
-    public EntityProxy.Concept getUserConcept() {
-        return EntityProxy.Concept.make("GUDID Author", UuidT5Generator.get(namespace, "GUDID Author"));
+    public EntityProxy.Concept getAuthorConcept() {
+        if (EntityService.get().getEntity(CONCEPT_GUDID_AUTHOR.publicId()).isEmpty()) {
+            throw new RuntimeException("Cannot resolve CONCEPT_GUDID_AUTHOR with UUID: " + CONCEPT_GUDID_AUTHOR.publicId().idString());
+        }
+        return CONCEPT_GUDID_AUTHOR;
     }
 
     public EntityProxy.Concept getModuleConcept() {
-        return EntityProxy.Concept.make(PublicIds.of("8449f4f5-1a96-478a-864a-232f3afa0ee6"));
+        if (EntityService.get().getEntity(CONCEPT_GUDID_MODULE.publicId()).isEmpty()) {
+            throw new RuntimeException("Cannot resolve CONCEPT_GUDID_MODULE with UUID: " + CONCEPT_GUDID_MODULE.publicId().idString());
+        }
+        return CONCEPT_GUDID_MODULE;
+    }
+
+    public EntityProxy.Concept getPublicDeviceRecordKeyConcept() {
+        if (EntityService.get().getEntity(CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId()).isEmpty()) {
+            throw new RuntimeException("Cannot resolve CONCEPT_PUBLIC_DEVICE_RECORD_KEY with UUID: " + CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId().idString());
+        }
+        return CONCEPT_PUBLIC_DEVICE_RECORD_KEY;
+    }
+
+    public EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
+        if (!DEVICE_ID_ISSUING_AGENCY_MAPPINGS.containsKey(deviceIdIssuingAgencyCode)) {
+            throw new RuntimeException("No concept mapping for issuing agency code: " + deviceIdIssuingAgencyCode);
+        }
+        PublicId issuingAgencyUuid = PublicIds.of(DEVICE_ID_ISSUING_AGENCY_MAPPINGS.get(deviceIdIssuingAgencyCode));
+        if (EntityService.get().getEntity(issuingAgencyUuid).isEmpty()) {
+            throw new RuntimeException("Concept for agency code '" + deviceIdIssuingAgencyCode + "' does not exist with UUID: " + issuingAgencyUuid.idString());
+        }
+        return EntityProxy.Concept.make(issuingAgencyUuid);
     }
 
 }
