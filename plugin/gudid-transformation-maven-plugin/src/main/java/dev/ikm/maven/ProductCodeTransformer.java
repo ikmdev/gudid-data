@@ -1,19 +1,24 @@
 package dev.ikm.maven;
 
-import dev.ikm.tinkar.common.id.*;
-import dev.ikm.tinkar.common.util.uuid.*;
-import dev.ikm.tinkar.composer.*;
-import dev.ikm.tinkar.composer.assembler.*;
-import dev.ikm.tinkar.composer.template.*;
-import dev.ikm.tinkar.terms.*;
+import dev.ikm.tinkar.common.id.PublicIds;
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
+import dev.ikm.tinkar.composer.Composer;
+import dev.ikm.tinkar.composer.Session;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
+import dev.ikm.tinkar.composer.template.AxiomSyntax;
+import dev.ikm.tinkar.terms.EntityProxy;
+import dev.ikm.tinkar.terms.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.*;
+
+import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
 
 public class ProductCodeTransformer extends AbstractTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(ProductCodeTransformer.class.getSimpleName());
@@ -41,7 +46,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
         LOG.info("Starting transformation of ProductCodes.txt file: " + inputFile.getName());
 
         EntityProxy.Concept author = gudidUtility.getAuthorConcept();
-        EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
+        EntityProxy.Concept path = DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
         AtomicInteger processedCount = new AtomicInteger(0);
@@ -165,7 +170,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
             for (int i = 0; i < fdaProductCodeUuids.size(); i++) {
                 owlBuilder.append(":[").append(fdaProductCodeUuids.get(i)).append("]");
                 if (i < fdaProductCodeUuids.size() - 1) {
-                    owlBuilder.append("");  // Space between concepts
+                    owlBuilder.append(" ");  // Space between concepts
                 }
             }
             owlBuilder.append("))");
