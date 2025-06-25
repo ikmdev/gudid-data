@@ -4,6 +4,7 @@ import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
@@ -15,13 +16,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public abstract class AbstractIntegrationTest {
     Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
     static String namespaceString;
-    static String gudIdFileName;
+//    static String gudIdFileName;
     static long timeForStamp;
 
     @AfterAll
@@ -38,8 +42,33 @@ public abstract class AbstractIntegrationTest {
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
         PrimitiveData.start();
-        gudIdFileName = System.getProperty("source.zip"); // property set in pom.xml
-        timeForStamp = GudIdUtility.parseTimeFromFileName(gudIdFileName);
+//        gudIdFileName = System.getProperty("source.zip"); // property set in pom.xml
+    }
+
+    /**
+     * Find FilePath
+     *
+     * @param baseDir
+     * @param fileKeyword
+     * @return absolutePath
+     * @throws IOException
+     */
+    protected String findFilePath(String baseDir, String fileKeyword) throws IOException {
+        try (Stream<Path> dirStream = Files.walk(Paths.get(baseDir))) {
+            Path targetDir = dirStream.filter(Files::isDirectory)
+//                    .filter(path -> path.toFile().getAbsoluteFile().toString().toLowerCase().contains(dirKeyword.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Target DIRECTORY not found"));
+
+            try (Stream<Path> fileStream = Files.walk(targetDir)) {
+                Path targetFile = fileStream.filter(Files::isRegularFile)
+                        .filter(path -> path.toFile().getAbsoluteFile().toString().toLowerCase().contains(fileKeyword.toLowerCase()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Target FILE not found for: " + fileKeyword));
+
+                return targetFile.toAbsolutePath().toString();
+            }
+        }
     }
 
     /**
@@ -51,29 +80,26 @@ public abstract class AbstractIntegrationTest {
      * @throws IOException
      */
     protected int processFile(String sourceFilePath, String errorFile) throws IOException {
-        return -1;
-    }
-
-    /**
-     *
-     * @param fileName
-     * @return Content of file into a String
-     * @throws IOException
-     */
-    private String readFile(String fileName) throws IOException {
-        StringBuilder content = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        int notFound = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(sourceFilePath));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(errorFile))) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("REVIEW_PANEL")) continue;
+                if (!assertLine(line.split("\\|", -1))) {
+                    notFound++;
+                    bw.write(line);
+                }
             }
         }
-        return content.toString();
+        LOG.info("We found file: " + sourceFilePath);
+        return notFound;
     }
 
     protected UUID conceptUuid(String id) {
-        return null;
+        return UuidT5Generator.get(UUID.fromString(namespaceString), "FDA_PRODUCT_CODE_" + id);
     }
 
-    protected abstract boolean assertOwlElement();
+    protected abstract boolean assertLine(String[] columns);
+
 }
