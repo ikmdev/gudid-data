@@ -124,71 +124,8 @@ public class GudidUtility {
         return productCodeToConceptMapping.get(productCode.trim());
     }
 
-    // OWL Syntax generation
-    public String generateOwlSyntax(String primaryDI, String[] productCodes) {
-        UUID deviceConcept = getConceptByPrimaryDI(primaryDI);
-        if (deviceConcept == null) {
-            throw new IllegalArgumentException("No device concept found for PrimaryDI: " + primaryDI);
-        }
-
-        if (productCodes == null || productCodes.length == 0) {
-            throw new IllegalArgumentException("No product codes provided for PrimaryDI: " + primaryDI);
-        }
-
-        // Single product code case
-        if (productCodes.length == 1) {
-            UUID productCodeConcept = getConceptByProductCode(productCodes[0]);
-            if (productCodeConcept == null) {
-                throw new IllegalArgumentException("No concept found for product code: " + productCodes[0]);
-            }
-            return String.format("SubClassOf(:%s :%s)", deviceConcept, productCodeConcept);
-        }
-
-        // Multiple product codes case
-        StringBuilder owlBuilder = new StringBuilder();
-        owlBuilder.append("SubClassOf(:").append(deviceConcept).append(" ObjectIntersectionOf(");
-
-        for (int i = 0; i < productCodes.length; i++) {
-            UUID productCodeConcept = getConceptByProductCode(productCodes[i]);
-            if (productCodeConcept == null) {
-                LOG.warn("No concept found for product code: '{}', skipping", productCodes[i]);
-                continue;
-            }
-
-            if (i > 0) {
-                owlBuilder.append(" ");
-            }
-            owlBuilder.append(":").append(productCodeConcept);
-        }
-
-        owlBuilder.append("))");
-        return owlBuilder.toString();
-    }
-
-    // Utility methods for data validation and cleaning
-    public String cleanAndValidate(String value, String fieldName) {
-        if (value == null) {
-            return null;
-        }
-
-        String cleaned = value.trim();
-        if (cleaned.isEmpty()) {
-            LOG.debug("Empty value found for field: {}", fieldName);
-            return null;
-        }
-
-        return cleaned;
-    }
-
-    public String[] splitAndClean(String value, String delimiter) {
-        if (value == null || value.trim().isEmpty()) {
-            return new String[0];
-        }
-
-        return java.util.Arrays.stream(value.split(delimiter))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .toArray(String[]::new);
+    public boolean isEmptyOrNull(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     // Mapping status methods for debugging

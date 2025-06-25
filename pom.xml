@@ -45,7 +45,7 @@
         <source.zip>${user.home}/Downloads/AccessGUDID_Delimited_Full_Release_${source.version}.zip</source.zip>
         <foi.source.zip>${user.home}/Downloads/foiclass.zip</foi.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
-        <starterSet>GUDID_StarterData.zip</starterSet>
+        <starterSet>GUDID Starter Set Data 20250620.zip</starterSet>
         <fieldCategoriesStarterSetLocation>${user.home}/Downloads</fieldCategoriesStarterSetLocation>
         <fieldCategoriesStarterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</fieldCategoriesStarterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
