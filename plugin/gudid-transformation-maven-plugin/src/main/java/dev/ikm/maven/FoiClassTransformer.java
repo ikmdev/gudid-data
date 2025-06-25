@@ -111,13 +111,13 @@ public class FoiClassTransformer extends AbstractTransformer {
                             String deviceName = data[DEVICE_NAME];
 
                             // Validate required fields
-                            if (isEmptyOrNull(productCode)) {
+                            if (gudidUtility.isEmptyOrNull(productCode)) {
                                 LOG.warn("Empty or null PRODUCTCODE found in row: {}", String.join("|", data));
                                 skippedCount.incrementAndGet();
                                 return;
                             }
 
-                            if (isEmptyOrNull(deviceName)) {
+                            if (gudidUtility.isEmptyOrNull(deviceName)) {
                                 LOG.warn("Empty or null DEVICENAME found for PRODUCTCODE '{}' in row: {}",
                                         productCode, String.join("|", data));
                                 skippedCount.incrementAndGet();
@@ -219,7 +219,7 @@ public class FoiClassTransformer extends AbstractTransformer {
 
     private EntityProxy.Concept getParentConcept(String medicalSpecialty) {
         // Handle empty or null medical specialty
-        if (isEmptyOrNull(medicalSpecialty)) {
+        if (gudidUtility.isEmptyOrNull(medicalSpecialty)) {
             LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
             return EntityProxy.Concept.make(
                     PublicIds.of(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty")));
@@ -238,13 +238,11 @@ public class FoiClassTransformer extends AbstractTransformer {
     }
 
     private String getParentConceptName(String medicalSpecialty) {
-        if (isEmptyOrNull(medicalSpecialty)) {
+        if (gudidUtility.isEmptyOrNull(medicalSpecialty)) {
             return "Unknown Medical Specialty";
         }
         return gudidUtility.getMedicalSpecialtyFullName(medicalSpecialty);
     }
 
-    private boolean isEmptyOrNull(String value) {
-        return value == null || value.trim().isEmpty();
-    }
+
 }
