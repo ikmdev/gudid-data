@@ -4,24 +4,28 @@ import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
-
 import dev.ikm.tinkar.composer.template.AxiomSyntax;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
+import dev.ikm.tinkar.terms.TinkarTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.*;
-
-import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
+import java.util.stream.Stream;
 
 public class ProductCodeTransformer extends AbstractTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(ProductCodeTransformer.class.getSimpleName());
+
     // Column indices for ProductCodes.txt
     private static final int PRIMARY_DI = 0;
     private static final int PRODUCT_CODE = 1;
@@ -46,17 +50,14 @@ public class ProductCodeTransformer extends AbstractTransformer {
         LOG.info("Starting transformation of ProductCodes.txt file: " + inputFile.getName());
 
         EntityProxy.Concept author = gudidUtility.getAuthorConcept();
-        EntityProxy.Concept path = DEVELOPMENT_PATH;
+        EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
 
         AtomicInteger processedCount = new AtomicInteger(0);
         AtomicInteger skippedCount = new AtomicInteger(0);
 
-        // Use current time for all semantics
-        long currentTime = System.currentTimeMillis();
-
         // Group productCodes by PrimaryDI
-        Map<String, List<String>> primaryDiToProductCodes = new HashMap<>();
+        Map<String, Set<String>> primaryDiToProductCodes = new HashMap<>();
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) // skip header line
@@ -77,7 +78,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         }
 
                         primaryDiToProductCodes
-                                .computeIfAbsent(primaryDi, k -> new ArrayList<>())
+                                .computeIfAbsent(primaryDi, _ -> new HashSet<>())
                                 .add(productCode);
                     });
         } catch (IOException e) {
@@ -92,36 +93,27 @@ public class ProductCodeTransformer extends AbstractTransformer {
                 // Get device concept UUID from mapping (created by Device.txt transformer)
                 EntityProxy.Concept deviceConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, primaryDi)));
 
-                // Remove duplicates from product codes
-                List<String> uniqueProductCodes = productCodes.stream()
-                        .distinct()
-                        .collect(Collectors.toList());
-
                 // Get FDA product code concept UUIDs from mapping
-                List<UUID> fdaProductCodeUuids = new ArrayList<>();
-                for (String productCode : uniqueProductCodes) {
-                    UUID fdaProductCodeUuid = gudidUtility.getConceptByProductCode(productCode);
-                    if (fdaProductCodeUuid == null) {
-                        LOG.warn("No FDA product code concept mapping found for productCode: {} in PrimaryDI: {}",
-                                productCode, primaryDi);
-                        continue;
-                    }
-                    fdaProductCodeUuids.add(fdaProductCodeUuid);
-                }
+                List<UUID> fdaProductCodeUuids = productCodes.stream()
+                        .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
+                        .toList();
 
                 if (fdaProductCodeUuids.isEmpty()) {
-                    LOG.warn("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
+                    LOG.info("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
                     skippedCount.incrementAndGet();
                     return;
                 }
 
                 // Create session
-                Session session = composer.open(State.ACTIVE, currentTime, author, module, path);
+                Session session = composer.open(State.ACTIVE, author, module, path);
 
                 // Create stated definition semantic with OWL expression
                 createStatedDefinitionSemantic(session, deviceConcept, fdaProductCodeUuids);
 
-                processedCount.incrementAndGet();
+                if (processedCount.incrementAndGet() % 100000 == 0) {
+                    LOG.info("processedCount: {}", processedCount.get());
+                    composer.commitSession(session);
+                }
 
             } catch (Exception e) {
                 LOG.error("Error processing PrimaryDI: " + primaryDi, e);
@@ -163,18 +155,16 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
         if (fdaProductCodeUuids.size() == 1) {
             // Single product code
-            owlBuilder.append(":[").append(fdaProductCodeUuids.get(0)).append("])");
+            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
         } else {
             // Multiple product codes - use ObjectIntersectionOf
-            owlBuilder.append("ObjectIntersectionOf(");
-            for (int i = 0; i < fdaProductCodeUuids.size(); i++) {
-                owlBuilder.append(":[").append(fdaProductCodeUuids.get(i)).append("]");
-                if (i < fdaProductCodeUuids.size() - 1) {
-                    owlBuilder.append(" ");  // Space between concepts
-                }
+            owlBuilder.append(" ObjectIntersectionOf(");
+            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
+                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
             }
-            owlBuilder.append("))");
+            owlBuilder.append(") ");
         }
+        owlBuilder.append(")");
         return owlBuilder.toString();
     }
 

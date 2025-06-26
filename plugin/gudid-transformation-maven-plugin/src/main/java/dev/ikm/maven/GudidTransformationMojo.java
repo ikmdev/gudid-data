@@ -136,6 +136,7 @@ public class GudidTransformationMojo extends AbstractMojo {
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName(controllerName);
         PrimitiveData.start();
+        System.gc();
     }
 
     private void processFilesInOrder(File inputDirectory, Composer composer) {
