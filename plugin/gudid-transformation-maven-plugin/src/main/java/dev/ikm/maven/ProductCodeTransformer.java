@@ -99,7 +99,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         .toList();
 
                 if (fdaProductCodeUuids.isEmpty()) {
-                    LOG.info("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
+                    LOG.warn("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
                     skippedCount.incrementAndGet();
                     return;
                 }
