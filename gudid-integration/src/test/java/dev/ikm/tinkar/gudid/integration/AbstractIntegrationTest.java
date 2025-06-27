@@ -85,7 +85,8 @@ public abstract class AbstractIntegrationTest {
              BufferedWriter bw = new BufferedWriter(new FileWriter(errorFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.startsWith("REVIEW_PANEL")) continue;
+            	if (line.startsWith("PrimaryDI")) continue;
+            	if (line.startsWith("REVIEW_PANEL")) continue;
                 if (!assertLine(line.split("\\|", -1))) {
                     notFound++;
                     bw.write(line);
@@ -100,6 +101,10 @@ public abstract class AbstractIntegrationTest {
         return UuidT5Generator.get(UUID.fromString(namespaceString), "FDA_PRODUCT_CODE_" + id);
     }
 
+    protected UUID conceptUuidForPrimaryDi(String id) {
+        return UuidT5Generator.get(UUID.fromString(namespaceString), id);
+    }
+    
     protected abstract boolean assertLine(String[] columns);
 
 }
