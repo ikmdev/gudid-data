@@ -46,9 +46,9 @@ public class GudidTransformationMojo extends AbstractMojo {
     // Define processing order based on dependencies
     private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
             "foi/foiclass.txt",       // Creates FDA product code concepts first
-            "gudid/Device.txt",       // Creates device concepts and mappings
-            "gudid/Identifiers.txt",  // Uses device mappings
-            "gudid/ProductCodes.txt"  // Uses both device and FDA product code mappings
+            "gudid/device.txt",       // Creates device concepts and mappings
+            "gudid/identifiers.txt",  // Uses device mappings
+            "gudid/productCodes.txt"  // Uses both device and FDA product code mappings
     );
 
     public void execute() throws MojoExecutionException {
