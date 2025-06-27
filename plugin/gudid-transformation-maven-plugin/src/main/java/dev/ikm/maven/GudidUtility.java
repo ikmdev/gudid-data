@@ -2,6 +2,7 @@ package dev.ikm.maven;
 
 import dev.ikm.tinkar.common.id.PublicId;
 import dev.ikm.tinkar.common.id.PublicIds;
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,10 +23,7 @@ public class GudidUtility {
 
     private final UUID namespace;
 
-    // Runtime mappings for cross-file references
-    private final Map<String, UUID> primaryDIToPublicDeviceRecordKeyMapping = new ConcurrentHashMap<>();
-    private final Map<String, UUID> productCodeToConceptMapping = new ConcurrentHashMap<>();
-    private final Map<String, UUID> publicDeviceRecordKeyToConceptMapping = new ConcurrentHashMap<>();
+    private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     // Static mappings for medical specialties (abbreviation -> full name)
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new HashMap<>();
@@ -69,7 +68,6 @@ public class GudidUtility {
         return namespace;
     }
 
-    // Medical Specialty Mappings
     public String getMedicalSpecialtyFullName(String abbreviation) {
         String fullName = MEDICAL_SPECIALTY_MAPPINGS.get(abbreviation == null ? "" : abbreviation.trim());
         if (fullName == null) {
@@ -79,68 +77,19 @@ public class GudidUtility {
         return fullName;
     }
 
-    // Runtime mapping management for PrimaryDI to PublicDeviceRecordKey
-    public void addPrimaryDIMapping(String primaryDI, String publicDeviceRecordKey, UUID conceptUuid) {
-        if (primaryDI != null && !primaryDI.trim().isEmpty() &&
-                publicDeviceRecordKey != null && !publicDeviceRecordKey.trim().isEmpty()) {
-            primaryDIToPublicDeviceRecordKeyMapping.put(primaryDI.trim(), conceptUuid);
-            publicDeviceRecordKeyToConceptMapping.put(publicDeviceRecordKey.trim(), conceptUuid);
-            LOG.debug("Added mapping: PrimaryDI '{}' -> PublicDeviceRecordKey '{}' -> Concept '{}'",
-                    primaryDI, publicDeviceRecordKey, conceptUuid);
-        } else {
-            LOG.warn("Attempted to add invalid PrimaryDI mapping - primaryDI: '{}', publicDeviceRecordKey: '{}'",
-                    primaryDI, publicDeviceRecordKey);
-        }
-    }
-
-    public UUID getConceptByPrimaryDI(String primaryDI) {
-        if (primaryDI == null || primaryDI.trim().isEmpty()) {
-            return null;
-        }
-        return primaryDIToPublicDeviceRecordKeyMapping.get(primaryDI.trim());
-    }
-
-    public UUID getConceptByPublicDeviceRecordKey(String publicDeviceRecordKey) {
-        if (publicDeviceRecordKey == null || publicDeviceRecordKey.trim().isEmpty()) {
-            return null;
-        }
-        return publicDeviceRecordKeyToConceptMapping.get(publicDeviceRecordKey.trim());
-    }
-
-    // Product Code mappings
-    public void addProductCodeMapping(String productCode, UUID conceptUuid) {
-        if (productCode != null && !productCode.trim().isEmpty()) {
-            productCodeToConceptMapping.put(productCode.trim(), conceptUuid);
-            LOG.debug("Added product code mapping: '{}' -> '{}'", productCode, conceptUuid);
-        } else {
-            LOG.warn("Attempted to add invalid product code mapping - productCode: '{}'", productCode);
-        }
-    }
-
-    public UUID getConceptByProductCode(String productCode) {
-        if (productCode == null || productCode.trim().isEmpty()) {
-            return null;
-        }
-        return productCodeToConceptMapping.get(productCode.trim());
+    public Optional<UUID> getConceptByProductCode(String productCode) {
+       return productCodeToConceptMapping.computeIfAbsent(productCode, _ -> {
+           UUID conceptUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode);
+           if (EntityService.get().getEntity(PublicIds.of(conceptUuid)).isEmpty()) {
+               LOG.warn("Concept does not exist for FDA product code: {}", productCode);
+               return Optional.empty();
+           }
+           return Optional.of(conceptUuid);
+       });
     }
 
     public boolean isEmptyOrNull(String value) {
         return value == null || value.trim().isEmpty();
-    }
-
-    // Mapping status methods for debugging
-    public int getPrimaryDIMappingCount() {
-        return primaryDIToPublicDeviceRecordKeyMapping.size();
-    }
-
-    public int getProductCodeMappingCount() {
-        return productCodeToConceptMapping.size();
-    }
-
-    public void logMappingStatus() {
-        LOG.info("GUDID Utility Mapping Status:");
-        LOG.info("  PrimaryDI mappings: {}", getPrimaryDIMappingCount());
-        LOG.info("  Product Code mappings: {}", getProductCodeMappingCount());
     }
 
     public EntityProxy.Concept getAuthorConcept() {

@@ -140,7 +140,6 @@ public class FoiClassTransformer extends AbstractTransformer {
 
         LOG.info("Completed transformation of foiclass.txt. Processed: {}, Skipped: {}",
                 processedCount.get(), skippedCount.get());
-        gudidUtility.logMappingStatus();
     }
 
     private void createFdaProductCodeConcept(Session session, String medicalSpecialty,
@@ -170,9 +169,6 @@ public class FoiClassTransformer extends AbstractTransformer {
         // Create Regular Name semantic (PRODUCTCODE)
         createDescriptionSemantic(session, fdaProductCodeConcept, productCode,
                 REGULAR_NAME_DESCRIPTION_TYPE);
-
-        // Store mapping for use by ProductCodes.txt transformation
-        gudidUtility.addProductCodeMapping(productCode, conceptUuid);
 
         LOG.debug("Created FDA Product Code concept: '{}' ({}), Parent: {}",
                 deviceName, productCode, getParentConceptName(medicalSpecialty));

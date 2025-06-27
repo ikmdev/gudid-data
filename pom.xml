@@ -16,10 +16,10 @@
         <module>gudid-origin</module>
         <module>gudid-starterdata</module>
         <module>gudid-pipeline</module>
-<!--        <module>gudid-owl-transform</module> -->     
-<!--        <module>gudid-reasoner</module> -->   
+        <module>gudid-owl-transform</module>
+        <module>gudid-reasoner</module>
         <module>gudid-integration</module>
-<!--        <module>gudid-export</module>-->
+        <!--<module>gudid-export</module>-->
     </modules>
 
     <properties>
@@ -60,6 +60,8 @@
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
         <tinkar-starter-data.classifier>unreasoned-sa</tinkar-starter-data.classifier>
         <tinkar-starter-data.version>1.2.0</tinkar-starter-data.version>
+
+        <reasoner-type>ElkSnomedReasoner</reasoner-type>
     </properties>
     <dependencyManagement>
         <dependencies>
