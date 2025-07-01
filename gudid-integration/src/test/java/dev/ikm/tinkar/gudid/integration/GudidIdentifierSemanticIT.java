@@ -36,13 +36,13 @@ public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
     @Test
     public void testGudidIdentifierSemantics() throws IOException {
         String sourceFilePath = "../gudid-origin/target/origin-sources";
-        String errorFile = "target/failsafe-reports/gudid_concepts_not_found.txt";
+        String errorFile = "target/failsafe-reports/gudid_identifier_not_found.txt";
 
 //        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
         String absolutePath = findFilePath(sourceFilePath, "identifiers.txt"); //Unable to find 6987 foiclass.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <6987>
         int notFound = processFile(absolutePath, errorFile);
 
-        assertEquals(0, notFound, "Unable to find " + notFound + " Gudid Concept semantics for devices. Details written to " + errorFile);
+        assertEquals(0, notFound, "Unable to find " + notFound + " Gudid Identifier semantics for Devices. Details written to " + errorFile);
     }
 
     @Override
