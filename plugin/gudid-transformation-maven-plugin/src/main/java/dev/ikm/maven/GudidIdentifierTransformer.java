@@ -67,7 +67,7 @@ public class GudidIdentifierTransformer extends AbstractTransformer {
                     .pattern(TinkarTerm.IDENTIFIER_PATTERN)
                     .reference(concept)
                     .fieldValues(fieldValues -> fieldValues
-                            .with(gudidUtility.lookupDeviceIdIssuingAgencyConcept(deviceIdIssuingAgency))
+                            .with(GudidUtility.lookupDeviceIdIssuingAgencyConcept(deviceIdIssuingAgency))
                             .with(deviceId)
                     ));
         } catch (Exception e) {

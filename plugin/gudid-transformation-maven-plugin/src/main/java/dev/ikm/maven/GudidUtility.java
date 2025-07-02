@@ -113,7 +113,7 @@ public class GudidUtility {
         return CONCEPT_PUBLIC_DEVICE_RECORD_KEY;
     }
 
-    public EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
+    public static EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
         if (!DEVICE_ID_ISSUING_AGENCY_MAPPINGS.containsKey(deviceIdIssuingAgencyCode)) {
             throw new RuntimeException("No concept mapping for issuing agency code: " + deviceIdIssuingAgencyCode);
         }
