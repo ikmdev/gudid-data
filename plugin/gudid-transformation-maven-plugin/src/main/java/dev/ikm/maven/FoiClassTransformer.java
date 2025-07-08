@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import static dev.ikm.maven.GudidUtility.MEDICAL_SPECIALTY_CONCEPT_UUIDS;
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_PATTERN;
 import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
@@ -40,32 +41,6 @@ public class FoiClassTransformer extends AbstractTransformer {
     private static final int PRODUCT_CODE = 2;
     private static final int DEVICE_NAME = 3;
 
-
-    // Hard-coded UUIDs for parent medical specialty concepts (placeholders for now)
-    private static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new HashMap<>();
-
-    static {
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", UUID.fromString("0e0ac17d-61a3-4f57-af96-63bdb26a9a81"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", UUID.fromString("58019993-2366-4fae-8f1f-e7d480a4ab07"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Chemistry", UUID.fromString("6b786704-71c4-4983-ae51-d819031fdbad"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Dental", UUID.fromString("bcae0826-06ea-4cf4-8113-98ccaccfe8ae"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ear, Nose, & Throat", UUID.fromString("48ceb40c-425f-4141-ab26-9ac7d85aaf08"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Gastroenterology & Urology", UUID.fromString("08756535-fb8e-4686-afa9-f87a71a842dd"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General Hospital", UUID.fromString("6a6eb514-355a-4389-8bfd-f85a71b58ed2"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Hematology", UUID.fromString("67497cb4-81c2-4165-94d3-a88fb19b864a"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Immunology", UUID.fromString("adee041f-7900-4fea-9a30-6dc80346ecd6"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Microbiology", UUID.fromString("81ba5654-256d-4d2e-b24a-6099badc64d1"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Neurology", UUID.fromString("2d287625-f601-4ced-be31-076c415d4551"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Obstetrics/Gynecology", UUID.fromString("7f3aadb6-3efc-463f-aede-2171bab4c406"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ophthalmic", UUID.fromString("4b562be9-e4d1-4aea-ba5b-a2afadd70126"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Orthopedic", UUID.fromString("868c7147-d1aa-424e-9fa4-0185d7f5f935"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Pathology", UUID.fromString("448005cc-b2d8-4fd1-810a-6ed4a99593ba"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Physical Medicine", UUID.fromString("cacd07e6-e670-41df-a757-bd33bf950f37"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Radiology", UUID.fromString("064e60ee-a604-44fc-9e34-c0a4f0aac1b7"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General & Plastic Surgery", UUID.fromString("7ba1ba77-a9a2-45dc-936b-538a4c3e3a4b"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Toxicology", UUID.fromString("b7968a5c-717a-4526-9d07-3b8d69176286"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Unknown Medical Specialty", UUID.fromString("e6a71f02-1ae4-4b4f-a2ae-4fb11b9e1531"));
-    }
     public FoiClassTransformer(UUID namespace) {
         super(namespace);
     }
