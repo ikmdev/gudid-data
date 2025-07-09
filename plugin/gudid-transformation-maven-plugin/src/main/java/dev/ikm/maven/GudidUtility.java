@@ -17,9 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GudidUtility {
     private static final Logger LOG = LoggerFactory.getLogger(GudidUtility.class);
 
-    private static EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("0b8f6359-239d-4614-94aa-ae2b81761340"));
-    private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("dda306df-668c-438a-9377-bfaabd4f2a50"));
-    private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("bbba2d1c-1ea7-4ffa-8a8d-44a6f664db9a"));
+    private static EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("abcc8d16-6c3a-4d74-a83e-e766dcd6fe3d"));
+    private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
+    private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
 
     private final UUID namespace;
 
