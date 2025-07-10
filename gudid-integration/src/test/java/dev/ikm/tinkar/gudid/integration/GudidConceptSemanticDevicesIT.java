@@ -26,7 +26,7 @@ public class GudidConceptSemanticDevicesIT extends AbstractIntegrationTest {
     @Test
     public void testGudidConceptSemanticsDevices() throws IOException {
         String sourceFilePath = "../gudid-origin/target/origin-sources";
-        String errorFile = "target/failsafe-reports/gudid_concepts_not_found.txt";
+        String errorFile = "target/failsafe-reports/gudid_concepts_devices_not_found.txt";
 
 //        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
         String absolutePath = findFilePath(sourceFilePath, "device.txt"); //Unable to find 6987 foiclass.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <6987>
