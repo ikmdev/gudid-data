@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -28,6 +31,10 @@ public abstract class AbstractIntegrationTest {
 //    static String gudIdFileName;
     static long timeForStamp;
 
+    static Map<String, Set<String>> primaryDiToProductCodes;
+    static String previousPrimaryDi = "";
+    static Set<String> productCodes;
+    
     @AfterAll
     public static void shutdown() {
         PrimitiveData.stop();
@@ -43,6 +50,8 @@ public abstract class AbstractIntegrationTest {
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
         PrimitiveData.start();
 //        gudIdFileName = System.getProperty("source.zip"); // property set in pom.xml
+        
+        productCodes = null;
     }
 
     /**

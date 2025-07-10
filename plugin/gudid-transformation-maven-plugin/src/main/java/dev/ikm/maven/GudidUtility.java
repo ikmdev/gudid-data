@@ -21,9 +21,9 @@ public class GudidUtility {
     private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
     private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
 
-    private final UUID namespace;
+    private static UUID namespace;
 
-    private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
+    private final static Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     // Static mappings for medical specialties (abbreviation -> full name)
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
@@ -101,7 +101,7 @@ public class GudidUtility {
         return fullName;
     }
 
-    public Optional<UUID> getConceptByProductCode(String productCode) {
+    public static Optional<UUID> getConceptByProductCode(String productCode) {
        return productCodeToConceptMapping.computeIfAbsent(productCode, _ -> {
            UUID conceptUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode);
            if (EntityService.get().getEntity(PublicIds.of(conceptUuid)).isEmpty()) {
