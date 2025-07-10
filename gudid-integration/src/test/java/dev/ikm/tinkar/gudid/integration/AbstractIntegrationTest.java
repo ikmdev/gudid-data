@@ -1,5 +1,6 @@
 package dev.ikm.tinkar.gudid.integration;
 
+import dev.ikm.maven.GudidUtility;
 import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
@@ -34,6 +35,8 @@ public abstract class AbstractIntegrationTest {
     static Map<String, Set<String>> primaryDiToProductCodes;
     static String previousPrimaryDi = "";
     static Set<String> productCodes;
+    GudidUtility gudidUtilityWithNameSpace = new GudidUtility(UUID.fromString(namespaceString));
+    
     
     @AfterAll
     public static void shutdown() {

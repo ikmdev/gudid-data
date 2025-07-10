@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -101,7 +102,7 @@ public class GudidUtility {
         return fullName;
     }
 
-    public static Optional<UUID> getConceptByProductCode(String productCode) {
+    public Optional<UUID> getConceptByProductCode(String productCode) {
        return productCodeToConceptMapping.computeIfAbsent(productCode, _ -> {
            UUID conceptUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode);
            if (EntityService.get().getEntity(PublicIds.of(conceptUuid)).isEmpty()) {
@@ -148,4 +149,23 @@ public class GudidUtility {
         return EntityProxy.Concept.make(issuingAgencyUuid);
     }
 
+    public String buildOwlExpression(EntityProxy.Concept deviceConceptUuid, List<UUID> fdaProductCodeUuids) {
+        StringBuilder owlBuilder = new StringBuilder();
+
+        owlBuilder.append("SubClassOf(:[").append(deviceConceptUuid.publicId().asUuidArray()[0]).append("]");
+
+        if (fdaProductCodeUuids.size() == 1) {
+            // Single product code
+            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
+        } else {
+            // Multiple product codes - use ObjectIntersectionOf
+            owlBuilder.append(" ObjectIntersectionOf(");
+            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
+                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
+            }
+            owlBuilder.append(") ");
+        }
+        owlBuilder.append(")");
+        return owlBuilder.toString();
+    }
 }

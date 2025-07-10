@@ -30,7 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GudidIStatedDefinitionSemanticIT extends AbstractIntegrationTest {
+public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 
     /**
      * Test GudidConcepts Semantics.
@@ -51,6 +51,7 @@ public class GudidIStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 
     @Override
     protected boolean assertLine(String[] columns) {
+    	
     	
     	AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
     	
@@ -78,10 +79,10 @@ public class GudidIStatedDefinitionSemanticIT extends AbstractIntegrationTest {
             if(!previousPrimaryDi.equals("")) {
                 // Get FDA product code concept UUIDs from mapping
                 fdaProductCodeUuids = productCodes.stream()
-                        .flatMap(productCode -> GudidUtility.getConceptByProductCode(productCode).stream())
+                        .flatMap(productCode -> gudidUtilityWithNameSpace.getConceptByProductCode(productCode).stream())
                         .toList();
                 
-        		String owlExpression = buildOwlExpression(concept, fdaProductCodeUuids);
+        		String owlExpression = gudidUtilityWithNameSpace.buildOwlExpression(concept, fdaProductCodeUuids);
         		
         		EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(), TinkarTerm.OWL_AXIOM_SYNTAX_PATTERN.nid(), semanticEntity -> {
         			Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
@@ -105,25 +106,4 @@ public class GudidIStatedDefinitionSemanticIT extends AbstractIntegrationTest {
         
 		return matchedOwlExpression.get();
     }
-
-    private String buildOwlExpression(EntityProxy.Concept deviceConceptUuid, List<UUID> fdaProductCodeUuids) {
-        StringBuilder owlBuilder = new StringBuilder();
-
-        owlBuilder.append("SubClassOf(:[").append(deviceConceptUuid.publicId().asUuidArray()[0]).append("]");
-
-        if (fdaProductCodeUuids.size() == 1) {
-            // Single product code
-            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
-        } else {
-            // Multiple product codes - use ObjectIntersectionOf
-            owlBuilder.append(" ObjectIntersectionOf(");
-            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
-                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
-            }
-            owlBuilder.append(") ");
-        }
-        owlBuilder.append(")");
-        return owlBuilder.toString();
-    }
-
 }
