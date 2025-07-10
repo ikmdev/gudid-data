@@ -63,7 +63,7 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
             Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
 
             if (latestActive.isPresent()) {
-                String description = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION, latestActive.get());
+                String description = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.TEXT_FOR_DESCRIPTION, latestActive.get());
                 Component descriptionNotCaseSensitive = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_CASE_SIGNIFICANCE, latestActive.get());
                 Component descriptionType = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_TYPE, latestActive.get());
 
