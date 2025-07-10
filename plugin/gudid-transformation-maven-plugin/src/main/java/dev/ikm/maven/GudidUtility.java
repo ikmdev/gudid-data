@@ -21,7 +21,7 @@ public class GudidUtility {
     private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
     private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
 
-    private UUID namespace;
+    private static UUID namespace;
 
     private final static Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
