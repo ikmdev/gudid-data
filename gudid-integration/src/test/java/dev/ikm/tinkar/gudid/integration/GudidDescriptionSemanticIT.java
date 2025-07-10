@@ -9,8 +9,6 @@ import dev.ikm.tinkar.coordinate.stamp.StateSet;
 import dev.ikm.tinkar.coordinate.stamp.calculator.Latest;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculator;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculatorWithCache;
-import dev.ikm.tinkar.entity.ConceptRecord;
-import dev.ikm.tinkar.entity.ConceptVersionRecord;
 import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.entity.PatternEntityVersion;
 import dev.ikm.tinkar.entity.SemanticEntityVersion;
@@ -23,7 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
-import static dev.ikm.tinkar.terms.TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE;
 import static dev.ikm.tinkar.terms.TinkarTerm.REGULAR_NAME_DESCRIPTION_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,7 +29,7 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
     /**
      * Test GudidDescription Semantics.
      *
-     * @result Reads content from file and validates Concept of Semantics by calling private method assertLine().
+     * @result Reads content from file and validates Description of Semantics by calling private method assertLine().
      */
     @Test
     public void testGudidDescriptionSemantics() throws IOException {
@@ -67,7 +64,7 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
 
             if (latestActive.isPresent()) {
                 String description = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION, latestActive.get());
-                Component descriptionNotCaseSensitive = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE, latestActive.get());
+                Component descriptionNotCaseSensitive = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_CASE_SIGNIFICANCE, latestActive.get());
                 Component descriptionType = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_TYPE, latestActive.get());
 
                 if (description.equals(productCode)
