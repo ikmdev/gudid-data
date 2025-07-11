@@ -24,7 +24,7 @@ public class GudidUtility {
 
     private final UUID namespace;
 
-    private final static Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
+    private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     // Static mappings for medical specialties (abbreviation -> full name)
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
