@@ -29,14 +29,13 @@ import java.util.stream.Stream;
 public abstract class AbstractIntegrationTest {
     Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
     static String namespaceString;
+    static GudidUtility gudidUtilityWithNameSpace;
 //    static String gudIdFileName;
     static long timeForStamp;
 
     static Map<String, Set<String>> primaryDiToProductCodes;
     static String previousPrimaryDi = "";
     static Set<String> productCodes;
-    GudidUtility gudidUtilityWithNameSpace = new GudidUtility(UUID.fromString(namespaceString));
-    
     
     @AfterAll
     public static void shutdown() {
@@ -48,6 +47,7 @@ public abstract class AbstractIntegrationTest {
         CachingService.clearAll();
         //Note. Dataset needed to be generated within repo, with command 'mvn clean install'
         namespaceString = System.getProperty("origin.namespace"); // property set in pom.xml
+        gudidUtilityWithNameSpace = new GudidUtility(UUID.fromString(namespaceString));
         File datastore = new File(System.getProperty("datastorePath")); // property set in pom.xml
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
