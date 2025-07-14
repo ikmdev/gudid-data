@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public abstract class AbstractIntegrationTest {
@@ -35,7 +36,9 @@ public abstract class AbstractIntegrationTest {
 
     static Map<String, Set<String>> primaryDiToProductCodes;
     static String previousPrimaryDi = "";
+    static String previousProductCode = "";
     static Set<String> productCodes;
+    AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
     
     @AfterAll
     public static void shutdown() {
