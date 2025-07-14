@@ -45,10 +45,10 @@ public class GudidTransformationMojo extends AbstractMojo {
 
     // Define processing order based on dependencies
     private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
-            "foi/foiclass.txt",       // Creates FDA product code concepts first
-            "gudid/device.txt",       // Creates device concepts and mappings
-            "gudid/identifiers.txt",  // Uses device mappings
-            "gudid/productCodes.txt"  // Uses both device and FDA product code mappings
+            "foi/foiclass.txt",
+            "gudid/productCodes.txt",
+            "gudid/identifiers.txt",
+            "gudid/device.txt"
     );
 
     public void execute() throws MojoExecutionException {
@@ -117,8 +117,9 @@ public class GudidTransformationMojo extends AbstractMojo {
 
         EntityService.get().beginLoadPhase();
         try {
+            GudidUtility gudidUtility = new GudidUtility(namespace);
             Composer composer = new Composer("GUDID Transformer Composer");
-            processFilesInOrder(inputDirectory, composer);
+            processFilesInOrder(inputDirectory, composer, gudidUtility);
             composer.commitAllSessions();
             LOG.info("GUDID transformation completed successfully");
         } catch (Exception e) {
@@ -138,22 +139,22 @@ public class GudidTransformationMojo extends AbstractMojo {
         PrimitiveData.start();
     }
 
-    private void processFilesInOrder(File inputDirectory, Composer composer) {
+    private void processFilesInOrder(File inputDirectory, Composer composer, GudidUtility gudidUtility) {
         LOG.info("Processing GUDID files in dependency order...");
 
         for (String fileName : FILE_PROCESSING_ORDER) {
             File file = new File(inputDirectory, fileName);
             if (file.exists() && file.isFile()) {
-                processIndividualFile(file, composer);
+                processIndividualFile(file, composer, gudidUtility);
             } else {
                 LOG.warn("Skipping missing file: " + fileName);
             }
         }
     }
 
-    private void processIndividualFile(File file, Composer composer) {
+    private void processIndividualFile(File file, Composer composer, GudidUtility gudidUtility) {
         String fileName = file.getName();
-        Transformer transformer = getTransformer(fileName);
+        Transformer transformer = getTransformer(fileName, gudidUtility);
 
         if (transformer != null) {
             LOG.info("### Transformer Starting for file: " + fileName);
@@ -170,17 +171,17 @@ public class GudidTransformationMojo extends AbstractMojo {
      * @param fileName File name to match against transformers
      * @return Transformer instance or null if no match found
      */
-    private Transformer getTransformer(String fileName) {
+    private Transformer getTransformer(String fileName, GudidUtility gudidUtility) {
         String lowerFileName = fileName.toLowerCase();
 
         if (lowerFileName.contains("foiclass.txt")) {
-            return new FoiClassTransformer(namespace);
+            return new FoiClassTransformer(gudidUtility);
         } else if (lowerFileName.contains("device.txt")) {
-            return new DeviceTransformer(namespace);
+            return new DeviceTransformer(gudidUtility);
         } else if (lowerFileName.contains("identifiers.txt")) {
-            return new GudidIdentifierTransformer(namespace);
+            return new GudidIdentifierTransformer(gudidUtility);
         } else if (lowerFileName.contains("productcodes.txt")) {
-            return new ProductCodeTransformer(namespace);
+            return new ProductCodeTransformer(gudidUtility);
         }
 
         return null;

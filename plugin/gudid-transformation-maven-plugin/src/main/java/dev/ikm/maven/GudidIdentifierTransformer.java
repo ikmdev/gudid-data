@@ -25,8 +25,8 @@ public class GudidIdentifierTransformer extends AbstractTransformer {
     private static final int DEVICE_ID = 1;
     private static final int DEVICE_ID_ISSUING_AGENCY = 3;
 
-    public GudidIdentifierTransformer(UUID namespace) {
-        super(namespace);
+    public GudidIdentifierTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     @Override

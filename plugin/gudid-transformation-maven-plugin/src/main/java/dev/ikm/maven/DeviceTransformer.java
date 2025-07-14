@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -32,8 +31,8 @@ public class DeviceTransformer extends AbstractTransformer {
     private static final int BRAND_NAME = 9;
     private static final int VERSION_MODEL_NUMBER = 10;
 
-    public DeviceTransformer(UUID namespace) {
-        super(namespace);
+    public DeviceTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     /**

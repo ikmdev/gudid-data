@@ -31,14 +31,15 @@ public class ProductCodeTransformer extends AbstractTransformer {
     private static final int PRODUCT_CODE = 1;
     private static final int PRODUCT_CODE_NAME = 2;
 
-    public ProductCodeTransformer(UUID namespace) {
-        super(namespace);
+    public ProductCodeTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     /**
      * Transforms ProductCodes.txt file into stated definition semantics
+     *
      * @param inputFile ProductCodes.txt input file
-     * @param composer Composer for creating semantics
+     * @param composer  Composer for creating semantics
      */
     @Override
     public void transform(File inputFile, Composer composer) {
