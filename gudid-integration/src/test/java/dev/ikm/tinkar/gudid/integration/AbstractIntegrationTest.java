@@ -34,7 +34,6 @@ public abstract class AbstractIntegrationTest {
 //    static String gudIdFileName;
     static long timeForStamp;
 
-    static Map<String, Set<String>> primaryDiToProductCodes;
     static String previousPrimaryDi = "";
     static String previousProductCode = "";
     static Set<String> productCodes;
