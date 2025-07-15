@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -32,8 +31,8 @@ public class DeviceTransformer extends AbstractTransformer {
     private static final int BRAND_NAME = 9;
     private static final int VERSION_MODEL_NUMBER = 10;
 
-    public DeviceTransformer(UUID namespace) {
-        super(namespace);
+    public DeviceTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     /**
@@ -51,6 +50,7 @@ public class DeviceTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\\|"))
+                    .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI]))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
                         long time = LocalDate.parse(data[DEVICE_PUBLISH_DATE]).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
@@ -83,7 +83,7 @@ public class DeviceTransformer extends AbstractTransformer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            LOG.debug("conceptCount: {}", conceptCount.get());
+            LOG.info("conceptCount: {}", conceptCount.get());
         }
     }
 

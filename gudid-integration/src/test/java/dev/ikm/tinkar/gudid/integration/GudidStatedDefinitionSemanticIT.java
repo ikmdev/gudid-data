@@ -1,8 +1,6 @@
 package dev.ikm.tinkar.gudid.integration;
 
-import dev.ikm.maven.GudidUtility;
 import dev.ikm.tinkar.common.id.PublicIds;
-import dev.ikm.tinkar.component.Component;
 import dev.ikm.tinkar.coordinate.Calculators;
 import dev.ikm.tinkar.coordinate.Coordinates;
 import dev.ikm.tinkar.coordinate.stamp.StampCoordinateRecord;
@@ -10,8 +8,6 @@ import dev.ikm.tinkar.coordinate.stamp.StateSet;
 import dev.ikm.tinkar.coordinate.stamp.calculator.Latest;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculator;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculatorWithCache;
-import dev.ikm.tinkar.entity.ConceptRecord;
-import dev.ikm.tinkar.entity.ConceptVersionRecord;
 import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.entity.PatternEntityVersion;
 import dev.ikm.tinkar.entity.SemanticEntityVersion;
@@ -21,16 +17,18 @@ import dev.ikm.tinkar.terms.TinkarTerm;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
+	String previousPrimaryDi = "";
+	String previousProductCode = "";
+	Set<String> productCodes;
+	AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
 
 	/**
 	 * Test GudidConcepts Semantics.
@@ -58,7 +56,12 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 	@Override
 	protected boolean assertLine(String[] columns) {
 
-		//AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
+		String primaryDi = columns[0];
+		String productCodeColumn = columns[1];
+
+		if (!gudidUtility.isDeviceIncluded(primaryDi, productCodeColumn)) {
+			return true;
+		}
 
 		StateSet stateActive = StateSet.ACTIVE;
 
@@ -67,9 +70,6 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 
 		StampCalculator stampCalcActive = StampCalculatorWithCache
 				.getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
-
-		String primaryDi = columns[0];
-		String productCodeColumn = columns[1];
 
 		if (previousPrimaryDi.equals("")) {
 			previousPrimaryDi = primaryDi;
@@ -92,10 +92,10 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 
 			// Get FDA product code concept UUIDs from mapping
 			fdaProductCodeUuids = productCodes.stream()
-					.flatMap(productCode -> gudidUtilityWithNameSpace.getConceptByProductCode(productCode).stream())
+					.flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
 					.toList();
 
-			String owlExpression = gudidUtilityWithNameSpace.buildOwlExpression(concept, fdaProductCodeUuids);
+			String owlExpression = gudidUtility.buildOwlExpression(concept, fdaProductCodeUuids);
 
 			EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(),
 					TinkarTerm.OWL_AXIOM_SYNTAX_PATTERN.nid(), semanticEntity -> {

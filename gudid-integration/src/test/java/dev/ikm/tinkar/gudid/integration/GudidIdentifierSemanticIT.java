@@ -10,14 +10,11 @@ import dev.ikm.tinkar.coordinate.stamp.StateSet;
 import dev.ikm.tinkar.coordinate.stamp.calculator.Latest;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculator;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculatorWithCache;
-import dev.ikm.tinkar.entity.ConceptRecord;
-import dev.ikm.tinkar.entity.ConceptVersionRecord;
 import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.entity.PatternEntityVersion;
 import dev.ikm.tinkar.entity.SemanticEntityVersion;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.TinkarTerm;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -38,8 +35,7 @@ public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
         String sourceFilePath = "../gudid-origin/target/origin-sources";
         String errorFile = "target/failsafe-reports/gudid_identifier_not_found.txt";
 
-//        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
-        String absolutePath = findFilePath(sourceFilePath, "identifiers.txt"); //Unable to find 6987 foiclass.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <6987>
+        String absolutePath = findFilePath(sourceFilePath, "identifiers.txt");
         int notFound = processFile(absolutePath, errorFile);
 
         assertEquals(0, notFound, "Unable to find " + notFound + " Gudid Identifier semantics for Devices. Details written to " + errorFile);
@@ -47,6 +43,12 @@ public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
 
     @Override
     protected boolean assertLine(String[] columns) {
+        String primaryDi = columns[0];
+
+        if (!gudidUtility.isDeviceIncluded(primaryDi)) {
+            return true;
+        }
+
     	int deviceIssuingAgencyCount = 0;
     	AtomicInteger innerDeviceIssuingAgencyCount = new AtomicInteger(0);
     	
@@ -61,8 +63,7 @@ public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
 		
         StampCalculator stampCalcActive = StampCalculatorWithCache
 	               .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
-		
-        String primaryDi = columns[0];
+
         UUID conceptUuid = conceptUuidForPrimaryDi(primaryDi);
         
 		EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));

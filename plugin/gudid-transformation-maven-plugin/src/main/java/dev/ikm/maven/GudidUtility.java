@@ -8,31 +8,33 @@ import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GudidUtility {
     private static final Logger LOG = LoggerFactory.getLogger(GudidUtility.class);
 
-    private static EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("abcc8d16-6c3a-4d74-a83e-e766dcd6fe3d"));
-    private static EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
-    private static EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
+    private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("abcc8d16-6c3a-4d74-a83e-e766dcd6fe3d"));
+    private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
+    private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
 
-    private final UUID namespace;
+    // Specify medical specialties to include in Device transformation
+    private static final Set<String> INCLUDED_MEDICAL_SPECIALTIES = Set.of("CV", "CH", "TX", "HE", "IM", "MI", "PA");
 
-    private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
-
-    // Static mappings for medical specialties (abbreviation -> full name)
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
-
-    // Static mappings for device ID issuing agencies
     private static final Map<String, UUID> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
-
-    // Hard-coded UUIDs for parent medical specialty concepts (placeholders for now)
     static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new LinkedHashMap<>();
 
     static {
@@ -85,8 +87,57 @@ public class GudidUtility {
         DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("NDC/NHRIC", UUID.fromString("f363ef10-4c50-410f-9aa0-95ceef14c658"));
     }
 
+    private final UUID namespace;
+    private final String basePath;
+    private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
+
+    private Map<String, Set<String>> devicesByProductCode;
+    private Map<String, String> productCodeToMedicalSpecialty;
+
     public GudidUtility(UUID namespace) {
+        this(namespace, ".");
+    }
+
+    public GudidUtility(UUID namespace, String basePath) {
         this.namespace = namespace;
+        this.basePath = basePath;
+        initializeDeviceProductCodeMap();
+    }
+
+    private void initializeDeviceProductCodeMap() {
+        try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
+             Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
+
+            devicesByProductCode = productCodes.map(row -> row.split("\\|"))
+                    .collect(Collectors.groupingBy(row -> row[0],
+                            Collectors.mapping(row -> row[1], Collectors.toSet())));
+
+            productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
+                    .filter(row -> INCLUDED_MEDICAL_SPECIALTIES.contains(row[1]))
+                    .collect(Collectors.toMap(row -> row[2], row -> row[1]));
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public boolean isMedicalSpecialtyIncluded(String medicalSpecialty, String productCode) {
+        return medicalSpecialty.equals(productCodeToMedicalSpecialty.get(productCode));
+    }
+
+    public boolean isDeviceIncluded(String primaryDi) {
+        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+                .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
+                .distinct().count();
+        return count > 0;
+    }
+
+    public boolean isDeviceIncluded(String primaryDi, String productCode) {
+        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+                .filter(code -> code.equals(productCode))
+                .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
+                .distinct().count();
+        return count > 0;
     }
 
     public UUID getNamespace() {
@@ -103,14 +154,14 @@ public class GudidUtility {
     }
 
     public Optional<UUID> getConceptByProductCode(String productCode) {
-       return productCodeToConceptMapping.computeIfAbsent(productCode, _ -> {
-           UUID conceptUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode);
-           if (EntityService.get().getEntity(PublicIds.of(conceptUuid)).isEmpty()) {
-               LOG.warn("Concept does not exist for FDA product code: {}", productCode);
-               return Optional.empty();
-           }
-           return Optional.of(conceptUuid);
-       });
+        return productCodeToConceptMapping.computeIfAbsent(productCode, _ -> {
+            UUID conceptUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode);
+            if (EntityService.get().getEntity(PublicIds.of(conceptUuid)).isEmpty()) {
+                LOG.warn("Concept does not exist for FDA product code: {}", productCode);
+                return Optional.empty();
+            }
+            return Optional.of(conceptUuid);
+        });
     }
 
     public boolean isEmptyOrNull(String value) {
@@ -168,4 +219,5 @@ public class GudidUtility {
         owlBuilder.append(")");
         return owlBuilder.toString();
     }
+
 }

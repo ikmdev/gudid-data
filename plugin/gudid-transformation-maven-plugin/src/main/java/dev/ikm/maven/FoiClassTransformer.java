@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -41,8 +39,8 @@ public class FoiClassTransformer extends AbstractTransformer {
     private static final int PRODUCT_CODE = 2;
     private static final int DEVICE_NAME = 3;
 
-    public FoiClassTransformer(UUID namespace) {
-        super(namespace);
+    public FoiClassTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     /**
@@ -72,6 +70,7 @@ public class FoiClassTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath(), Charset.forName("windows-1252"))) {
             lines.skip(1) // skip header line
                     .map(row -> row.split("\\|", -1)) // -1 to preserve empty trailing fields
+                    .filter(data -> gudidUtility.isMedicalSpecialtyIncluded(data[MEDICAL_SPECIALTY], data[PRODUCT_CODE]))
                     .forEach(data -> {
                         try {
                             if (data.length < 4) {

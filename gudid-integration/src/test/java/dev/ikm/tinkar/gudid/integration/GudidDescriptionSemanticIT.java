@@ -44,14 +44,15 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
 
     @Override
     protected boolean assertLine(String[] columns) {
+        String medicalSpecialty = columns[1];
         String productCode = columns[2];
-        String deviceName = columns[3];
+        if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialty, productCode)) {
+            return true;
+        }
         UUID conceptUuid = conceptUuid(productCode);
         StateSet stateActive = StateSet.ACTIVE;
         StampCalculator stampCalcActive = StampCalculatorWithCache
                 .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
-//        ConceptRecord entity = EntityService.get().getEntityFast(conceptUuid);
-//        Latest<ConceptVersionRecord> latest = stampCalcActive.latest(entity);
 
         EntityProxy.Concept fdaProductCodeConcept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
         PatternEntityVersion latestDescriptionPattern = (PatternEntityVersion) Calculators.Stamp.DevelopmentLatest().latest(TinkarTerm.DESCRIPTION_PATTERN).get();
