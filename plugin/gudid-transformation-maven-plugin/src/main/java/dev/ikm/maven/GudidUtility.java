@@ -88,19 +88,25 @@ public class GudidUtility {
     }
 
     private final UUID namespace;
+    private final String basePath;
     private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
 
     public GudidUtility(UUID namespace) {
+        this(namespace, ".");
+    }
+
+    public GudidUtility(UUID namespace, String basePath) {
         this.namespace = namespace;
+        this.basePath = basePath;
         initializeDeviceProductCodeMap();
     }
 
     private void initializeDeviceProductCodeMap() {
-        try (Stream<String> productCodes = Files.lines(Path.of("gudid-origin\\target\\origin-sources\\gudid\\productCodes.txt"));
-             Stream<String> foiClass = Files.lines(Path.of("gudid-origin\\target\\origin-sources\\foi\\foiclass.txt"), Charset.forName("windows-1252"))) {
+        try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
+             Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
 
             devicesByProductCode = productCodes.map(row -> row.split("\\|"))
                     .collect(Collectors.groupingBy(row -> row[0],
@@ -213,4 +219,5 @@ public class GudidUtility {
         owlBuilder.append(")");
         return owlBuilder.toString();
     }
+
 }

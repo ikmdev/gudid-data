@@ -130,7 +130,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
     private void createStatedDefinitionSemantic(Session session, EntityProxy.Concept deviceConcept, List<UUID> fdaProductCodeUuids) {
 
         // Generate OWL expression
-        String owlExpression = buildOwlExpression(deviceConcept, fdaProductCodeUuids);
+        String owlExpression = gudidUtility.buildOwlExpression(deviceConcept, fdaProductCodeUuids);
 
         // Create semantic UUID based on device concept and OWL expression
         EntityProxy.Semantic axiomSemantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace, deviceConcept.publicId().asUuidArray()[0] + "AXIOM")));
@@ -148,26 +148,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
         } catch (Exception e) {
             LOG.error("Error creating stated definition semantic for device concept: " + deviceConcept, e);
         }
-    }
-
-    private String buildOwlExpression(EntityProxy.Concept deviceConceptUuid, List<UUID> fdaProductCodeUuids) {
-        StringBuilder owlBuilder = new StringBuilder();
-
-        owlBuilder.append("SubClassOf(:[").append(deviceConceptUuid.publicId().asUuidArray()[0]).append("]");
-
-        if (fdaProductCodeUuids.size() == 1) {
-            // Single product code
-            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
-        } else {
-            // Multiple product codes - use ObjectIntersectionOf
-            owlBuilder.append(" ObjectIntersectionOf(");
-            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
-                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
-            }
-            owlBuilder.append(") ");
-        }
-        owlBuilder.append(")");
-        return owlBuilder.toString();
     }
 
 }

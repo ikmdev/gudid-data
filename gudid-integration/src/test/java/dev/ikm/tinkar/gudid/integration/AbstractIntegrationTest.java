@@ -20,24 +20,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public abstract class AbstractIntegrationTest {
-    Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+    static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
     static String namespaceString;
-    static GudidUtility gudidUtilityWithNameSpace;
-//    static String gudIdFileName;
-    static long timeForStamp;
-
-    static String previousPrimaryDi = "";
-    static String previousProductCode = "";
-    static Set<String> productCodes;
-    AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
+    static GudidUtility gudidUtility;
     
     @AfterAll
     public static void shutdown() {
@@ -49,14 +38,11 @@ public abstract class AbstractIntegrationTest {
         CachingService.clearAll();
         //Note. Dataset needed to be generated within repo, with command 'mvn clean install'
         namespaceString = System.getProperty("origin.namespace"); // property set in pom.xml
-        gudidUtilityWithNameSpace = new GudidUtility(UUID.fromString(namespaceString));
+        gudidUtility = new GudidUtility(UUID.fromString(namespaceString), "..");
         File datastore = new File(System.getProperty("datastorePath")); // property set in pom.xml
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
         PrimitiveData.start();
-//        gudIdFileName = System.getProperty("source.zip"); // property set in pom.xml
-        
-        productCodes = null;
     }
 
     /**
