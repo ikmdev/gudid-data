@@ -141,20 +141,6 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 		String[] elementsForOwl2 = owl1.replace("SubClassOf(:", "").replace("ObjectIntersectionOf(", "")
 				.replace(")", "").split(":");
 
-		boolean match = false;
-		for (String element1 : elementsForOwl1) {
-			for (String element2 : elementsForOwl2) {
-				if (element1.equals(element2)) {
-					match = true;
-					break;
-				}
-			}
-
-			if (match == false) {
-				break;
-			}
-		}
-
-		return match;
+		return Set.of(elementsForOwl1).equals(Set.of(elementsForOwl2));
 	}
 }
