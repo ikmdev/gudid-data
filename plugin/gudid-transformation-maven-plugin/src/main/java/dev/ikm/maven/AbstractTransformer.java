@@ -6,9 +6,9 @@ public abstract class AbstractTransformer implements Transformer {
     protected final UUID namespace;
     protected final GudidUtility gudidUtility;
 
-    AbstractTransformer(UUID namespace) {
-        this.namespace = namespace;
-        this.gudidUtility = new GudidUtility(namespace);
+    AbstractTransformer(GudidUtility gudidUtility) {
+        this.gudidUtility = gudidUtility;
+        this.namespace = gudidUtility.getNamespace();
     }
 
     @Override

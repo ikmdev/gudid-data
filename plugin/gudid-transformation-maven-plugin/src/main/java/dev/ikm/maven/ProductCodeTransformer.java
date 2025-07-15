@@ -31,14 +31,15 @@ public class ProductCodeTransformer extends AbstractTransformer {
     private static final int PRODUCT_CODE = 1;
     private static final int PRODUCT_CODE_NAME = 2;
 
-    public ProductCodeTransformer(UUID namespace) {
-        super(namespace);
+    public ProductCodeTransformer(GudidUtility gudidUtility) {
+        super(gudidUtility);
     }
 
     /**
      * Transforms ProductCodes.txt file into stated definition semantics
+     *
      * @param inputFile ProductCodes.txt input file
-     * @param composer Composer for creating semantics
+     * @param composer  Composer for creating semantics
      */
     @Override
     public void transform(File inputFile, Composer composer) {
@@ -62,6 +63,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) // skip header line
                     .map(row -> row.split("\\|", -1))
+                    .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI], data[PRODUCT_CODE]))
                     .forEach(data -> {
                         if (data.length < 3) {
                             LOG.warn("Insufficient columns in row, expected at least 3, got {}: {}",
@@ -128,7 +130,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
     private void createStatedDefinitionSemantic(Session session, EntityProxy.Concept deviceConcept, List<UUID> fdaProductCodeUuids) {
 
         // Generate OWL expression
-        String owlExpression = buildOwlExpression(deviceConcept, fdaProductCodeUuids);
+        String owlExpression = gudidUtility.buildOwlExpression(deviceConcept, fdaProductCodeUuids);
 
         // Create semantic UUID based on device concept and OWL expression
         EntityProxy.Semantic axiomSemantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace, deviceConcept.publicId().asUuidArray()[0] + "AXIOM")));
@@ -146,26 +148,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
         } catch (Exception e) {
             LOG.error("Error creating stated definition semantic for device concept: " + deviceConcept, e);
         }
-    }
-
-    private String buildOwlExpression(EntityProxy.Concept deviceConceptUuid, List<UUID> fdaProductCodeUuids) {
-        StringBuilder owlBuilder = new StringBuilder();
-
-        owlBuilder.append("SubClassOf(:[").append(deviceConceptUuid.publicId().asUuidArray()[0]).append("]");
-
-        if (fdaProductCodeUuids.size() == 1) {
-            // Single product code
-            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
-        } else {
-            // Multiple product codes - use ObjectIntersectionOf
-            owlBuilder.append(" ObjectIntersectionOf(");
-            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
-                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
-            }
-            owlBuilder.append(") ");
-        }
-        owlBuilder.append(")");
-        return owlBuilder.toString();
     }
 
 }

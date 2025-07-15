@@ -28,8 +28,7 @@ public class GudidConceptSemanticIT extends AbstractIntegrationTest {
         String sourceFilePath = "../gudid-origin/target/origin-sources";
         String errorFile = "target/failsafe-reports/gudid_concepts_not_found.txt";
 
-//        String absolutePath = gudIdFileName; //Unable to find 2932991 foiclass.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
-        String absolutePath = findFilePath(sourceFilePath, "foiclass.txt"); //Unable to find 6987 foiclass.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <6987>
+        String absolutePath = findFilePath(sourceFilePath, "foiclass.txt");
         int notFound = processFile(absolutePath, errorFile);
 
         assertEquals(0, notFound, "Unable to find " + notFound + " Gudid Concept semantics. Details written to " + errorFile);
@@ -37,7 +36,11 @@ public class GudidConceptSemanticIT extends AbstractIntegrationTest {
 
     @Override
     protected boolean assertLine(String[] columns) {
+        String medicalSpecialty = columns[1];
         String productCode = columns[2];
+        if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialty, productCode)) {
+            return true;
+        }
         UUID conceptUuid = conceptUuid(productCode);
         StateSet stateActive = StateSet.ACTIVE;
         StampCalculator stampCalcActive = StampCalculatorWithCache
