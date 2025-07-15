@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -193,4 +194,23 @@ public class GudidUtility {
         return EntityProxy.Concept.make(issuingAgencyUuid);
     }
 
+    public String buildOwlExpression(EntityProxy.Concept deviceConceptUuid, List<UUID> fdaProductCodeUuids) {
+        StringBuilder owlBuilder = new StringBuilder();
+
+        owlBuilder.append("SubClassOf(:[").append(deviceConceptUuid.publicId().asUuidArray()[0]).append("]");
+
+        if (fdaProductCodeUuids.size() == 1) {
+            // Single product code
+            owlBuilder.append(":[").append(fdaProductCodeUuids.getFirst()).append("]");
+        } else {
+            // Multiple product codes - use ObjectIntersectionOf
+            owlBuilder.append(" ObjectIntersectionOf(");
+            for (UUID fdaProductCodeUuid : fdaProductCodeUuids) {
+                owlBuilder.append(":[").append(fdaProductCodeUuid).append("] ");
+            }
+            owlBuilder.append(") ");
+        }
+        owlBuilder.append(")");
+        return owlBuilder.toString();
+    }
 }
