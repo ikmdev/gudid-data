@@ -63,6 +63,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) // skip header line
                     .map(row -> row.split("\\|", -1))
+                    .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI], data[PRODUCT_CODE]))
                     .forEach(data -> {
                         if (data.length < 3) {
                             LOG.warn("Insufficient columns in row, expected at least 3, got {}: {}",

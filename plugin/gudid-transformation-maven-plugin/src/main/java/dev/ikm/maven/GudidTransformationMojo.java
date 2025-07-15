@@ -147,7 +147,7 @@ public class GudidTransformationMojo extends AbstractMojo {
             if (file.exists() && file.isFile()) {
                 processIndividualFile(file, composer, gudidUtility);
             } else {
-                LOG.warn("Skipping missing file: " + fileName);
+                throw new RuntimeException("Origin file does not exist: " + file);
             }
         }
     }

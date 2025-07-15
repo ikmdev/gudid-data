@@ -50,6 +50,7 @@ public class DeviceTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\\|"))
+                    .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI]))
                     .forEach(data -> {
                         State status = "Published".equals(data[DEVICE_RECORD_STATUS]) ? State.ACTIVE : State.INACTIVE;
                         long time = LocalDate.parse(data[DEVICE_PUBLISH_DATE]).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
@@ -82,7 +83,7 @@ public class DeviceTransformer extends AbstractTransformer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            LOG.debug("conceptCount: {}", conceptCount.get());
+            LOG.info("conceptCount: {}", conceptCount.get());
         }
     }
 

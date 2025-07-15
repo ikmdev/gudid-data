@@ -70,6 +70,7 @@ public class FoiClassTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath(), Charset.forName("windows-1252"))) {
             lines.skip(1) // skip header line
                     .map(row -> row.split("\\|", -1)) // -1 to preserve empty trailing fields
+                    .filter(data -> gudidUtility.isMedicalSpecialtyIncluded(data[MEDICAL_SPECIALTY], data[PRODUCT_CODE]))
                     .forEach(data -> {
                         try {
                             if (data.length < 4) {

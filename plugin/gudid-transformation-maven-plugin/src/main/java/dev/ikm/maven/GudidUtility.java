@@ -8,12 +8,19 @@ import dev.ikm.tinkar.terms.EntityProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GudidUtility {
     private static final Logger LOG = LoggerFactory.getLogger(GudidUtility.class);
@@ -80,11 +87,50 @@ public class GudidUtility {
     }
 
     private final UUID namespace;
-
     private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
+
+    private Map<String, Set<String>> devicesByProductCode;
+    private Map<String, String> productCodeToMedicalSpecialty;
 
     public GudidUtility(UUID namespace) {
         this.namespace = namespace;
+        initializeDeviceProductCodeMap();
+    }
+
+    private void initializeDeviceProductCodeMap() {
+        try (Stream<String> productCodes = Files.lines(Path.of("gudid-origin\\target\\origin-sources\\gudid\\productCodes.txt"));
+             Stream<String> foiClass = Files.lines(Path.of("gudid-origin\\target\\origin-sources\\foi\\foiclass.txt"), Charset.forName("windows-1252"))) {
+
+            devicesByProductCode = productCodes.map(row -> row.split("\\|"))
+                    .collect(Collectors.groupingBy(row -> row[0],
+                            Collectors.mapping(row -> row[1], Collectors.toSet())));
+
+            productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
+                    .filter(row -> INCLUDED_MEDICAL_SPECIALTIES.contains(row[1]))
+                    .collect(Collectors.toMap(row -> row[2], row -> row[1]));
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public boolean isMedicalSpecialtyIncluded(String medicalSpecialty, String productCode) {
+        return medicalSpecialty.equals(productCodeToMedicalSpecialty.get(productCode));
+    }
+
+    public boolean isDeviceIncluded(String primaryDi) {
+        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+                .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
+                .distinct().count();
+        return count > 0;
+    }
+
+    public boolean isDeviceIncluded(String primaryDi, String productCode) {
+        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+                .filter(code -> code.equals(productCode))
+                .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
+                .distinct().count();
+        return count > 0;
     }
 
     public UUID getNamespace() {

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -41,6 +40,7 @@ public class GudidIdentifierTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\\|"))
+                    .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI]))
                     .forEach(data -> {
                         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
 
@@ -53,7 +53,7 @@ public class GudidIdentifierTransformer extends AbstractTransformer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            LOG.debug("identiferCount: {}", identiferCount.get());
+            LOG.info("identiferCount: {}", identiferCount.get());
         }
     }
 
