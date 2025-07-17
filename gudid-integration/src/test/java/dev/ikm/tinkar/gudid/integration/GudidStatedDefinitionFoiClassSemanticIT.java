@@ -76,9 +76,9 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
 		EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(),
 				TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN.nid(), semanticEntity -> {
 					Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
-					innerCount.incrementAndGet();
 
 					if (latestActive.isPresent()) {
+						innerCount.incrementAndGet();
 						if (parentConcept != null) {
 							DiTreeEntity fieldValue = latestAxiomPattern.getFieldWithMeaning(
 									TinkarTerm.EL_PLUS_PLUS_STATED_TERMINOLOGICAL_AXIOMS, latestActive.get());
