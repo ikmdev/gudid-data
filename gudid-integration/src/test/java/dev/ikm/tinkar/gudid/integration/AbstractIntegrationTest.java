@@ -24,7 +24,10 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public abstract class AbstractIntegrationTest {
-    static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+    static final Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+
+    static final String[] INCLUDED_MEDICAL_SPECIALTIES = {"CV", "CH", "TX", "HE", "IM", "MI", "PA"};
+
     static String namespaceString;
     static GudidUtility gudidUtility;
     
@@ -38,7 +41,7 @@ public abstract class AbstractIntegrationTest {
         CachingService.clearAll();
         //Note. Dataset needed to be generated within repo, with command 'mvn clean install'
         namespaceString = System.getProperty("origin.namespace"); // property set in pom.xml
-        gudidUtility = new GudidUtility(UUID.fromString(namespaceString), "..");
+        gudidUtility = new GudidUtility(UUID.fromString(namespaceString), "..", INCLUDED_MEDICAL_SPECIALTIES);
         File datastore = new File(System.getProperty("datastorePath")); // property set in pom.xml
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");

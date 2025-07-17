@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static dev.ikm.maven.GudidUtility.MEDICAL_SPECIALTY_CONCEPT_UUIDS;
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_PATTERN;
 import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
@@ -151,7 +150,7 @@ public class FoiClassTransformer extends AbstractTransformer {
     private void createStatedAxiom(Session session, EntityProxy.Concept concept, String medicalSpecialty) {
         EntityProxy.Semantic axiomSemantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace, concept.publicId().asUuidArray()[0] + medicalSpecialty + "AXIOM")));
         // Get parent concept based on medical specialty
-        EntityProxy.Concept parentConcept = getParentConcept(medicalSpecialty);
+        EntityProxy.Concept parentConcept = gudidUtility.getMedicalSpecialtyParentConcept(medicalSpecialty);
         try {
             session.compose(new StatedAxiom()
                             .semantic(axiomSemantic)
@@ -185,26 +184,6 @@ public class FoiClassTransformer extends AbstractTransformer {
         } catch (Exception e) {
             LOG.error("Error creating " + typeStr + " description semantic for concept: " + concept, e);
         }
-    }
-
-    private EntityProxy.Concept getParentConcept(String medicalSpecialty) {
-        // Handle empty or null medical specialty
-        if (gudidUtility.isEmptyOrNull(medicalSpecialty)) {
-            LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
-            return EntityProxy.Concept.make(
-                    PublicIds.of(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty")));
-        }
-
-        String parentConceptName = gudidUtility.getMedicalSpecialtyFullName(medicalSpecialty);
-        UUID parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get(parentConceptName);
-
-        if (parentUuid == null) {
-            LOG.warn("No UUID mapping found for medical specialty: '{}', using Unknown Medical Specialty",
-                    parentConceptName);
-            parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty");
-        }
-
-        return EntityProxy.Concept.make(PublicIds.of(parentUuid));
     }
 
     private String getParentConceptName(String medicalSpecialty) {
