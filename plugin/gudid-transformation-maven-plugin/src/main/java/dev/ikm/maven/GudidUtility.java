@@ -220,4 +220,23 @@ public class GudidUtility {
         return owlBuilder.toString();
     }
 
+    public EntityProxy.Concept getParentConcept(String medicalSpecialty) {
+        // Handle empty or null medical specialty
+        if (isEmptyOrNull(medicalSpecialty)) {
+            LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
+            return EntityProxy.Concept.make(
+                    PublicIds.of(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty")));
+        }
+
+        String parentConceptName = getMedicalSpecialtyFullName(medicalSpecialty);
+        UUID parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get(parentConceptName);
+
+        if (parentUuid == null) {
+            LOG.warn("No UUID mapping found for medical specialty: '{}', using Unknown Medical Specialty",
+                    parentConceptName);
+            parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty");
+        }
+
+        return EntityProxy.Concept.make(PublicIds.of(parentUuid));
+    }
 }
