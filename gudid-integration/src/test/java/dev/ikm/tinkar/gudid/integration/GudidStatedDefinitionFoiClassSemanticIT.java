@@ -19,9 +19,6 @@ import dev.ikm.tinkar.terms.TinkarTerm;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,12 +38,8 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
 		String sourceFilePath = "../gudid-origin/target/origin-sources";
 		String errorFile = "target/failsafe-reports/gudid_foi_axiom_not_found.txt";
 
-//        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
-		String absolutePath = findFilePath(sourceFilePath, "foiclass.txt"); // Unable to find 6987
-																			// productCodes.txt.txt semantics.
-																			// Details written to
-																			// target/failsafe-reports/gudid_concepts_not_found.txt
-																			// ==> expected: <0> but was: <6987>
+		String absolutePath = findFilePath(sourceFilePath, "foiclass.txt"); 
+																			
 		int notFound = processFile(absolutePath, errorFile);
 
 		assertEquals(0, notFound,
