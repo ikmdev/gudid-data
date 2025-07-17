@@ -43,10 +43,10 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
 
 //        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>
 		String absolutePath = findFilePath(sourceFilePath, "foiclass.txt"); // Unable to find 6987
-																				// productCodes.txt.txt semantics.
-																				// Details written to
-																				// target/failsafe-reports/gudid_concepts_not_found.txt
-																				// ==> expected: <0> but was: <6987>
+																			// productCodes.txt.txt semantics.
+																			// Details written to
+																			// target/failsafe-reports/gudid_concepts_not_found.txt
+																			// ==> expected: <0> but was: <6987>
 		int notFound = processFile(absolutePath, errorFile);
 
 		assertEquals(0, notFound,
@@ -60,17 +60,18 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
 
 		String medicalSpecialtyColumn = columns[1];
 		String productCodeColumn = columns[2];
-		
-        if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialtyColumn, productCodeColumn)) {
-            return true;
-        }
-		
+
+		if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialtyColumn, productCodeColumn)) {
+			return true;
+		}
+
 		StateSet stateActive = StateSet.ACTIVE;
 
 		PatternEntityVersion latestAxiomPattern = (PatternEntityVersion) Calculators.Stamp.DevelopmentLatest()
 				.latest(TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN).get();
 
-		StampCalculator stampCalcActive = StampCalculatorWithCache.getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
+		StampCalculator stampCalcActive = StampCalculatorWithCache
+				.getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
 
 		UUID conceptUuid = conceptUuid(productCodeColumn);
 
@@ -78,23 +79,24 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
 
 		// Get parent concept based on medical specialty
 		EntityProxy.Concept parentConcept = gudidUtility.getParentConcept(medicalSpecialtyColumn);
-		
+
 		EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(),
 				TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN.nid(), semanticEntity -> {
 					Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
 					innerCount.incrementAndGet();
-					
+
 					if (latestActive.isPresent()) {
-						if (parentConcept != null) { 
-	    					DiTreeEntity fieldValue = latestAxiomPattern.getFieldWithMeaning(TinkarTerm.EL_PLUS_PLUS_STATED_TERMINOLOGICAL_AXIOMS, latestActive.get());
-	    					
-	    					EntityVertex vertex = fieldValue.firstVertexWithMeaning(TinkarTerm.CONCEPT_REFERENCE).get();
-	    					if (!vertex.properties().containsValue(parentConcept)) {
-	    						matched.set(false);
-	    					}
+						if (parentConcept != null) {
+							DiTreeEntity fieldValue = latestAxiomPattern.getFieldWithMeaning(
+									TinkarTerm.EL_PLUS_PLUS_STATED_TERMINOLOGICAL_AXIOMS, latestActive.get());
+
+							EntityVertex vertex = fieldValue.firstVertexWithMeaning(TinkarTerm.CONCEPT_REFERENCE).get();
+							if (!vertex.properties().containsValue(parentConcept)) {
+								matched.set(false);
+							}
 						} else {
-	    				    matched.set(false);
-	    			    }
+							matched.set(false);
+						}
 					}
 				});
 
