@@ -225,7 +225,7 @@ public class GudidUtility {
         return owlBuilder.toString();
     }
 
-    public EntityProxy.Concept getParentConcept(String medicalSpecialty) {
+    public EntityProxy.Concept getMedicalSpecialtyParentConcept(String medicalSpecialty) {
         // Handle empty or null medical specialty
         if (isEmptyOrNull(medicalSpecialty)) {
             LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
@@ -244,4 +244,5 @@ public class GudidUtility {
 
         return EntityProxy.Concept.make(PublicIds.of(parentUuid));
     }
+
 }
