@@ -30,9 +30,6 @@ public class GudidUtility {
     private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
     private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
 
-    // Specify medical specialties to include in Device transformation
-    private static final Set<String> INCLUDED_MEDICAL_SPECIALTIES = Set.of("CV", "CH", "TX", "HE", "IM", "MI", "PA");
-
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
     private static final Map<String, UUID> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
     static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new LinkedHashMap<>();
@@ -89,18 +86,24 @@ public class GudidUtility {
 
     private final UUID namespace;
     private final String basePath;
+    private final Set<String> includedMedicalSpecialties;
     private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
 
-    public GudidUtility(UUID namespace) {
-        this(namespace, ".");
+    public GudidUtility(UUID namespace, String basePath) {
+        this(namespace, basePath, null);
     }
 
-    public GudidUtility(UUID namespace, String basePath) {
+    public GudidUtility(UUID namespace, String basePath, String[] medicalSpecialtiesFilter) {
         this.namespace = namespace;
         this.basePath = basePath;
+        if (medicalSpecialtiesFilter == null) {
+            this.includedMedicalSpecialties = MEDICAL_SPECIALTY_MAPPINGS.keySet();
+        } else {
+            this.includedMedicalSpecialties = Set.of(medicalSpecialtiesFilter);
+        }
         initializeDeviceProductCodeMap();
     }
 
@@ -113,8 +116,10 @@ public class GudidUtility {
                             Collectors.mapping(row -> row[1], Collectors.toSet())));
 
             productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
-                    .filter(row -> INCLUDED_MEDICAL_SPECIALTIES.contains(row[1]))
+                    .filter(row -> includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
+
+            LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
 
         } catch (Exception ex) {
             throw new RuntimeException(ex);
