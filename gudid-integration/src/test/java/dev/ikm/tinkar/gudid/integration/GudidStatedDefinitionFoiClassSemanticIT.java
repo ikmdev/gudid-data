@@ -27,73 +27,73 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegrationTest {
 
-	/**
-	 * Test GudidConcepts Semantics.
-	 *
-	 * @result Reads content from file and validates Axiom of Semantics by calling
-	 *         private method assertLine().
-	 */
-	@Test
-	public void testGudidStatedDefinitionFoiClassSemantics() throws IOException {
-		String sourceFilePath = "../gudid-origin/target/origin-sources";
-		String errorFile = "target/failsafe-reports/gudid_foi_axiom_not_found.txt";
+    /**
+     * Test GudidConcepts Semantics.
+     *
+     * @result Reads content from file and validates Axiom of Semantics by calling
+     * private method assertLine().
+     */
+    @Test
+    public void testGudidStatedDefinitionFoiClassSemantics() throws IOException {
+        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String errorFile = "target/failsafe-reports/gudid_foi_axiom_not_found.txt";
 
-		String absolutePath = findFilePath(sourceFilePath, "foiclass.txt"); 
-																			
-		int notFound = processFile(absolutePath, errorFile);
+        String absolutePath = findFilePath(sourceFilePath, "foiclass.txt");
 
-		assertEquals(0, notFound,
-				"Unable to find " + notFound + " Gudid Axiom semantics for Devices. Details written to " + errorFile);
-	}
+        int notFound = processFile(absolutePath, errorFile);
 
-	@Override
-	protected boolean assertLine(String[] columns) {
-		AtomicBoolean matched = new AtomicBoolean(true);
-		AtomicInteger innerCount = new AtomicInteger(0);
+        assertEquals(0, notFound,
+                "Unable to find " + notFound + " Gudid Axiom semantics for Devices. Details written to " + errorFile);
+    }
 
-		String medicalSpecialtyColumn = columns[1];
-		String productCodeColumn = columns[2];
+    @Override
+    protected boolean assertLine(String[] columns) {
+        AtomicBoolean matched = new AtomicBoolean(true);
+        AtomicInteger innerCount = new AtomicInteger(0);
 
-		if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialtyColumn, productCodeColumn)) {
-			return true;
-		}
+        String medicalSpecialtyColumn = columns[1];
+        String productCodeColumn = columns[2];
 
-		StateSet stateActive = StateSet.ACTIVE;
+        if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialtyColumn, productCodeColumn)) {
+            return true;
+        }
 
-		PatternEntityVersion latestAxiomPattern = (PatternEntityVersion) Calculators.Stamp.DevelopmentLatest()
-				.latest(TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN).get();
+        StateSet stateActive = StateSet.ACTIVE;
 
-		StampCalculator stampCalcActive = StampCalculatorWithCache
-				.getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
+        PatternEntityVersion latestAxiomPattern = (PatternEntityVersion) Calculators.Stamp.DevelopmentLatest()
+                .latest(TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN).get();
 
-		UUID conceptUuid = conceptUuid(productCodeColumn);
+        StampCalculator stampCalcActive = StampCalculatorWithCache
+                .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
 
-		EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
+        UUID conceptUuid = conceptUuid(productCodeColumn);
 
-		// Get parent concept based on medical specialty
-		EntityProxy.Concept parentConcept = gudidUtility.getParentConcept(medicalSpecialtyColumn);
+        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
 
-		EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(),
-				TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN.nid(), semanticEntity -> {
-					Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
+        // Get parent concept based on medical specialty
+        EntityProxy.Concept parentConcept = gudidUtility.getMedicalSpecialtyParentConcept(medicalSpecialtyColumn);
 
-					if (latestActive.isPresent()) {
-						innerCount.incrementAndGet();
-						if (parentConcept != null) {
-							DiTreeEntity fieldValue = latestAxiomPattern.getFieldWithMeaning(
-									TinkarTerm.EL_PLUS_PLUS_STATED_TERMINOLOGICAL_AXIOMS, latestActive.get());
+        EntityService.get().forEachSemanticForComponentOfPattern(concept.nid(),
+                TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN.nid(), semanticEntity -> {
+                    Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
 
-							EntityVertex vertex = fieldValue.firstVertexWithMeaning(TinkarTerm.CONCEPT_REFERENCE).get();
-							if (!vertex.properties().containsValue(parentConcept)) {
-								matched.set(false);
-							}
-						} else {
-							matched.set(false);
-						}
-					}
-				});
+                    if (latestActive.isPresent()) {
+                        innerCount.incrementAndGet();
+                        if (parentConcept != null) {
+                            DiTreeEntity fieldValue = latestAxiomPattern.getFieldWithMeaning(
+                                    TinkarTerm.EL_PLUS_PLUS_STATED_TERMINOLOGICAL_AXIOMS, latestActive.get());
 
-		return matched.get() && innerCount.get() == 1;
-	}
+                            EntityVertex vertex = fieldValue.firstVertexWithMeaning(TinkarTerm.CONCEPT_REFERENCE).get();
+                            if (!vertex.properties().containsValue(parentConcept)) {
+                                matched.set(false);
+                            }
+                        } else {
+                            matched.set(false);
+                        }
+                    }
+                });
+
+        return matched.get() && innerCount.get() == 1;
+    }
 
 }
