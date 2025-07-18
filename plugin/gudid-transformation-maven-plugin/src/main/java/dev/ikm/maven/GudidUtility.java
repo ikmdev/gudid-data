@@ -29,6 +29,7 @@ public class GudidUtility {
     private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("abcc8d16-6c3a-4d74-a83e-e766dcd6fe3d"));
     private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
     private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
+    private static final EntityProxy.Concept CONCEPT_PREMARKET_SUBMISSION_NUMBER = EntityProxy.Concept.make(PublicIds.of("8c0fd617-7cd8-4498-8aca-428c5361890b"));
 
     // Specify medical specialties to include in Device transformation
     private static final Set<String> INCLUDED_MEDICAL_SPECIALTIES = Set.of("CV", "CH", "TX", "HE", "IM", "MI", "PA");
@@ -187,6 +188,13 @@ public class GudidUtility {
             throw new RuntimeException("Cannot resolve CONCEPT_PUBLIC_DEVICE_RECORD_KEY with UUID: " + CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId().idString());
         }
         return CONCEPT_PUBLIC_DEVICE_RECORD_KEY;
+    }
+
+    public EntityProxy.Concept getConceptPremarketSubmissionNumber() {
+        if (EntityService.get().getEntity(CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId()).isEmpty()) {
+            throw new RuntimeException("Cannot resolve CONCEPT_PREMARKET_SUBMISSION_NUMBER with UUID: " + CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId().idString());
+        }
+        return CONCEPT_PREMARKET_SUBMISSION_NUMBER;
     }
 
     public static EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
