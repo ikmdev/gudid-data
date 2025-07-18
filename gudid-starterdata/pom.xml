@@ -59,7 +59,7 @@
                 <executions>
                     <execution>
                         <id>copy-tinkar-starter-data-dependency</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -79,7 +79,7 @@
                     </execution>
                     <execution>
                         <id>download-java-term-forge-template</id>
-                        <phase>initialize</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -105,7 +105,7 @@
                 <executions>
                     <execution>
                         <id>rename-file</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -124,6 +124,11 @@
                 <version>${maven-artifacts.version}</version>
                 <executions>
                     <execution>
+                        <id>load-data-field-categories</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
@@ -134,13 +139,13 @@
                             </fileset>
                             <isolate>false</isolate>
                         </configuration>
-                        <id>load-data-field-categories</id>
-                        <phase>install</phase>
+                    </execution>
+                    <execution>
+                        <id>load-data-starter-set</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>load-data</goal>
                         </goals>
-                    </execution>
-                    <execution>
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
@@ -151,15 +156,10 @@
                             </fileset>
                             <isolate>false</isolate>
                         </configuration>
-                        <id>load-data-starter-set</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>load-data</goal>
-                        </goals>
                     </execution>
                     <execution>
                         <id>forge-binding</id>
-                        <phase>install</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate-binding</goal>
                         </goals>
@@ -167,6 +167,7 @@
                             <isolate>false</isolate>
                             <bindingOutput>src/main/java/dev/ikm/maven/GudidTerm.java</bindingOutput>
                             <templateFile>term-java-1.1.0.ftl</templateFile>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <stringVariables>
                                 <stringVariable>
                                     <name>package</name>
@@ -186,11 +187,11 @@
                                 </stringVariable>
                             </stringVariables>
                             <filter>
-                                <memberships>
-                                    <membership>
-                                        <bindingName>TINKAR_BASE_MODEL_COMPONENT_PATTERN</bindingName>
-                                    </membership>
-                                </memberships>
+<!--                                <memberships>-->
+<!--                                    <membership>-->
+<!--                                        <bindingName>TINKAR_BASE_MODEL_COMPONENT_PATTERN</bindingName>-->
+<!--                                    </membership>-->
+<!--                                </memberships>-->
                                 <statuses>
                                     <status>
                                         <bindingName>ACTIVE_STATE</bindingName>
