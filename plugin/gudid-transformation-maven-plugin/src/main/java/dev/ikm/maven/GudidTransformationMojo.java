@@ -184,6 +184,8 @@ public class GudidTransformationMojo extends AbstractMojo {
             return new GudidIdentifierTransformer(gudidUtility);
         } else if (lowerFileName.contains("productcodes.txt")) {
             return new ProductCodeTransformer(gudidUtility);
+        } else if (lowerFileName.contains("premarketSubmissions.txt")) {
+            return new PremarketSubmissionTransformer(gudidUtility);
         }
 
         return null;
