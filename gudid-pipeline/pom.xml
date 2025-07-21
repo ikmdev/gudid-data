@@ -40,6 +40,18 @@
                         <goals>
                             <goal>run-gudid-transformation</goal>
                         </goals>
+                        <configuration>
+                            <!-- Specify medical specialty codes to INCLUDE in transformation -->
+                            <medicalSpecialties>
+                                <medicalSpecialty>CV</medicalSpecialty>
+                                <medicalSpecialty>CH</medicalSpecialty>
+                                <medicalSpecialty>TX</medicalSpecialty>
+                                <medicalSpecialty>HE</medicalSpecialty>
+                                <medicalSpecialty>IM</medicalSpecialty>
+                                <medicalSpecialty>MI</medicalSpecialty>
+                                <medicalSpecialty>PA</medicalSpecialty>
+                            </medicalSpecialties>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

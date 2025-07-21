@@ -31,9 +31,6 @@ public class GudidUtility {
     private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
     private static final EntityProxy.Concept CONCEPT_PREMARKET_SUBMISSION_NUMBER = EntityProxy.Concept.make(PublicIds.of("8c0fd617-7cd8-4498-8aca-428c5361890b"));
 
-    // Specify medical specialties to include in Device transformation
-    private static final Set<String> INCLUDED_MEDICAL_SPECIALTIES = Set.of("CV", "CH", "TX", "HE", "IM", "MI", "PA");
-
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
     private static final Map<String, UUID> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
     static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new LinkedHashMap<>();
@@ -90,18 +87,24 @@ public class GudidUtility {
 
     private final UUID namespace;
     private final String basePath;
+    private final Set<String> includedMedicalSpecialties;
     private final Map<String, Optional<UUID>> productCodeToConceptMapping = new ConcurrentHashMap<>();
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
 
-    public GudidUtility(UUID namespace) {
-        this(namespace, ".");
+    public GudidUtility(UUID namespace, String basePath) {
+        this(namespace, basePath, null);
     }
 
-    public GudidUtility(UUID namespace, String basePath) {
+    public GudidUtility(UUID namespace, String basePath, String[] medicalSpecialtiesFilter) {
         this.namespace = namespace;
         this.basePath = basePath;
+        if (medicalSpecialtiesFilter == null || "ALL".equalsIgnoreCase(medicalSpecialtiesFilter[0])) {
+            this.includedMedicalSpecialties = MEDICAL_SPECIALTY_MAPPINGS.keySet();
+        } else {
+            this.includedMedicalSpecialties = Set.of(medicalSpecialtiesFilter);
+        }
         initializeDeviceProductCodeMap();
     }
 
@@ -114,8 +117,10 @@ public class GudidUtility {
                             Collectors.mapping(row -> row[1], Collectors.toSet())));
 
             productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
-                    .filter(row -> INCLUDED_MEDICAL_SPECIALTIES.contains(row[1]))
+                    .filter(row -> includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
+
+            LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
 
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -226,6 +231,26 @@ public class GudidUtility {
         }
         owlBuilder.append(")");
         return owlBuilder.toString();
+    }
+
+    public EntityProxy.Concept getMedicalSpecialtyParentConcept(String medicalSpecialty) {
+        // Handle empty or null medical specialty
+        if (isEmptyOrNull(medicalSpecialty)) {
+            LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
+            return EntityProxy.Concept.make(
+                    PublicIds.of(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty")));
+        }
+
+        String parentConceptName = getMedicalSpecialtyFullName(medicalSpecialty);
+        UUID parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get(parentConceptName);
+
+        if (parentUuid == null) {
+            LOG.warn("No UUID mapping found for medical specialty: '{}', using Unknown Medical Specialty",
+                    parentConceptName);
+            parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty");
+        }
+
+        return EntityProxy.Concept.make(PublicIds.of(parentUuid));
     }
 
 }
