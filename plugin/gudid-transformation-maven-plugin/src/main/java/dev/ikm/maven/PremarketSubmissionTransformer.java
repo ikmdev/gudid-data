@@ -59,7 +59,7 @@ public class PremarketSubmissionTransformer extends AbstractTransformer {
     private void createPremarketIdentifierSemantic(Session session, EntityProxy.Concept concept, String submissionNumber) {
         try {
             EntityProxy.Semantic semantic = EntityProxy.Semantic.make(
-                    PublicIds.of(UuidT5Generator.get(namespace, concept.publicId().asUuidArray()[0] + "PREMARKET")));
+                    PublicIds.of(UuidT5Generator.get(namespace, concept.publicId().asUuidArray()[0] + "PREMARKET" + submissionNumber)));
 
             session.compose((SemanticAssembler assembler) -> assembler
                     .semantic(semantic)
