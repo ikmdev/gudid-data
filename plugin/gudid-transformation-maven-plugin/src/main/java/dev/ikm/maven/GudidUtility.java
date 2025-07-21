@@ -26,13 +26,13 @@ import java.util.stream.Stream;
 public class GudidUtility {
     private static final Logger LOG = LoggerFactory.getLogger(GudidUtility.class);
 
-    private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = EntityProxy.Concept.make(PublicIds.of("abcc8d16-6c3a-4d74-a83e-e766dcd6fe3d"));
-    private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = EntityProxy.Concept.make(PublicIds.of("7d48d128-83bc-4831-a00a-56dbf1d2a812"));
-    private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = EntityProxy.Concept.make(PublicIds.of("4595a20d-22fa-45c6-9197-966ccd4b6a2b"));
+    private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = GudidTerm.GUDID_AUTHOR;
+    private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = GudidTerm.DEVELOPMENT_GUDID;
+    private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = GudidTerm.GUDID_PUBLIC_DEVICE_RECORD_KEY;
 
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
-    private static final Map<String, UUID> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
-    static final Map<String, UUID> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new LinkedHashMap<>();
+    private static final Map<String, PublicId> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
+    static final Map<String, PublicId> MEDICAL_SPECIALTY_CONCEPT_UUIDS = new LinkedHashMap<>();
 
     static {
         // Initialize medical specialty mappings
@@ -57,31 +57,31 @@ public class GudidUtility {
         MEDICAL_SPECIALTY_MAPPINGS.put("TX", "Clinical Toxicology");
         MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty"); // Default for blank values
 
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", UUID.fromString("eec10bd1-fcd8-4d8c-936c-645f920bcfba"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", UUID.fromString("97cce489-04fb-47ae-abf4-d0cf4185ff36"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Chemistry", UUID.fromString("0cc27ea9-b441-4e4c-8baf-888d936f304c"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Dental", UUID.fromString("49509c1f-fccf-426b-bddb-302f30ff87ab"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ear, Nose, & Throat", UUID.fromString("9ccd764f-d64d-408c-8000-ef2d503154bb"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Gastroenterology & Urology", UUID.fromString("eb743737-eb31-4d23-af77-c5fec133273d"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General Hospital", UUID.fromString("822682f2-37e5-4a23-a480-490b71f38104"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Hematology", UUID.fromString("4f4c13df-dc61-420f-bb13-9f59ab26d6a7"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Immunology", UUID.fromString("86027a36-ac17-462b-b864-d0e3f5bd9a74"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Microbiology", UUID.fromString("04b2404e-5535-4c11-8e5a-5a7201336199"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Neurology", UUID.fromString("1f45fa9f-ebcd-41d0-b387-da989066cdbe"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Obstetrics/Gynecology", UUID.fromString("2f7f306c-0e5a-484c-8e97-59f923bc7f56"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ophthalmic", UUID.fromString("4f38386d-b5d9-46a2-8e82-27f429e925e0"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Orthopedic", UUID.fromString("114c587a-6bda-4036-99bb-ce76a21fce85"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Pathology", UUID.fromString("e443fd71-842b-458b-adc4-2c9015e212d5"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Physical Medicine", UUID.fromString("08fec815-1598-42c2-99cf-90dd69f0dfdc"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Radiology", UUID.fromString("ccc82d08-561a-4e11-9084-083300760957"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General & Plastic Surgery", UUID.fromString("4f79eeba-874a-4b6c-93d4-82f6f49b5815"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Toxicology", UUID.fromString("e6026812-6a34-4d28-abad-3db727ea9cfc"));
-        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Unknown Medical Specialty", UUID.fromString("a2daa52b-7f15-404e-adfe-f30959817d04"));
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", GudidTerm.GUDID_ANESTHESIOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", GudidTerm.GUDID_CARDIOVASCULAR);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Chemistry", GudidTerm.GUDID_CLINICAL_CHEMISTRY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Dental", GudidTerm.GUDID_DENTAL);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ear, Nose, & Throat", GudidTerm.GUDID_EAR_NOSE_THROAT);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Gastroenterology & Urology", GudidTerm.GUDID_GASTROENTEROLOGY_UROLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General Hospital", GudidTerm.GUDID_GENERAL_HOSPITAL);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Hematology", GudidTerm.GUDID_HEMATOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Immunology", GudidTerm.GUDID_IMMUNOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Microbiology", GudidTerm.GUDID_MICROBIOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Neurology", GudidTerm.GUDID_NEUROLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Obstetrics/Gynecology", GudidTerm.GUDID_OBSTETRICS_GYNECOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Ophthalmic", GudidTerm.GUDID_OPHTHALMIC);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Orthopedic", GudidTerm.GUDID_ORTHOPEDIC);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Pathology", GudidTerm.GUDID_PATHOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Physical Medicine", GudidTerm.GUDID_PHYSICAL_MEDICINE);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Radiology", GudidTerm.GUDID_RADIOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("General & Plastic Surgery", GudidTerm.GUDID_GENERAL_PLASTIC_SURGERY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Clinical Toxicology", GudidTerm.GUDID_CLINICAL_TOXICOLOGY);
+        MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Unknown Medical Specialty", GudidTerm.GUDID_UNKNOWN_MEDICAL_SPECIALTY);
 
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("HIBCC", UUID.fromString("5bc619bd-1080-413c-86b7-0c696605532c"));
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("ICCBBA", UUID.fromString("8cf247be-cc9e-4a0e-9ab9-77330209a398"));
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("GS1", UUID.fromString("bd5c11e4-b0eb-4971-b5bf-7d1ccc778a73"));
-        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("NDC/NHRIC", UUID.fromString("f363ef10-4c50-410f-9aa0-95ceef14c658"));
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("HIBCC", GudidTerm.GUDID_HIBCC);
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("ICCBBA", GudidTerm.GUDID_ICCBBA);
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("GS1", GudidTerm.GUDID_GS1);
+        DEVICE_ID_ISSUING_AGENCY_MAPPINGS.put("NDC/NHRIC", GudidTerm.GUDID_NDC_NHRIC);
     }
 
     private final UUID namespace;
@@ -198,7 +198,7 @@ public class GudidUtility {
         if (!DEVICE_ID_ISSUING_AGENCY_MAPPINGS.containsKey(deviceIdIssuingAgencyCode)) {
             throw new RuntimeException("No concept mapping for issuing agency code: " + deviceIdIssuingAgencyCode);
         }
-        PublicId issuingAgencyUuid = PublicIds.of(DEVICE_ID_ISSUING_AGENCY_MAPPINGS.get(deviceIdIssuingAgencyCode));
+        PublicId issuingAgencyUuid = DEVICE_ID_ISSUING_AGENCY_MAPPINGS.get(deviceIdIssuingAgencyCode);
         if (EntityService.get().getEntity(issuingAgencyUuid).isEmpty()) {
             throw new RuntimeException("Concept for agency code '" + deviceIdIssuingAgencyCode + "' does not exist with UUID: " + issuingAgencyUuid.idString());
         }
@@ -229,12 +229,11 @@ public class GudidUtility {
         // Handle empty or null medical specialty
         if (isEmptyOrNull(medicalSpecialty)) {
             LOG.debug("Empty medical specialty found, using Unknown Medical Specialty");
-            return EntityProxy.Concept.make(
-                    PublicIds.of(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty")));
+            return EntityProxy.Concept.make(MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty"));
         }
 
         String parentConceptName = getMedicalSpecialtyFullName(medicalSpecialty);
-        UUID parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get(parentConceptName);
+        PublicId parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get(parentConceptName);
 
         if (parentUuid == null) {
             LOG.warn("No UUID mapping found for medical specialty: '{}', using Unknown Medical Specialty",
@@ -242,7 +241,7 @@ public class GudidUtility {
             parentUuid = MEDICAL_SPECIALTY_CONCEPT_UUIDS.get("Unknown Medical Specialty");
         }
 
-        return EntityProxy.Concept.make(PublicIds.of(parentUuid));
+        return EntityProxy.Concept.make(parentUuid);
     }
 
 }

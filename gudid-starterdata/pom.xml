@@ -88,7 +88,7 @@
                                 <artifactItem>
                                     <groupId>dev.ikm.binding.forge.template</groupId>
                                     <artifactId>term-java</artifactId>
-                                    <version>1.1.0</version>
+                                    <version>1.2.0-IKDT-1074-SNAPSHOT</version>
                                     <type>ftl</type>
                                 </artifactItem>
                             </artifactItems>
@@ -166,7 +166,7 @@
                         <configuration>
                             <isolate>false</isolate>
                             <bindingOutput>src/main/java/dev/ikm/maven/GudidTerm.java</bindingOutput>
-                            <templateFile>term-java-1.1.0.ftl</templateFile>
+                            <templateFile>term-java-1.2.0-IKDT-1074-SNAPSHOT.ftl</templateFile>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <stringVariables>
                                 <stringVariable>
