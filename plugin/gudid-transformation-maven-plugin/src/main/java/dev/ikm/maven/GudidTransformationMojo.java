@@ -50,7 +50,8 @@ public class GudidTransformationMojo extends AbstractMojo {
             "foi/foiclass.txt",
             "gudid/productCodes.txt",
             "gudid/identifiers.txt",
-            "gudid/device.txt"
+            "gudid/device.txt",
+            "gudid/premarketSubmissions.txt"
     );
 
     public void execute() throws MojoExecutionException {
