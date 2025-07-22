@@ -29,6 +29,7 @@ public class GudidUtility {
     private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = GudidTerm.GUDID_AUTHOR;
     private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = GudidTerm.DEVELOPMENT_GUDID;
     private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = GudidTerm.GUDID_PUBLIC_DEVICE_RECORD_KEY;
+    private static final EntityProxy.Concept CONCEPT_PREMARKET_SUBMISSION_NUMBER = GudidTerm.GUDID_FDA_PREMARKET_SUBMISSION_NUMBER;
 
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
     private static final Map<String, PublicId> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
@@ -192,6 +193,13 @@ public class GudidUtility {
             throw new RuntimeException("Cannot resolve CONCEPT_PUBLIC_DEVICE_RECORD_KEY with UUID: " + CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId().idString());
         }
         return CONCEPT_PUBLIC_DEVICE_RECORD_KEY;
+    }
+
+    public EntityProxy.Concept getConceptPremarketSubmissionNumber() {
+        if (EntityService.get().getEntity(CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId()).isEmpty()) {
+            throw new RuntimeException("Cannot resolve CONCEPT_PREMARKET_SUBMISSION_NUMBER with UUID: " + CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId().idString());
+        }
+        return CONCEPT_PREMARKET_SUBMISSION_NUMBER;
     }
 
     public static EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
