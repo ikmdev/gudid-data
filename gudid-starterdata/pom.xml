@@ -9,10 +9,16 @@
 
     <groupId>dev.ikm.maven</groupId>
     <artifactId>gudid-starterdata</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>gudid-starterdata</name>
     <url>http://maven.apache.org</url>
+
+    <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
         <plugins>
@@ -53,7 +59,7 @@
                 <executions>
                     <execution>
                         <id>copy-tinkar-starter-data-dependency</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -71,6 +77,26 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download-java-term-forge-template</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>dev.ikm.binding.forge.template</groupId>
+                                    <artifactId>term-java</artifactId>
+                                    <version>1.2.0</version>
+                                    <type>ftl</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/template</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -79,7 +105,7 @@
                 <executions>
                     <execution>
                         <id>rename-file</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -98,6 +124,11 @@
                 <version>${maven-artifacts.version}</version>
                 <executions>
                     <execution>
+                        <id>load-data-field-categories</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
@@ -106,14 +137,15 @@
                                     <include>**/${fieldCategoriesStarterSet}</include>
                                 </includes>
                             </fileset>
+                            <isolate>false</isolate>
                         </configuration>
-                        <id>load-data</id>
-                        <phase>install</phase>
+                    </execution>
+                    <execution>
+                        <id>load-data-starter-set</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>load-data</goal>
                         </goals>
-                    </execution>
-                    <execution>
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
@@ -122,15 +154,92 @@
                                     <include>**/${starterSet}</include>
                                 </includes>
                             </fileset>
+                            <isolate>false</isolate>
                         </configuration>
-                        <id>load-data2</id>
-                        <phase>install</phase>
+                    </execution>
+                    <execution>
+                        <id>forge-binding</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>load-data</goal>
+                            <goal>generate-binding</goal>
                         </goals>
+                        <configuration>
+                            <isolate>false</isolate>
+                            <bindingOutput>src/main/java/dev/ikm/maven/GudidTerm.java</bindingOutput>
+                            <templateFile>term-java-1.2.0.ftl</templateFile>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <stringVariables>
+                                <stringVariable>
+                                    <name>package</name>
+                                    <value>dev.ikm.maven</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>author</name>
+                                    <value>GUDID Author</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>className</name>
+                                    <value>GudidTerm</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>namespace</name>
+                                    <value>${origin.namespace}</value>
+                                </stringVariable>
+                            </stringVariables>
+                            <filter>
+<!--                                <memberships>-->
+<!--                                    <membership>-->
+<!--                                        <bindingName>TINKAR_BASE_MODEL_COMPONENT_PATTERN</bindingName>-->
+<!--                                    </membership>-->
+<!--                                </memberships>-->
+                                <statuses>
+                                    <status>
+                                        <bindingName>ACTIVE_STATE</bindingName>
+                                    </status>
+                                    <status>
+                                        <bindingName>INACTIVE_STATE</bindingName>
+                                    </status>
+                                </statuses>
+                                <path>
+                                    <bindingName>DEVELOPMENT_PATH</bindingName>
+                                </path>
+                                <useInferredDefinitions>true</useInferredDefinitions>
+                                <language>
+                                    <bindingName>ENGLISH_LANGUAGE</bindingName>
+                                </language>
+                                <descriptionPattern>
+                                    <bindingName>DESCRIPTION_PATTERN</bindingName>
+                                </descriptionPattern>
+                                <descriptionTypePreferences>
+                                    <descriptionTypePreference>
+                                        <bindingName>REGULAR_NAME_DESCRIPTION_TYPE</bindingName>
+                                    </descriptionTypePreference>
+                                    <descriptionTypePreference>
+                                        <bindingName>FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE</bindingName>
+                                    </descriptionTypePreference>
+                                </descriptionTypePreferences>
+                                <dialectPreferences>
+                                    <dialectPreference>
+                                        <bindingName>US_ENGLISH_DIALECT</bindingName>
+                                    </dialectPreference>
+                                    <dialectPreference>
+                                        <bindingName>GB_ENGLISH_DIALECT</bindingName>
+                                    </dialectPreference>
+                                </dialectPreferences>
+                            </filter>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.ikm.tinkar</groupId>
+            <artifactId>terms</artifactId>
+            <version>${tinkar-core.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>

@@ -1,6 +1,6 @@
 # Title
 
-|| Description about the Project ||
+GUDID Pipeline
 
 ### Team Ownership - Product Owner
 
@@ -14,7 +14,7 @@ Required for running this:
 
 ## Building and Running
 
-Follow the steps below to build and run Komet on your local machine:
+Follow the steps below to build and run on your local machine:
 
 1. Clone the repository from GitHub to your local machine
 
