@@ -66,7 +66,7 @@ public class PremarketSubmissionTransformer extends AbstractTransformer {
                     .pattern(TinkarTerm.IDENTIFIER_PATTERN)
                     .reference(concept)
                     .fieldValues(fieldValues -> fieldValues
-                            .with(gudidUtility.getConceptPremarketSubmissionNumber())
+                            .with(GudidTerm.GUDID_FDA_PREMARKET_SUBMISSION_NUMBER)
                             .with(submissionNumber)
                     ));
         } catch (Exception e) {

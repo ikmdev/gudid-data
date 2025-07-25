@@ -158,6 +158,23 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>load-data-change-set</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${starterSetLocation}</directory>
+                                <includes>
+                                    <include>**/${changeSet}</include>
+                                </includes>
+                            </fileset>
+                            <isolate>false</isolate>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>forge-binding</id>
                         <phase>generate-sources</phase>
                         <goals>

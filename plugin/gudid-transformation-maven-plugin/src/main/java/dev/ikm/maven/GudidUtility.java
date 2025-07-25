@@ -28,8 +28,6 @@ public class GudidUtility {
 
     private static final EntityProxy.Concept CONCEPT_GUDID_AUTHOR = GudidTerm.GUDID_AUTHOR;
     private static final EntityProxy.Concept CONCEPT_GUDID_MODULE = GudidTerm.DEVELOPMENT_GUDID;
-    private static final EntityProxy.Concept CONCEPT_PUBLIC_DEVICE_RECORD_KEY = GudidTerm.GUDID_PUBLIC_DEVICE_RECORD_KEY;
-    private static final EntityProxy.Concept CONCEPT_PREMARKET_SUBMISSION_NUMBER = GudidTerm.GUDID_FDA_PREMARKET_SUBMISSION_NUMBER;
 
     private static final Map<String, String> MEDICAL_SPECIALTY_MAPPINGS = new LinkedHashMap<>();
     private static final Map<String, PublicId> DEVICE_ID_ISSUING_AGENCY_MAPPINGS = new LinkedHashMap<>();
@@ -56,7 +54,7 @@ public class GudidUtility {
         MEDICAL_SPECIALTY_MAPPINGS.put("RA", "Radiology");
         MEDICAL_SPECIALTY_MAPPINGS.put("SU", "General & Plastic Surgery");
         MEDICAL_SPECIALTY_MAPPINGS.put("TX", "Clinical Toxicology");
-        MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty"); // Default for blank values
+        MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty");
 
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", GudidTerm.GUDID_ANESTHESIOLOGY);
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", GudidTerm.GUDID_CARDIOVASCULAR);
@@ -101,11 +99,13 @@ public class GudidUtility {
         this.namespace = namespace;
         this.basePath = basePath;
         if (medicalSpecialtiesFilter == null || "ALL".equalsIgnoreCase(medicalSpecialtiesFilter[0])) {
-            this.includedMedicalSpecialties = MEDICAL_SPECIALTY_MAPPINGS.keySet();
+            this.includedMedicalSpecialties = Collections.emptySet();
+            LOG.info("includedMedicalSpecialties: ALL");
         } else {
             this.includedMedicalSpecialties = Set.of(medicalSpecialtiesFilter);
+            initializeDeviceProductCodeMap();
+            LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
         }
-        initializeDeviceProductCodeMap();
     }
 
     private void initializeDeviceProductCodeMap() {
@@ -120,18 +120,22 @@ public class GudidUtility {
                     .filter(row -> includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
 
-            LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
-
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
     public boolean isMedicalSpecialtyIncluded(String medicalSpecialty, String productCode) {
+        if (isUnfilteredMode()) {
+            return true;
+        }
         return medicalSpecialty.equals(productCodeToMedicalSpecialty.get(productCode));
     }
 
     public boolean isDeviceIncluded(String primaryDi) {
+        if (isUnfilteredMode()) {
+            return true;
+        }
         long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
@@ -139,11 +143,18 @@ public class GudidUtility {
     }
 
     public boolean isDeviceIncluded(String primaryDi, String productCode) {
+        if (isUnfilteredMode()) {
+            return true;
+        }
         long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
                 .filter(code -> code.equals(productCode))
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
         return count > 0;
+    }
+
+    private boolean isUnfilteredMode() {
+        return includedMedicalSpecialties.isEmpty();
     }
 
     public UUID getNamespace() {
@@ -186,20 +197,6 @@ public class GudidUtility {
             throw new RuntimeException("Cannot resolve CONCEPT_GUDID_MODULE with UUID: " + CONCEPT_GUDID_MODULE.publicId().idString());
         }
         return CONCEPT_GUDID_MODULE;
-    }
-
-    public EntityProxy.Concept getPublicDeviceRecordKeyConcept() {
-        if (EntityService.get().getEntity(CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId()).isEmpty()) {
-            throw new RuntimeException("Cannot resolve CONCEPT_PUBLIC_DEVICE_RECORD_KEY with UUID: " + CONCEPT_PUBLIC_DEVICE_RECORD_KEY.publicId().idString());
-        }
-        return CONCEPT_PUBLIC_DEVICE_RECORD_KEY;
-    }
-
-    public EntityProxy.Concept getConceptPremarketSubmissionNumber() {
-        if (EntityService.get().getEntity(CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId()).isEmpty()) {
-            throw new RuntimeException("Cannot resolve CONCEPT_PREMARKET_SUBMISSION_NUMBER with UUID: " + CONCEPT_PREMARKET_SUBMISSION_NUMBER.publicId().idString());
-        }
-        return CONCEPT_PREMARKET_SUBMISSION_NUMBER;
     }
 
     public static EntityProxy.Concept lookupDeviceIdIssuingAgencyConcept(String deviceIdIssuingAgencyCode) {
