@@ -117,13 +117,13 @@ public class GmdnTermsTransformer extends AbstractTransformer {
 
     private void createDeviceIdentifierSemantic(Session session, String[] data) {
         EntityProxy.Semantic semantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI] + "_GMDN_" + data[GMDN_CODE])));
-        EntityProxy.Concept deviceConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
+        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
         session.compose((SemanticAssembler assembler) -> assembler
                 .semantic(semantic)
                 .pattern(GudidTerm.GUDID_GMDN_TERMS_PATTERN)
-                .reference(deviceConcept)
+                .reference(concept)
                 .fieldValues(fieldValues -> fieldValues
-                        .withAll(List.of(data))
+                        .with(String.join(", ", data))
                 ));
     }
 
