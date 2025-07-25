@@ -41,7 +41,7 @@ public class GudidConceptSemanticIT extends AbstractIntegrationTest {
         if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialty, productCode)) {
             return true;
         }
-        UUID conceptUuid = conceptUuid(productCode);
+        UUID conceptUuid = conceptUuidForProductCode(productCode);
         StateSet stateActive = StateSet.ACTIVE;
         StampCalculator stampCalcActive = StampCalculatorWithCache
                 .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));

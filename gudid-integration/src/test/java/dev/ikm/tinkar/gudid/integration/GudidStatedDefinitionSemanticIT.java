@@ -31,7 +31,7 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 	AtomicBoolean matchedOwlExpression = new AtomicBoolean(false);
 
 	/**
-	 * Test GudidConcepts Semantics.
+	 * Test GudidStatedDefinition Semantics.
 	 *
 	 * @result Reads content from file and validates Axiom of Semantics by calling
 	 *         private method assertLine().
