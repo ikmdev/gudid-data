@@ -93,6 +93,7 @@ public abstract class AbstractIntegrationTest {
                 if (!assertLine(line.split("\\|", -1))) {
                     notFound++;
                     bw.write(line);
+                    bw.newLine();
                 }
             }
         }
@@ -100,7 +101,7 @@ public abstract class AbstractIntegrationTest {
         return notFound;
     }
 
-    protected UUID conceptUuid(String id) {
+    protected UUID conceptUuidForProductCode(String id) {
         return UuidT5Generator.get(UUID.fromString(namespaceString), "FDA_PRODUCT_CODE_" + id);
     }
 

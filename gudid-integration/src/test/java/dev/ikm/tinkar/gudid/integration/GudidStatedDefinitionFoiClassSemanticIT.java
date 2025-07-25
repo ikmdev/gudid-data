@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegrationTest {
 
     /**
-     * Test GudidConcepts Semantics.
+     * Test GudidStatedDefinitionFoiClass Semantics.
      *
      * @result Reads content from file and validates Axiom of Semantics by calling
      * private method assertLine().
@@ -66,7 +66,7 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
         StampCalculator stampCalcActive = StampCalculatorWithCache
                 .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
 
-        UUID conceptUuid = conceptUuid(productCodeColumn);
+        UUID conceptUuid = conceptUuidForProductCode(productCodeColumn);
 
         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
 
