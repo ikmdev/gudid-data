@@ -76,7 +76,7 @@ public class DeviceTransformer extends AbstractTransformer {
                                 )
                         );
 
-                        if (conceptCount.incrementAndGet() % 1000 == 0) {
+                        if (conceptCount.incrementAndGet() % 10000 == 0) {
                             LOG.debug("conceptCount: {} componentsInSessionCount: {}", conceptCount.get(), session.componentsInSessionCount());
                         }
                     });
