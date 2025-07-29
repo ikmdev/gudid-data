@@ -114,7 +114,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
                 if (processedCount.incrementAndGet() % 100000 == 0) {
                     LOG.info("processedCount: {}", processedCount.get());
-                    composer.commitSession(session);
                 }
 
             } catch (Exception e) {

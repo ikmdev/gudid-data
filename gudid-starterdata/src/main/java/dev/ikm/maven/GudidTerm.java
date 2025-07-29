@@ -192,6 +192,19 @@ public class GudidTerm {
     public static final Pattern DEVELOPMENT_STAMP_VERSION_PATTERN = Pattern.make("DEVELOPMENT_STAMP_VERSION_PATTERN", UUID.fromString("fcf637ce-63fe-4f52-a4f3-401f46f71a60"));
 
     /**
+     * Java binding for the pattern described as GUDID_GMDN_TERMS_PATTERN and identified by the following as UUID(s):
+     * <ul>
+     * <li>5b8fbc02-465b-4b7c-bf12-f11a8e87db4a
+     * </ul>
+     * <p>
+     * Pattern contains the following fields
+     * <ul>
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_SET that represents GUDID_GMDN_TERMS.
+     * </ul>
+     */
+    public static final Pattern GUDID_GMDN_TERMS_PATTERN = Pattern.make("GUDID_GMDN_TERMS_PATTERN", UUID.fromString("5b8fbc02-465b-4b7c-bf12-f11a8e87db4a"));
+
+    /**
      * Java binding for the pattern described as PRIMORDIAL_COMMENT_PATTERN and identified by the following as UUID(s):
      * <ul>
      * <li>3734fb0a-4c14-5831-9a61-4743af609e7a
@@ -1004,6 +1017,22 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept GUDID_GENERAL_PLASTIC_SURGERY = Concept.make("GUDID_GENERAL_PLASTIC_SURGERY", UUID.fromString("4f79eeba-874a-4b6c-93d4-82f6f49b5815"));
+
+    /**
+     * Java binding for the concept described as GUDID_GMDN_CODE and identified by the following UUID(s):
+     * <ul>
+     * <li>c762b8a3-a299-48ef-9e57-1d3565ad772d
+     * </ul>
+     */
+    public static final Concept GUDID_GMDN_CODE = Concept.make("GUDID_GMDN_CODE", UUID.fromString("c762b8a3-a299-48ef-9e57-1d3565ad772d"));
+
+    /**
+     * Java binding for the concept described as GUDID_GMDN_TERMS and identified by the following UUID(s):
+     * <ul>
+     * <li>73257f7e-da60-4f6e-9459-e8cc6e6f8312
+     * </ul>
+     */
+    public static final Concept GUDID_GMDN_TERMS = Concept.make("GUDID_GMDN_TERMS", UUID.fromString("73257f7e-da60-4f6e-9459-e8cc6e6f8312"));
 
     /**
      * Java binding for the concept described as GUDID_GS1 and identified by the following UUID(s):

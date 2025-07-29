@@ -51,7 +51,8 @@ public class GudidTransformationMojo extends AbstractMojo {
             "gudid/productCodes.txt",
             "gudid/identifiers.txt",
             "gudid/device.txt",
-            "gudid/premarketSubmissions.txt"
+            "gudid/premarketSubmissions.txt",
+            "gudid/gmdnTerms.txt"
     );
 
     public void execute() throws MojoExecutionException {
@@ -187,6 +188,8 @@ public class GudidTransformationMojo extends AbstractMojo {
             return new ProductCodeTransformer(gudidUtility);
         } else if (lowerFileName.contains("premarketsubmissions.txt")) {
             return new PremarketSubmissionTransformer(gudidUtility);
+        } else if (lowerFileName.contains("gmdnterms.txt")) {
+            return new GmdnTermsTransformer(gudidUtility);
         }
 
         return null;

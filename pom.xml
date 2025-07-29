@@ -46,6 +46,7 @@
         <foi.source.zip>${user.home}/Downloads/foiclass.zip</foi.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
         <starterSet>GUDID_StarterData_1-52.zip</starterSet>
+        <changeSet>GUDID_SD_Incremental_20250723.zip</changeSet>
         <fieldCategoriesStarterSetLocation>${user.home}/Downloads</fieldCategoriesStarterSetLocation>
         <fieldCategoriesStarterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</fieldCategoriesStarterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>

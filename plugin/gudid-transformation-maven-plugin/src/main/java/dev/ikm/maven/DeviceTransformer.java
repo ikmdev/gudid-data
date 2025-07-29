@@ -71,12 +71,12 @@ public class DeviceTransformer extends AbstractTransformer {
                                         .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                                 )
                                 .attach((Identifier identifier) -> identifier
-                                        .source(gudidUtility.getPublicDeviceRecordKeyConcept())
+                                        .source(GudidTerm.GUDID_PUBLIC_DEVICE_RECORD_KEY)
                                         .identifier(data[PUBLIC_DEVICE_RECORD_KEY])
                                 )
                         );
 
-                        if (conceptCount.incrementAndGet() % 1000 == 0) {
+                        if (conceptCount.incrementAndGet() % 10000 == 0) {
                             LOG.debug("conceptCount: {} componentsInSessionCount: {}", conceptCount.get(), session.componentsInSessionCount());
                         }
                     });
