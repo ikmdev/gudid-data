@@ -144,8 +144,8 @@ public class GmdnTermsTransformer extends AbstractTransformer {
             return EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, primaryDI))).nid();
         }
 
-        public State state() {
-            return "Active".equals(gmdnCodeStatus()) ? State.ACTIVE : State.INACTIVE;
+        State state() {
+            return "Active".equals(gmdnCodeStatus) ? State.ACTIVE : State.INACTIVE;
         }
     }
 
