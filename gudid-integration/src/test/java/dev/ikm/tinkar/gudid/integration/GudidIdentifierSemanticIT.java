@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
 
     /**
-     * Test GudidConcepts Semantics.
+     * Test GudidIdentifier Semantics.
      *
      * @result Reads content from file and validates Concept of Semantics by calling private method assertLine().
      */

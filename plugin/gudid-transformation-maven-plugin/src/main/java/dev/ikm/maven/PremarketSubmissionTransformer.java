@@ -70,7 +70,7 @@ public class PremarketSubmissionTransformer extends AbstractTransformer {
                             .with(submissionNumber)
                     ));
         } catch (Exception e) {
-            LOG.error("Error creating identifier semantic for concept: " + concept, e);
+            LOG.error("Error creating premarketSubmisison semantic for concept: " + concept, e);
         }
     }
 
