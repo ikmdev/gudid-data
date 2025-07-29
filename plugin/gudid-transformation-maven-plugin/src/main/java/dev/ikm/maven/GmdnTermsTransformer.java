@@ -1,6 +1,5 @@
 package dev.ikm.maven;
 
-import dev.ikm.tinkar.common.id.IntIdSet;
 import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.common.id.impl.IntIdSetArray;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
@@ -22,11 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Stream;
 
 public class GmdnTermsTransformer extends AbstractTransformer {
@@ -53,45 +49,48 @@ public class GmdnTermsTransformer extends AbstractTransformer {
             throw new RuntimeException("Concept input file is either null or invalid.");
         }
 
-        AtomicInteger conceptCount = new AtomicInteger();
+        AtomicInteger identiferCount = new AtomicInteger(0);
+        LongAdder conceptCount = new LongAdder();
+
+        var context = new Object() {
+            EntityProxy.Concept currentConcept;
+            String previousGmdnCode = null;
+        };
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
-            Map<GmdnTerm, Set<GmdnDevice>> gmdnDeviceMap = lines
-                    .skip(1) //skip first line, i.e. header line
+            lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\\|"))
                     .filter(data -> gudidUtility.isDeviceIncluded(data[PRIMARY_DI]))
                     .sorted(Comparator.comparing(data -> data[GMDN_CODE]))
-                    .collect(Collectors.groupingBy(GmdnTerm::fromCsv, Collectors.mapping(GmdnDevice::fromCsv, Collectors.toSet())));
+                    .forEach(data -> {
+                        State status = "Active".equals(data[GMDN_CODE_STATUS]) ? State.ACTIVE : State.INACTIVE;
+                        String gmdnCode = data[GMDN_CODE];
 
-            gmdnDeviceMap.forEach((gmdnTerm, devices) -> {
+                        Session session = composer.open(status, GudidTerm.GUDID_AUTHOR,
+                                gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
 
-                boolean isAllDevicesInactive = devices.stream().map(GmdnDevice::state).allMatch(state -> state == State.INACTIVE);
-                State status = isAllDevicesInactive ? State.INACTIVE : State.ACTIVE;
+                        if (!gmdnCode.equals(context.previousGmdnCode)) {
+                            context.currentConcept = createGmdnConcept(session, data);
+                            conceptCount.increment();
+                        }
 
-                Session session = composer.open(status, GudidTerm.GUDID_AUTHOR,
-                        gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
+                        createDeviceIdentifierSemantic(session, data, context.currentConcept.nid());
 
-                EntityProxy.Concept concept = createGmdnConcept(session, gmdnTerm);
+                        if (identiferCount.incrementAndGet() % 100000 == 0) {
+                            LOG.info("identiferCount: {}", identiferCount.get());
+                        }
 
-                IntIdSet deviceNids = IntIdSetArray.newIntIdSet(devices.stream()
-                        .mapToInt(device -> device.nid(namespace)).toArray());
-
-                createDevicesIdentifierSemantic(session, gmdnTerm.gmdnCode(), concept, deviceNids);
-
-                if (conceptCount.incrementAndGet() % 10000 == 0) {
-                    LOG.debug("conceptCount: {} componentsInSessionCount: {}", conceptCount.get(), session.componentsInSessionCount());
-                }
-            });
-
+                        context.previousGmdnCode = gmdnCode;
+                    });
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            LOG.info("conceptCount: {}", conceptCount.get());
+            LOG.info("conceptCount: {} identifierCount: {}", conceptCount, identiferCount);
         }
     }
 
-    private EntityProxy.Concept createGmdnConcept(Session session, GmdnTerm data) {
-        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, "GMDN_" + data.gmdnCode())));
+    private EntityProxy.Concept createGmdnConcept(Session session, String[] data) {
+        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, "GMDN_" + data[GMDN_CODE])));
         session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
                 .concept(concept)
                 .attach((Identifier identifier) -> identifier
@@ -100,16 +99,16 @@ public class GmdnTermsTransformer extends AbstractTransformer {
                 )
                 .attach((FullyQualifiedName fqn) -> fqn
                         .language(TinkarTerm.ENGLISH_LANGUAGE)
-                        .text(data.gmdnPTName())
+                        .text(data[GMDN_PT_NAME])
                         .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                 )
                 .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
-                        .text(data.gmdnPTDefinition())
+                        .text(data[GMDN_PT_DEFINITION])
                         .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                 )
                 .attach((Identifier identifier) -> identifier
                         .source(GudidTerm.GUDID_GMDN_TERMS)
-                        .identifier(data.gmdnCode())
+                        .identifier(data[GMDN_CODE])
                 )
                 .attach((StatedAxiom statedAxiom) -> statedAxiom
                         .isA(GudidTerm.GUDID_GMDN_TERMS)
@@ -118,35 +117,17 @@ public class GmdnTermsTransformer extends AbstractTransformer {
         return concept;
     }
 
-    private void createDevicesIdentifierSemantic(Session session, String gmdnCode, EntityProxy.Concept gmdnConcept, IntIdSet deviceNids) {
-        EntityProxy.Semantic semantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace, "GMDN_IDENTIFIER_" + gmdnCode)));
+    private void createDeviceIdentifierSemantic(Session session, String[] data, int gmdnConceptNid) {
+        EntityProxy.Semantic semantic = EntityProxy.Semantic.make(PublicIds.of(UuidT5Generator.get(namespace,
+                data[PRIMARY_DI] + "GMDN_" + data[GMDN_CODE]+ "_DEVICE_" + data[PRIMARY_DI])));
+        EntityProxy.Concept deviceConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, data[PRIMARY_DI])));
         session.compose((SemanticAssembler assembler) -> assembler
                 .semantic(semantic)
                 .pattern(GudidTerm.GUDID_GMDN_TERMS_PATTERN)
-                .reference(gmdnConcept)
+                .reference(deviceConcept)
                 .fieldValues(fieldValues -> fieldValues
-                        .with(deviceNids)
+                        .with(IntIdSetArray.newIntIdSet(gmdnConceptNid))
                 ));
-    }
-
-    record GmdnTerm(String gmdnPTName, String gmdnPTDefinition, String gmdnCode, String gmdnCodeStatus) {
-        static GmdnTerm fromCsv(String[] data) {
-            return new GmdnTerm(data[GMDN_PT_NAME], data[GMDN_PT_DEFINITION], data[GMDN_CODE], data[GMDN_CODE_STATUS]);
-        }
-    }
-
-    record GmdnDevice(String primaryDI, String gmdnCodeStatus) {
-        static GmdnDevice fromCsv(String[] data) {
-            return new GmdnDevice(data[PRIMARY_DI], data[GMDN_CODE_STATUS]);
-        }
-
-        int nid(UUID namespace) {
-            return EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, primaryDI))).nid();
-        }
-
-        State state() {
-            return "Active".equals(gmdnCodeStatus) ? State.ACTIVE : State.INACTIVE;
-        }
     }
 
 }

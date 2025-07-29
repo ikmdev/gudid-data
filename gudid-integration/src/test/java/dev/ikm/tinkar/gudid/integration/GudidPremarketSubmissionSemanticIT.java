@@ -1,5 +1,6 @@
 package dev.ikm.tinkar.gudid.integration;
 
+import dev.ikm.maven.GudidTerm;
 import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.component.Component;
 import dev.ikm.tinkar.coordinate.Calculators;
@@ -66,7 +67,7 @@ public class GudidPremarketSubmissionSemanticIT extends AbstractIntegrationTest 
 			if (latestActive.isPresent()) {
                 Component component = latestIdentifierPattern.getFieldWithMeaning(TinkarTerm.IDENTIFIER_SOURCE, latestActive.get());
                 String value = latestIdentifierPattern.getFieldWithMeaning(TinkarTerm.IDENTIFIER_VALUE, latestActive.get());
-                if (gudidUtility.getConceptPremarketSubmissionNumber().equals(component)
+                if (GudidTerm.GUDID_FDA_PREMARKET_SUBMISSION_NUMBER.equals(component)
                         && submissionNumber.equals(value)) {
                     submissionNumberValue.set(true);
                 }
