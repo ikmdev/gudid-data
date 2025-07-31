@@ -44,7 +44,7 @@
                             <!-- Specify medical specialty codes to INCLUDE in transformation -->
                             <medicalSpecialties>
                                 <medicalSpecialty>${medicalSpecialtyFlag}</medicalSpecialty>
-                                <!--<medicalSpecialty>CV</medicalSpecialty>-->
+                                <medicalSpecialty>CV</medicalSpecialty>
                                 <medicalSpecialty>CH</medicalSpecialty>
                                 <medicalSpecialty>TX</medicalSpecialty>
                                 <medicalSpecialty>HE</medicalSpecialty>
