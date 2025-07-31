@@ -105,6 +105,10 @@ public abstract class AbstractIntegrationTest {
         return UuidT5Generator.get(UUID.fromString(namespaceString), "FDA_PRODUCT_CODE_" + id);
     }
 
+    protected UUID conceptUuidForGMDN(String id) {
+        return UuidT5Generator.get(UUID.fromString(namespaceString), "GMDN_" + id);
+    }
+
     protected UUID conceptUuidForPrimaryDi(String id) {
         return UuidT5Generator.get(UUID.fromString(namespaceString), id);
     }
