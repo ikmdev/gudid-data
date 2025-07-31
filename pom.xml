@@ -62,7 +62,7 @@
         <tinkar-starter-data.classifier>unreasoned-sa</tinkar-starter-data.classifier>
         <tinkar-starter-data.version>1.7.0</tinkar-starter-data.version>
         
-        <medicalSpecialtyFlag>N</medicalSpecialtyFlag>
+        <medicalSpecialtyFlag>CV</medicalSpecialtyFlag>
 
         <reasoner-type>ElkSnomedReasoner</reasoner-type>
     </properties>

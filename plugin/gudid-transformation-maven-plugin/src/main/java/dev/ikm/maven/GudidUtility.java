@@ -98,7 +98,7 @@ public class GudidUtility {
     public GudidUtility(UUID namespace, String basePath, String[] medicalSpecialtiesFilter) {
         this.namespace = namespace;
         this.basePath = basePath;
-        if (medicalSpecialtiesFilter == null || !"N".equalsIgnoreCase(medicalSpecialtiesFilter[0]) || "ALL".equalsIgnoreCase(medicalSpecialtiesFilter[0])) {
+        if (medicalSpecialtiesFilter == null || "ALL".equalsIgnoreCase(medicalSpecialtiesFilter[0])) {
             this.includedMedicalSpecialties = Collections.emptySet();
             LOG.info("includedMedicalSpecialties: ALL");
         } else {
