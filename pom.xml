@@ -61,6 +61,8 @@
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
         <tinkar-starter-data.classifier>unreasoned-sa</tinkar-starter-data.classifier>
         <tinkar-starter-data.version>1.7.0</tinkar-starter-data.version>
+        
+        <medicalSpecialtyFlag>CV</medicalSpecialtyFlag>
 
         <reasoner-type>ElkSnomedReasoner</reasoner-type>
     </properties>
