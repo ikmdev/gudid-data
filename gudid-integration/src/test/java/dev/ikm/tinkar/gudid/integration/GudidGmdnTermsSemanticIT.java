@@ -9,22 +9,19 @@ import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculator;
 import dev.ikm.tinkar.coordinate.stamp.calculator.StampCalculatorWithCache;
 import dev.ikm.tinkar.entity.ConceptRecord;
 import dev.ikm.tinkar.entity.ConceptVersionRecord;
-import dev.ikm.tinkar.entity.Entity;
 import dev.ikm.tinkar.entity.EntityService;
-import dev.ikm.tinkar.entity.EntityVersion;
 import dev.ikm.tinkar.terms.EntityProxy;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GudidGmdnTermsSemanticIT extends AbstractIntegrationTest {
-    String previousGmdnCode = "";
+    Set<String> gmdnCodes;
 
     /**
      * Test GudidGmdnTerm Semantics.
@@ -54,29 +51,29 @@ public class GudidGmdnTermsSemanticIT extends AbstractIntegrationTest {
             return true;
         }
 
-        if (previousGmdnCode.equals(gmdnCode)) { //If current gmdnCode is equals to previous line(s), no need to create Concept then return!
-            return true;
+        // NOTE. GmdnTermsTransformer is sorting the lines based on the data[GMDN_CODE] (.sorted)
+        // Therefore, Integration Test needs a HashSet to compare current gmdnCode and iterate it to be Unique
+        if (gmdnCodes == null || gmdnCodes.isEmpty()) {
+            gmdnCodes = new HashSet<>(); // Creates new HashSet
+            gmdnCodes.add(gmdnCode); // Add productCode to the HashSet
+        } else {
+            if (gmdnCodes.contains(gmdnCode)) { // Compare current gmdnCode with existing elements in HashSet
+                return true;
+            } else {
+                gmdnCodes.add(gmdnCode); // Add gmdnCode to HashSet
+            }
         }
-        previousGmdnCode = gmdnCode; //Assigns to previousGmdnCode
 
         StateSet state = "Active".equals(gmdnCodeStatus) ? StateSet.ACTIVE : StateSet.INACTIVE;
         StampCalculator stampCalc = StampCalculatorWithCache
                 .getCalculator(StampCoordinateRecord.make(state, Coordinates.Position.LatestOnDevelopment()));
-//        PatternEntityVersion latestIdentifierPattern = (PatternEntityVersion) Calculators.Stamp.DevelopmentLatest().latest(TinkarTerm.IDENTIFIER_PATTERN).get();
 
         UUID conceptUuid = conceptUuidForGMDN(gmdnCode);
-//        Optional<Entity<EntityVersion>> entity = EntityService.get().getEntity(PublicIds.of(conceptUuid));
-//        return entity.isPresent();
-
         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
         ConceptRecord entity = EntityService.get().getEntityFast(concept);
         Latest<ConceptVersionRecord> latest = stampCalc.latest(entity);
 
-//        if (latest.isPresent()) {
-//            System.out.println("latest.isPresent(): " + primaryDi +" - "+ gmdnCode +" - " + gmdnCodeStatus);
-//        }
         return latest.isPresent();
-
     }
 
 }
