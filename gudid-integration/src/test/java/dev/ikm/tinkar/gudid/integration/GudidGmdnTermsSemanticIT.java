@@ -14,15 +14,11 @@ import dev.ikm.tinkar.terms.EntityProxy;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GudidGmdnTermsSemanticIT extends AbstractIntegrationTest {
-    Set<String> gmdnCodes;
-
     /**
      * Test GudidGmdnTerm Semantics.
      *
@@ -42,31 +38,15 @@ public class GudidGmdnTermsSemanticIT extends AbstractIntegrationTest {
     @Override
     protected boolean assertLine(String[] columns) {
         String primaryDi = columns[0];
-        String gmdnName = columns[1];
-        String gmdnDef = columns[2];
         String gmdnCode = columns[3];
-        String gmdnCodeStatus = columns[4];
 
         if (!gudidUtility.isDeviceIncluded(primaryDi)) {
             return true;
         }
 
-        // NOTE. GmdnTermsTransformer is sorting the lines based on the data[GMDN_CODE] (.sorted)
-        // Therefore, Integration Test needs a HashSet to compare current gmdnCode and iterate it to be Unique
-        if (gmdnCodes == null || gmdnCodes.isEmpty()) {
-            gmdnCodes = new HashSet<>(); // Creates new HashSet
-            gmdnCodes.add(gmdnCode); // Add productCode to the HashSet
-        } else {
-            if (gmdnCodes.contains(gmdnCode)) { // Compare current gmdnCode with existing elements in HashSet
-                return true;
-            } else {
-                gmdnCodes.add(gmdnCode); // Add gmdnCode to HashSet
-            }
-        }
-
-        StateSet state = "Active".equals(gmdnCodeStatus) ? StateSet.ACTIVE : StateSet.INACTIVE;
+        StateSet stateActive = StateSet.ACTIVE;
         StampCalculator stampCalc = StampCalculatorWithCache
-                .getCalculator(StampCoordinateRecord.make(state, Coordinates.Position.LatestOnDevelopment()));
+                .getCalculator(StampCoordinateRecord.make(stateActive, Coordinates.Position.LatestOnDevelopment()));
 
         UUID conceptUuid = conceptUuidForGMDN(gmdnCode);
         EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(conceptUuid));
