@@ -57,6 +57,9 @@ public class GmdnTermsTransformer extends AbstractTransformer {
             String previousGmdnCode = null;
         };
 
+        Session conceptSession = composer.open(State.ACTIVE, GudidTerm.GUDID_AUTHOR,
+                gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
+
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\\|"))
@@ -70,7 +73,7 @@ public class GmdnTermsTransformer extends AbstractTransformer {
                                 gudidUtility.getModuleConcept(), TinkarTerm.DEVELOPMENT_PATH);
 
                         if (!gmdnCode.equals(context.previousGmdnCode)) {
-                            context.currentConcept = createGmdnConcept(session, data);
+                            context.currentConcept = createGmdnConcept(conceptSession, data);
                             conceptCount.increment();
                         }
 
