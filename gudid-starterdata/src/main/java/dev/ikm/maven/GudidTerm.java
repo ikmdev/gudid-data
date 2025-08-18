@@ -24,7 +24,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_SET that represents GUDID_GMDN_TERMS.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents GUDID_GMDN_TERMS.
      * </ul>
      */
     public static final Pattern GUDID_GMDN_TERMS_PATTERN = Pattern.make("GUDID_GMDN_TERMS_PATTERN", UUID.fromString("5b8fbc02-465b-4b7c-bf12-f11a8e87db4a"));
@@ -37,7 +37,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_STRING that represents PRIMORDIAL_COMMENT.
+     * <li>Field 0 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_COMMENT.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_COMMENT_PATTERN = Pattern.make("PRIMORDIAL_COMMENT_PATTERN", UUID.fromString("3734fb0a-4c14-5831-9a61-4743af609e7a"));
@@ -50,8 +50,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_COMPONENT_VERSIONS_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_COMPONENT_VERSIONS_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_COMPONENT_CHRONOLOGY_PATTERN = Pattern.make("PRIMORDIAL_COMPONENT_CHRONOLOGY_PATTERN", UUID.fromString("c48db76d-5eb0-4ff5-84d0-5c3c4ec77767"));
@@ -64,7 +64,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STAMP_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STAMP_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_COMPONENT_VERSION_PATTERN = Pattern.make("PRIMORDIAL_COMPONENT_VERSION_PATTERN", UUID.fromString("a38b7d2d-8fa5-4206-9185-a1af9f81be2c"));
@@ -77,8 +77,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_CONCEPT_VERSIONS_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_CONCEPT_VERSIONS_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_CONCEPT_CHRONOLOGY_PATTERN = Pattern.make("PRIMORDIAL_CONCEPT_CHRONOLOGY_PATTERN", UUID.fromString("3e510cb9-1666-4676-9334-d288a56bf155"));
@@ -91,7 +91,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STAMP_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STAMP_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_CONCEPT_VERSION_PATTERN = Pattern.make("PRIMORDIAL_CONCEPT_VERSION_PATTERN", UUID.fromString("7943a5f1-538b-4fda-8acb-019e0bec125b"));
@@ -104,10 +104,10 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_LANGUAGE_FOR_DESCRIPTION.
-     * <li>Field 1 is a PRIMORDIAL_STRING that represents PRIMORDIAL_TEXT.
-     * <li>Field 2 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_DESCRIPTION_CASE_SIGNIFICANCE.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_DESCRIPTION_TYPE.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_LANGUAGE_FOR_DESCRIPTION.
+     * <li>Field 1 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_TEXT.
+     * <li>Field 2 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_DESCRIPTION_CASE_SIGNIFICANCE.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_DESCRIPTION_TYPE.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_DESCRIPTION_PATTERN = Pattern.make("PRIMORDIAL_DESCRIPTION_PATTERN", UUID.fromString("a4de0039-2625-5842-8a4c-d1ce6aebf021"));
@@ -120,7 +120,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_GB_ENGLISH_DIALECT_GB_ENGLISH.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_GB_ENGLISH_DIALECT_GB_ENGLISH.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_GB_DIALECT_PATTERN = Pattern.make("PRIMORDIAL_GB_DIALECT_PATTERN", UUID.fromString("561f817a-130e-5e56-984d-910e9991558c"));
@@ -133,8 +133,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_IDENTIFIER_SOURCE.
-     * <li>Field 1 is a PRIMORDIAL_STRING that represents PRIMORDIAL_IDENTIFIER_VALUE.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_IDENTIFIER_SOURCE.
+     * <li>Field 1 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_IDENTIFIER_VALUE.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_IDENTIFIER_PATTERN = Pattern.make("PRIMORDIAL_IDENTIFIER_PATTERN", UUID.fromString("5d60e14b-c410-5172-9559-3c4253278ae2"));
@@ -147,7 +147,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_DITREE that represents PRIMORDIAL_EL_INFERRED_TERMINOLOGICAL_AXIOMS.
+     * <li>Field 0 is a PRIMORDIAL_DITREE_DISPLAY_FIELD that represents PRIMORDIAL_EL_INFERRED_TERMINOLOGICAL_AXIOMS.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_INFERRED_DEFINITION_PATTERN = Pattern.make("PRIMORDIAL_INFERRED_DEFINITION_PATTERN", UUID.fromString("9f011812-15c9-5b1b-85f8-bb262bc1b2a2"));
@@ -160,8 +160,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_RELATIONSHIP_DESTINATION.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_RELATIONSHIP_ORIGIN.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_RELATIONSHIP_DESTINATION.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_RELATIONSHIP_ORIGIN.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_INFERRED_NAVIGATION_PATTERN = Pattern.make("PRIMORDIAL_INFERRED_NAVIGATION_PATTERN", UUID.fromString("a53cc42d-c07e-5934-96b3-2ede3264474e"));
@@ -174,7 +174,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_ORIGINS.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_ORIGINS.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_ORIGINS_PATTERN = Pattern.make("PRIMORDIAL_ORIGINS_PATTERN", UUID.fromString("536b0ec4-4974-47ae-93a6-ae6c4d169780"));
@@ -187,7 +187,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_STRING that represents PRIMORDIAL_AXIOM_SYNTAX.
+     * <li>Field 0 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_AXIOM_SYNTAX.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_OWL_AXIOM_SYNTAX_PATTERN = Pattern.make("PRIMORDIAL_OWL_AXIOM_SYNTAX_PATTERN", UUID.fromString("c0ca180b-aae2-5fa1-9ab7-4a24f2dfe16b"));
@@ -200,7 +200,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PATH_CONCEPT.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PATH_CONCEPT.
      * <li>Field 1 is a PRIMORDIAL_INSTANT_LITERAL that represents PRIMORDIAL_PATH_ORIGINS.
      * </ul>
      */
@@ -214,8 +214,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_PATTERN_VERSIONS_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_PATTERN_VERSIONS_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_PATTERN_CHRONOLOGY_PATTERN = Pattern.make("PRIMORDIAL_PATTERN_CHRONOLOGY_PATTERN", UUID.fromString("5bc93adb-9d39-43fe-a7a4-1492245b7efb"));
@@ -228,10 +228,10 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STAMP_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PATTERN_MEANING_FIELD.
-     * <li>Field 2 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PATTERN_PURPOSE_FIELD.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_FIELD_DEFINITION_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STAMP_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PATTERN_MEANING_FIELD.
+     * <li>Field 2 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PATTERN_PURPOSE_FIELD.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_FIELD_DEFINITION_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_PATTERN_VERSION_PATTERN = Pattern.make("PRIMORDIAL_PATTERN_VERSION_PATTERN", UUID.fromString("a90f8a4d-ae13-476b-98b8-814914f9704e"));
@@ -244,10 +244,10 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_SEMANTIC_PATTERN_FIELD.
-     * <li>Field 2 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_SEMANTIC_REFERENCED_COMPONENT_FIELD.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_SEMANTIC_VERSIONS_SET.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_SEMANTIC_PATTERN_FIELD.
+     * <li>Field 2 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_SEMANTIC_REFERENCED_COMPONENT_FIELD.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_SEMANTIC_VERSIONS_SET.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_SEMANTIC_CHRONOLOGY_PATTERN = Pattern.make("PRIMORDIAL_SEMANTIC_CHRONOLOGY_PATTERN", UUID.fromString("5f0ad6ca-638e-4052-82b0-3f564ac99b3f"));
@@ -260,8 +260,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STAMP_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_SEMANTIC_FIELD_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STAMP_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_SEMANTIC_FIELD_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_SEMANTIC_VERSION_PATTERN = Pattern.make("PRIMORDIAL_SEMANTIC_VERSION_PATTERN", UUID.fromString("82f93e84-cee1-44bc-bb6d-4cc2a722048b"));
@@ -282,8 +282,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_STAMP_VERSIONS_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PUBLIC_ID_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_STAMP_VERSIONS_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_STAMP_CHRONOLOGY_PATTERN = Pattern.make("PRIMORDIAL_STAMP_CHRONOLOGY_PATTERN", UUID.fromString("e16abc7a-2a7b-42af-b168-d77aec8116ea"));
@@ -296,11 +296,11 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STATUS.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STATUS.
      * <li>Field 1 is a PRIMORDIAL_LONG that represents PRIMORDIAL_TIME_FOR_VERSION.
-     * <li>Field 2 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_AUTHOR.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_.
-     * <li>Field 4 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PATH.
+     * <li>Field 2 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_AUTHOR.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_.
+     * <li>Field 4 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PATH.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_STAMP_PATTERN = Pattern.make("PRIMORDIAL_STAMP_PATTERN", UUID.fromString("9fd67fee-abf9-551d-9d0e-76a4b1e8b4ee"));
@@ -313,12 +313,12 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STAMP_FIELD.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_STATUS_FIELD.
-     * <li>Field 2 is a PRIMORDIAL_STRING that represents PRIMORDIAL_TIME_FIELD.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_AUTHOR_FIELD.
-     * <li>Field 4 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_FIELD.
-     * <li>Field 5 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_PATH_FIELD.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STAMP_FIELD.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_STATUS_FIELD.
+     * <li>Field 2 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_TIME_FIELD.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_AUTHOR_FIELD.
+     * <li>Field 4 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_FIELD.
+     * <li>Field 5 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_PATH_FIELD.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_STAMP_VERSION_PATTERN = Pattern.make("PRIMORDIAL_STAMP_VERSION_PATTERN", UUID.fromString("73c798cf-bc77-49a2-84f7-4c0f4bc4c012"));
@@ -331,7 +331,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_DITREE that represents PRIMORDIAL_EL_STATED_TERMINOLOGICAL_AXIOMS.
+     * <li>Field 0 is a PRIMORDIAL_DITREE_DISPLAY_FIELD that represents PRIMORDIAL_EL_STATED_TERMINOLOGICAL_AXIOMS.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_STATED_DEFINITION_PATTERN = Pattern.make("PRIMORDIAL_STATED_DEFINITION_PATTERN", UUID.fromString("e813eb92-7d07-5035-8d43-e81249f5b36e"));
@@ -344,8 +344,8 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_RELATIONSHIP_DESTINATION.
-     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_SET that represents PRIMORDIAL_RELATIONSHIP_ORIGIN.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_RELATIONSHIP_DESTINATION.
+     * <li>Field 1 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_RELATIONSHIP_ORIGIN.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_STATED_NAVIGATION_PATTERN = Pattern.make("PRIMORDIAL_STATED_NAVIGATION_PATTERN", UUID.fromString("d02957d6-132d-5b3c-adba-505f5778d998"));
@@ -366,7 +366,7 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_US_ENGLISH_DIALECT.
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_US_ENGLISH_DIALECT.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_US_DIALECT_PATTERN = Pattern.make("PRIMORDIAL_US_DIALECT_PATTERN", UUID.fromString("08f9112c-c041-56d3-b89b-63258f070074"));
@@ -379,12 +379,12 @@ public class GudidTerm {
      * <p>
      * Pattern contains the following fields
      * <ul>
-     * <li>Field 0 is a PRIMORDIAL_CONCEPT_FIELD that represents PRIMORDIAL_VALUE_CONSTRAINT_SOURCE.
-     * <li>Field 1 is a PRIMORDIAL_CONCEPT_FIELD that represents PRIMORDIAL_MINIMUM_VALUE_OPERATOR_MINIMUM_DOMAIN_OPERATOR.
-     * <li>Field 2 is a PRIMORDIAL_FLOAT_FIELD that represents PRIMORDIAL_MINIMUM_VALUE_MIN_VALUE.
-     * <li>Field 3 is a PRIMORDIAL_COMPONENT_FIELD that represents PRIMORDIAL_MAXIMUM_VALUE_OPERATOR_MAXIMUM_DOMAIN_OPERATOR.
-     * <li>Field 4 is a PRIMORDIAL_FLOAT_FIELD that represents PRIMORDIAL_MAXIMUM_VALUE_MAX_VALUE.
-     * <li>Field 5 is a PRIMORDIAL_STRING that represents PRIMORDIAL_EXAMPLE_UCUM_UNITS.
+     * <li>Field 0 is a PRIMORDIAL_CONCEPT_DISPLAY_FIELD that represents PRIMORDIAL_VALUE_CONSTRAINT_SOURCE.
+     * <li>Field 1 is a PRIMORDIAL_CONCEPT_DISPLAY_FIELD that represents PRIMORDIAL_MINIMUM_VALUE_OPERATOR_MINIMUM_DOMAIN_OPERATOR.
+     * <li>Field 2 is a PRIMORDIAL_FLOAT_DISPLAY_FIELD that represents PRIMORDIAL_MINIMUM_VALUE_MIN_VALUE.
+     * <li>Field 3 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents PRIMORDIAL_MAXIMUM_VALUE_OPERATOR_MAXIMUM_DOMAIN_OPERATOR.
+     * <li>Field 4 is a PRIMORDIAL_FLOAT_DISPLAY_FIELD that represents PRIMORDIAL_MAXIMUM_VALUE_MAX_VALUE.
+     * <li>Field 5 is a PRIMORDIAL_STRING_DISPLAY_FIELD that represents PRIMORDIAL_EXAMPLE_UCUM_UNITS.
      * </ul>
      */
     public static final Pattern PRIMORDIAL_VALUE_CONSTRAINT_PATTERN = Pattern.make("PRIMORDIAL_VALUE_CONSTRAINT_PATTERN", UUID.fromString("922697f7-36ba-4afc-9dd5-f29d54b0fdec"));
@@ -1080,10 +1080,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_ and identified by the following UUID(s):
      * <ul>
-     * <li>40d1c869-b509-32f8-b735-836eac577a67
+     * <li>67cd64f1-96d7-5110-b847-556c055ac063
      * </ul>
      */
-    public static final Concept PRIMORDIAL_ = Concept.make("PRIMORDIAL_", UUID.fromString("40d1c869-b509-32f8-b735-836eac577a67"));
+    public static final Concept PRIMORDIAL_ = Concept.make("PRIMORDIAL_", UUID.fromString("67cd64f1-96d7-5110-b847-556c055ac063"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_ACCEPTABLE and identified by the following UUID(s):
@@ -1166,20 +1166,20 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_ARRAY = Concept.make("PRIMORDIAL_ARRAY", UUID.fromString("318622e6-dd7a-5651-851d-2d5c2af85767"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_ARRAY_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_ARRAY_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>b168ad04-f814-5036-b886-fd4913de88c8
      * </ul>
      */
-    public static final Concept PRIMORDIAL_ARRAY_FIELD = Concept.make("PRIMORDIAL_ARRAY_FIELD", UUID.fromString("b168ad04-f814-5036-b886-fd4913de88c8"));
+    public static final Concept PRIMORDIAL_ARRAY_DISPLAY_FIELD = Concept.make("PRIMORDIAL_ARRAY_DISPLAY_FIELD", UUID.fromString("b168ad04-f814-5036-b886-fd4913de88c8"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHOR and identified by the following UUID(s):
      * <ul>
-     * <li>337e93ba-531b-59a4-8153-57dca00e58d2
+     * <li>f7495b58-6630-3499-a44e-2052b5fcf06c
      * </ul>
      */
-    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("337e93ba-531b-59a4-8153-57dca00e58d2"));
+    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHORS and identified by the following UUID(s):
@@ -1254,6 +1254,14 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_BOOLEAN = Concept.make("PRIMORDIAL_BOOLEAN", UUID.fromString("08f2fb74-980d-5157-b92c-4ff1eac6a506"));
 
     /**
+     * Java binding for the concept described as PRIMORDIAL_BOOLEAN_DISPLAY_FIELD and identified by the following UUID(s):
+     * <ul>
+     * <li>d6b9e2cc-31c6-5e80-91b7-7537690aae32
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_BOOLEAN_DISPLAY_FIELD = Concept.make("PRIMORDIAL_BOOLEAN_DISPLAY_FIELD", UUID.fromString("d6b9e2cc-31c6-5e80-91b7-7537690aae32"));
+
+    /**
      * Java binding for the concept described as PRIMORDIAL_BOOLEAN_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>4229683e-8772-4936-abd5-edc5a180f4d1
@@ -1294,12 +1302,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_BYTE_ARRAY = Concept.make("PRIMORDIAL_BYTE_ARRAY", UUID.fromString("9a84fecf-708d-5de4-9c5f-e17973229e0f"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_BYTE_ARRAY_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_BYTE_ARRAY_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>dbdd8df2-aec3-596b-88fc-7b83b5594a45
      * </ul>
      */
-    public static final Concept PRIMORDIAL_BYTE_ARRAY_FIELD = Concept.make("PRIMORDIAL_BYTE_ARRAY_FIELD", UUID.fromString("dbdd8df2-aec3-596b-88fc-7b83b5594a45"));
+    public static final Concept PRIMORDIAL_BYTE_ARRAY_DISPLAY_FIELD = Concept.make("PRIMORDIAL_BYTE_ARRAY_DISPLAY_FIELD", UUID.fromString("dbdd8df2-aec3-596b-88fc-7b83b5594a45"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_CANCELED and identified by the following UUID(s):
@@ -1384,6 +1392,14 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_COMPONENT = Concept.make("PRIMORDIAL_COMPONENT", UUID.fromString("0bc32c16-698e-5719-8bd5-efa099c7d782"));
 
     /**
+     * Java binding for the concept described as PRIMORDIAL_COMPONENT_DISPLAY_FIELD and identified by the following UUID(s):
+     * <ul>
+     * <li>fb00d132-fcc3-5cbf-881d-4bcc4b4c91b3
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_COMPONENT_DISPLAY_FIELD = Concept.make("PRIMORDIAL_COMPONENT_DISPLAY_FIELD", UUID.fromString("fb00d132-fcc3-5cbf-881d-4bcc4b4c91b3"));
+
+    /**
      * Java binding for the concept described as PRIMORDIAL_COMPONENT_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>8bd36a0c-d05d-46b7-a79a-d11477705cc1
@@ -1392,20 +1408,20 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_COMPONENT_FIELD = Concept.make("PRIMORDIAL_COMPONENT_FIELD", UUID.fromString("8bd36a0c-d05d-46b7-a79a-d11477705cc1"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_COMPONENT_ID_LIST and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_COMPONENT_ID_DISPLAY_LIST and identified by the following UUID(s):
      * <ul>
      * <li>e553d3f1-63e1-4292-a3a9-af646fe44292
      * </ul>
      */
-    public static final Concept PRIMORDIAL_COMPONENT_ID_LIST = Concept.make("PRIMORDIAL_COMPONENT_ID_LIST", UUID.fromString("e553d3f1-63e1-4292-a3a9-af646fe44292"));
+    public static final Concept PRIMORDIAL_COMPONENT_ID_DISPLAY_LIST = Concept.make("PRIMORDIAL_COMPONENT_ID_DISPLAY_LIST", UUID.fromString("e553d3f1-63e1-4292-a3a9-af646fe44292"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_COMPONENT_ID_SET and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_COMPONENT_ID_DISPLAY_SET and identified by the following UUID(s):
      * <ul>
      * <li>e283af51-2e8f-44fa-9bf1-89a99a7c7631
      * </ul>
      */
-    public static final Concept PRIMORDIAL_COMPONENT_ID_SET = Concept.make("PRIMORDIAL_COMPONENT_ID_SET", UUID.fromString("e283af51-2e8f-44fa-9bf1-89a99a7c7631"));
+    public static final Concept PRIMORDIAL_COMPONENT_ID_DISPLAY_SET = Concept.make("PRIMORDIAL_COMPONENT_ID_DISPLAY_SET", UUID.fromString("e283af51-2e8f-44fa-9bf1-89a99a7c7631"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_COMPONENT_SEMANTIC and identified by the following UUID(s):
@@ -1470,6 +1486,14 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_CONCEPT_DETAILS_TREE_TABLE = Concept.make("PRIMORDIAL_CONCEPT_DETAILS_TREE_TABLE", UUID.fromString("1655edd8-7b73-52c5-98b0-263d1ab3a90b"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_CONCEPT_DISPLAY_FIELD and identified by the following UUID(s):
+     * <ul>
+     * <li>ac8f1f54-c7c6-5fc7-b1a8-ebb04b918557
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_CONCEPT_DISPLAY_FIELD = Concept.make("PRIMORDIAL_CONCEPT_DISPLAY_FIELD", UUID.fromString("ac8f1f54-c7c6-5fc7-b1a8-ebb04b918557"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_CONCEPT_FIELD and identified by the following UUID(s):
@@ -1636,10 +1660,18 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_DATA_PROPERTY_SET and identified by the following UUID(s):
      * <ul>
+     * <li>6b8ed642-de72-4aee-953d-42e5db92c0ab
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_DATA_PROPERTY_SET = Concept.make("PRIMORDIAL_DATA_PROPERTY_SET", UUID.fromString("6b8ed642-de72-4aee-953d-42e5db92c0ab"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_DATA_PROPERTY_SET_AXIOMS and identified by the following UUID(s):
+     * <ul>
      * <li>1402d311-0b4b-4014-81d2-e715c6696346
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DATA_PROPERTY_SET = Concept.make("PRIMORDIAL_DATA_PROPERTY_SET", UUID.fromString("1402d311-0b4b-4014-81d2-e715c6696346"));
+    public static final Concept PRIMORDIAL_DATA_PROPERTY_SET_AXIOMS = Concept.make("PRIMORDIAL_DATA_PROPERTY_SET_AXIOMS", UUID.fromString("1402d311-0b4b-4014-81d2-e715c6696346"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DECIMAL and identified by the following UUID(s):
@@ -1650,12 +1682,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_DECIMAL = Concept.make("PRIMORDIAL_DECIMAL", UUID.fromString("dccb0476-3b63-3d48-b5a2-85bd0ad2fa61"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_DECIMAL_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_DECIMAL_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>b413fe94-4ada-4aee-96f9-22be19699d40
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DECIMAL_FIELD = Concept.make("PRIMORDIAL_DECIMAL_FIELD", UUID.fromString("b413fe94-4ada-4aee-96f9-22be19699d40"));
+    public static final Concept PRIMORDIAL_DECIMAL_DISPLAY_FIELD = Concept.make("PRIMORDIAL_DECIMAL_DISPLAY_FIELD", UUID.fromString("b413fe94-4ada-4aee-96f9-22be19699d40"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DEFAULT and identified by the following UUID(s):
@@ -1781,10 +1813,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_TYPE and identified by the following UUID(s):
      * <ul>
-     * <li>a00c5ad7-5b8a-5592-a28c-64057dd3caab
+     * <li>ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("a00c5ad7-5b8a-5592-a28c-64057dd3caab"));
+    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_VERSION_PROPERTIES and identified by the following UUID(s):
@@ -1851,6 +1883,14 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_DIGRAPH = Concept.make("PRIMORDIAL_DIGRAPH", UUID.fromString("1cdacc80-0dea-580f-a77b-8a6b273eb673"));
 
     /**
+     * Java binding for the concept described as PRIMORDIAL_DIGRAPH_DISPLAY_FIELD and identified by the following UUID(s):
+     * <ul>
+     * <li>60113dfe-2bad-11eb-adc1-0242ac120002
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_DIGRAPH_DISPLAY_FIELD = Concept.make("PRIMORDIAL_DIGRAPH_DISPLAY_FIELD", UUID.fromString("60113dfe-2bad-11eb-adc1-0242ac120002"));
+
+    /**
      * Java binding for the concept described as PRIMORDIAL_DISJOINT_WITH and identified by the following UUID(s):
      * <ul>
      * <li>f8433993-9a2d-5377-b564-80a45c7b7824
@@ -1867,12 +1907,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_DISPLAY_FIELDS = Concept.make("PRIMORDIAL_DISPLAY_FIELDS", UUID.fromString("4e627b9c-cecb-5563-82fc-cb0ee25113b1"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_DITREE and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_DITREE_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>32f64fc6-5371-11eb-ae93-0242ac130002
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DITREE = Concept.make("PRIMORDIAL_DITREE", UUID.fromString("32f64fc6-5371-11eb-ae93-0242ac130002"));
+    public static final Concept PRIMORDIAL_DITREE_DISPLAY_FIELD = Concept.make("PRIMORDIAL_DITREE_DISPLAY_FIELD", UUID.fromString("32f64fc6-5371-11eb-ae93-0242ac130002"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DOUBLE and identified by the following UUID(s):
@@ -1883,12 +1923,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_DOUBLE = Concept.make("PRIMORDIAL_DOUBLE", UUID.fromString("7172e6ac-a05a-5a34-8275-aef430b18207"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_DOUBLE_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_DOUBLE_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>85ff6e8f-9151-5428-a5f0-e07844b69260
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DOUBLE_FIELD = Concept.make("PRIMORDIAL_DOUBLE_FIELD", UUID.fromString("85ff6e8f-9151-5428-a5f0-e07844b69260"));
+    public static final Concept PRIMORDIAL_DOUBLE_DISPLAY_FIELD = Concept.make("PRIMORDIAL_DOUBLE_DISPLAY_FIELD", UUID.fromString("85ff6e8f-9151-5428-a5f0-e07844b69260"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DUTCH_LANGUAGE and identified by the following UUID(s):
@@ -2175,12 +2215,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_FLOAT = Concept.make("PRIMORDIAL_FLOAT", UUID.fromString("fb591801-7b37-525d-980d-98a1c63ceee0"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_FLOAT_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_FLOAT_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>6efe7087-3e3c-5b45-8109-90d7652b1506
      * </ul>
      */
-    public static final Concept PRIMORDIAL_FLOAT_FIELD = Concept.make("PRIMORDIAL_FLOAT_FIELD", UUID.fromString("6efe7087-3e3c-5b45-8109-90d7652b1506"));
+    public static final Concept PRIMORDIAL_FLOAT_DISPLAY_FIELD = Concept.make("PRIMORDIAL_FLOAT_DISPLAY_FIELD", UUID.fromString("6efe7087-3e3c-5b45-8109-90d7652b1506"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_FLOAT_LITERAL and identified by the following UUID(s):
@@ -2332,12 +2372,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_IGNORE_CASE = Concept.make("PRIMORDIAL_IGNORE_CASE", UUID.fromString("74bbdaff-f061-5807-b334-3c88ac3e9421"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_IMAGE_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_IMAGE_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>cd9ea037-0af9-586b-9369-7bc044cdb8f7
      * </ul>
      */
-    public static final Concept PRIMORDIAL_IMAGE_FIELD = Concept.make("PRIMORDIAL_IMAGE_FIELD", UUID.fromString("cd9ea037-0af9-586b-9369-7bc044cdb8f7"));
+    public static final Concept PRIMORDIAL_IMAGE_DISPLAY_FIELD = Concept.make("PRIMORDIAL_IMAGE_DISPLAY_FIELD", UUID.fromString("cd9ea037-0af9-586b-9369-7bc044cdb8f7"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_IMMUTABLECOORDINATE_PROPERTIES and identified by the following UUID(s):
@@ -2453,6 +2493,14 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_INSTANT_SUBSTITUTION = Concept.make("PRIMORDIAL_INSTANT_SUBSTITUTION", UUID.fromString("56599345-31c5-5817-9d36-57dd3a626b3a"));
 
     /**
+     * Java binding for the concept described as PRIMORDIAL_INTEGER_DISPLAY_FIELD and identified by the following UUID(s):
+     * <ul>
+     * <li>ff59c300-9c4e-5e77-a35d-6a133eb3440f
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_INTEGER_DISPLAY_FIELD = Concept.make("PRIMORDIAL_INTEGER_DISPLAY_FIELD", UUID.fromString("ff59c300-9c4e-5e77-a35d-6a133eb3440f"));
+
+    /**
      * Java binding for the concept described as PRIMORDIAL_INTEGER_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>db249d1f-ea2e-4608-ae13-166ed20ca825
@@ -2491,6 +2539,22 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_INTERVAL_ROLE_TYPE = Concept.make("PRIMORDIAL_INTERVAL_ROLE_TYPE", UUID.fromString("6fa58611-af37-402e-a0c2-6ee1d6068651"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_INTERVAL_SET_AXIOMS and identified by the following UUID(s):
+     * <ul>
+     * <li>b253e725-d7cd-46e3-bc3a-5db8b3ffbd52
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_INTERVAL_SET_AXIOMS = Concept.make("PRIMORDIAL_INTERVAL_SET_AXIOMS", UUID.fromString("b253e725-d7cd-46e3-bc3a-5db8b3ffbd52"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_INTERVAL_TYPE and identified by the following UUID(s):
+     * <ul>
+     * <li>ba3191ee-a260-41a6-99fd-74a22fdc937e
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_INTERVAL_TYPE = Concept.make("PRIMORDIAL_INTERVAL_TYPE", UUID.fromString("ba3191ee-a260-41a6-99fd-74a22fdc937e"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_INTERVAL_UPPER_BOUND and identified by the following UUID(s):
@@ -2720,12 +2784,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_LOGICAL_DEFINITION = Concept.make("PRIMORDIAL_LOGICAL_DEFINITION", UUID.fromString("7dccd042-b0b8-5cec-a1bc-6de676b92f4b"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_LOGICAL_EXPRESSION_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_LOGICAL_EXPRESSION_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>c16eb414-8840-54f8-9bd2-e2f1ab37e19d
      * </ul>
      */
-    public static final Concept PRIMORDIAL_LOGICAL_EXPRESSION_FIELD = Concept.make("PRIMORDIAL_LOGICAL_EXPRESSION_FIELD", UUID.fromString("c16eb414-8840-54f8-9bd2-e2f1ab37e19d"));
+    public static final Concept PRIMORDIAL_LOGICAL_EXPRESSION_DISPLAY_FIELD = Concept.make("PRIMORDIAL_LOGICAL_EXPRESSION_DISPLAY_FIELD", UUID.fromString("c16eb414-8840-54f8-9bd2-e2f1ab37e19d"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_LOGICAL_EXPRESSION_SEMANTIC and identified by the following UUID(s):
@@ -2774,6 +2838,14 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_LONG = Concept.make("PRIMORDIAL_LONG", UUID.fromString("dea8cdf1-de75-5991-9791-79714e4a964d"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_LOWER_BOUND_OPEN and identified by the following UUID(s):
+     * <ul>
+     * <li>a0096ba1-0718-4c03-ad8f-8143c44091e7
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_LOWER_BOUND_OPEN = Concept.make("PRIMORDIAL_LOWER_BOUND_OPEN", UUID.fromString("a0096ba1-0718-4c03-ad8f-8143c44091e7"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_MASTER_PATH and identified by the following UUID(s):
@@ -3043,10 +3115,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_PATH_ORIGINS and identified by the following UUID(s):
      * <ul>
-     * <li>6e6a112e-7d8c-53c7-aaf1-c46e2d69743c
+     * <li>f33e1668-34dd-53dd-8728-31b29934b482
      * </ul>
      */
-    public static final Concept PRIMORDIAL_PATH_ORIGINS = Concept.make("PRIMORDIAL_PATH_ORIGINS", UUID.fromString("6e6a112e-7d8c-53c7-aaf1-c46e2d69743c"));
+    public static final Concept PRIMORDIAL_PATH_ORIGINS = Concept.make("PRIMORDIAL_PATH_ORIGINS", UUID.fromString("f33e1668-34dd-53dd-8728-31b29934b482"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_PATTERN_FIELD and identified by the following UUID(s):
@@ -3184,6 +3256,14 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_PROPERTY_SET = Concept.make("PRIMORDIAL_PROPERTY_SET", UUID.fromString("e273b5c0-c012-5e53-990c-aec5c2cb33a7"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_PROPERTY_SET_AXIOMS and identified by the following UUID(s):
+     * <ul>
+     * <li>ca2fdefd-0481-41cb-8074-41a78f94034d
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_PROPERTY_SET_AXIOMS = Concept.make("PRIMORDIAL_PROPERTY_SET_AXIOMS", UUID.fromString("ca2fdefd-0481-41cb-8074-41a78f94034d"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_PUBLIC_ID_FIELD and identified by the following UUID(s):
@@ -3367,10 +3447,18 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_SANDBOX_PATH and identified by the following UUID(s):
      * <ul>
-     * <li>80710ea6-983c-5fa0-8908-e479f1f03ea9
+     * <li>715bd36d-6090-5b37-8ae7-88c9e532010e
      * </ul>
      */
-    public static final Concept PRIMORDIAL_SANDBOX_PATH = Concept.make("PRIMORDIAL_SANDBOX_PATH", UUID.fromString("80710ea6-983c-5fa0-8908-e479f1f03ea9"));
+    public static final Concept PRIMORDIAL_SANDBOX_PATH = Concept.make("PRIMORDIAL_SANDBOX_PATH", UUID.fromString("715bd36d-6090-5b37-8ae7-88c9e532010e"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_SEMANTIC_DISPLAY_FIELD_TYPE and identified by the following UUID(s):
+     * <ul>
+     * <li>9c3dfc88-51e4-5e51-a59a-88dd580162b7
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_SEMANTIC_DISPLAY_FIELD_TYPE = Concept.make("PRIMORDIAL_SEMANTIC_DISPLAY_FIELD_TYPE", UUID.fromString("9c3dfc88-51e4-5e51-a59a-88dd580162b7"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_SEMANTIC_FIELD and identified by the following UUID(s):
@@ -3403,14 +3491,6 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_SEMANTIC_FIELD_FIELDS_SET = Concept.make("PRIMORDIAL_SEMANTIC_FIELD_FIELDS_SET", UUID.fromString("8dcfc1a1-31f2-46f7-8247-0a17a6d7c6c0"));
-
-    /**
-     * Java binding for the concept described as PRIMORDIAL_SEMANTIC_FIELD_TYPE and identified by the following UUID(s):
-     * <ul>
-     * <li>9c3dfc88-51e4-5e51-a59a-88dd580162b7
-     * </ul>
-     */
-    public static final Concept PRIMORDIAL_SEMANTIC_FIELD_TYPE = Concept.make("PRIMORDIAL_SEMANTIC_FIELD_TYPE", UUID.fromString("9c3dfc88-51e4-5e51-a59a-88dd580162b7"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_SEMANTIC_LIST_FOR_CHRONICLE and identified by the following UUID(s):
@@ -3608,12 +3688,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_STATUS_FOR_VERSION = Concept.make("PRIMORDIAL_STATUS_FOR_VERSION", UUID.fromString("0608e233-d79d-5076-985b-9b1ea4e14b4c"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_STRING and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_STRING_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>a46aaf11-b37a-32d6-abdc-707f084ec8f5
      * </ul>
      */
-    public static final Concept PRIMORDIAL_STRING = Concept.make("PRIMORDIAL_STRING", UUID.fromString("a46aaf11-b37a-32d6-abdc-707f084ec8f5"));
+    public static final Concept PRIMORDIAL_STRING_DISPLAY_FIELD = Concept.make("PRIMORDIAL_STRING_DISPLAY_FIELD", UUID.fromString("a46aaf11-b37a-32d6-abdc-707f084ec8f5"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_STRING_FIELD and identified by the following UUID(s):
@@ -3671,22 +3751,6 @@ public class GudidTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_TEMPORAL_AXIOM = Concept.make("PRIMORDIAL_TEMPORAL_AXIOM", UUID.fromString("5144d836-18d8-4881-a377-2d4640b710a9"));
-
-    /**
-     * Java binding for the concept described as PRIMORDIAL_TEMPORAL_SET_AXIOMS and identified by the following UUID(s):
-     * <ul>
-     * <li>b253e725-d7cd-46e3-bc3a-5db8b3ffbd52
-     * </ul>
-     */
-    public static final Concept PRIMORDIAL_TEMPORAL_SET_AXIOMS = Concept.make("PRIMORDIAL_TEMPORAL_SET_AXIOMS", UUID.fromString("b253e725-d7cd-46e3-bc3a-5db8b3ffbd52"));
-
-    /**
-     * Java binding for the concept described as PRIMORDIAL_TEMPORAL_TYPE and identified by the following UUID(s):
-     * <ul>
-     * <li>ba3191ee-a260-41a6-99fd-74a22fdc937e
-     * </ul>
-     */
-    public static final Concept PRIMORDIAL_TEMPORAL_TYPE = Concept.make("PRIMORDIAL_TEMPORAL_TYPE", UUID.fromString("ba3191ee-a260-41a6-99fd-74a22fdc937e"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_TEXT and identified by the following UUID(s):
@@ -3833,6 +3897,14 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_UNMODELED_ROLE_CONCEPT = Concept.make("PRIMORDIAL_UNMODELED_ROLE_CONCEPT", UUID.fromString("4be7118f-e6ab-5dc7-bcba-b2cc8b028492"));
 
     /**
+     * Java binding for the concept described as PRIMORDIAL_UPPER_BOUND_OPEN and identified by the following UUID(s):
+     * <ul>
+     * <li>c20b3b1e-112f-4cb2-b901-4046db844629
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_UPPER_BOUND_OPEN = Concept.make("PRIMORDIAL_UPPER_BOUND_OPEN", UUID.fromString("c20b3b1e-112f-4cb2-b901-4046db844629"));
+
+    /**
      * Java binding for the concept described as PRIMORDIAL_USER and identified by the following UUID(s):
      * <ul>
      * <li>349161ba-9a6a-5c9c-a78f-281f19cfc057
@@ -3874,12 +3946,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_UUID_DATA_TYPE = Concept.make("PRIMORDIAL_UUID_DATA_TYPE", UUID.fromString("2faa9262-8fb2-11db-b606-0800200c9a66"), UUID.fromString("680f3f6c-7a2a-365d-b527-8c9a96dd1a94"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_UUID_FIELD and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_UUID_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>dea8cb0f-9bb5-56bb-af27-a14943cb24ba
      * </ul>
      */
-    public static final Concept PRIMORDIAL_UUID_FIELD = Concept.make("PRIMORDIAL_UUID_FIELD", UUID.fromString("dea8cb0f-9bb5-56bb-af27-a14943cb24ba"));
+    public static final Concept PRIMORDIAL_UUID_DISPLAY_FIELD = Concept.make("PRIMORDIAL_UUID_DISPLAY_FIELD", UUID.fromString("dea8cb0f-9bb5-56bb-af27-a14943cb24ba"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_VALUE_CONSTRAINT and identified by the following UUID(s):
@@ -3930,12 +4002,12 @@ public class GudidTerm {
     public static final Concept PRIMORDIAL_VERSION_PROPERTIES = Concept.make("PRIMORDIAL_VERSION_PROPERTIES", UUID.fromString("93f844df-38e5-5167-ba94-2c948b8bd07c"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_VERTEX and identified by the following UUID(s):
+     * Java binding for the concept described as PRIMORDIAL_VERTEX_DISPLAY_FIELD and identified by the following UUID(s):
      * <ul>
      * <li>3e56c6b6-5371-11eb-ae93-0242ac130002
      * </ul>
      */
-    public static final Concept PRIMORDIAL_VERTEX = Concept.make("PRIMORDIAL_VERTEX", UUID.fromString("3e56c6b6-5371-11eb-ae93-0242ac130002"));
+    public static final Concept PRIMORDIAL_VERTEX_DISPLAY_FIELD = Concept.make("PRIMORDIAL_VERTEX_DISPLAY_FIELD", UUID.fromString("3e56c6b6-5371-11eb-ae93-0242ac130002"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_VERTEX_STATES and identified by the following UUID(s):
