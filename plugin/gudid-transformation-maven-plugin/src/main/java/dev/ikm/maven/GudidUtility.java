@@ -54,7 +54,7 @@ public class GudidUtility {
         MEDICAL_SPECIALTY_MAPPINGS.put("RA", "Radiology");
         MEDICAL_SPECIALTY_MAPPINGS.put("SU", "General & Plastic Surgery");
         MEDICAL_SPECIALTY_MAPPINGS.put("TX", "Clinical Toxicology");
-        MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty");
+        MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty"); // NOTE 'Unknown' is mapped to empty string in source file
 
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", GudidTerm.GUDID_ANESTHESIOLOGY);
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", GudidTerm.GUDID_CARDIOVASCULAR);
@@ -117,7 +117,7 @@ public class GudidUtility {
                             Collectors.mapping(row -> row[1], Collectors.toSet())));
 
             productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
-                    .filter(row -> includedMedicalSpecialties.contains(row[1]))
+                    .filter(row -> row[1].isBlank() || includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
 
         } catch (Exception ex) {
