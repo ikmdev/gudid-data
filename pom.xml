@@ -41,7 +41,7 @@
         <jupiter.version>5.12.0</jupiter.version>
         <!-- origin -->
         <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>
-        <source.version>20250501</source.version>
+        <source.version>20250804</source.version>
         <source.zip>${user.home}/Downloads/AccessGUDID_Delimited_Full_Release_${source.version}.zip</source.zip>
         <foi.source.zip>${user.home}/Downloads/foiclass.zip</foi.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
