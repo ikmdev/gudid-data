@@ -133,20 +133,20 @@ public class GudidUtility {
     }
 
     public boolean isDeviceIncluded(String primaryDi) {
-        if (isUnfilteredMode()) {
+        if (isUnfilteredMode() || !devicesByProductCode.containsKey(primaryDi)) {
             return true;
         }
-        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+        long count = devicesByProductCode.get(primaryDi).stream()
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
         return count > 0;
     }
 
     public boolean isDeviceIncluded(String primaryDi, String productCode) {
-        if (isUnfilteredMode()) {
+        if (isUnfilteredMode() || !devicesByProductCode.containsKey(primaryDi)) {
             return true;
         }
-        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+        long count = devicesByProductCode.get(primaryDi).stream()
                 .filter(code -> code.equals(productCode))
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
