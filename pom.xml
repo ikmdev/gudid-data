@@ -47,8 +47,6 @@
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
         <starterSet>GUDID_StarterData_1-52.zip</starterSet>
         <changeSet>GUDID_SD_Incremental_20250723.zip</changeSet>
-        <fieldCategoriesStarterSetLocation>${user.home}/Downloads</fieldCategoriesStarterSetLocation>
-        <fieldCategoriesStarterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</fieldCategoriesStarterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>gudid</dataStore>
 
@@ -59,8 +57,8 @@
         <!-- starter data -->
         <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
-        <tinkar-starter-data.classifier>unreasoned-sa</tinkar-starter-data.classifier>
-        <tinkar-starter-data.version>1.7.0</tinkar-starter-data.version>
+        <tinkar-starter-data.classifier>unreasoned-pb</tinkar-starter-data.classifier>
+        <tinkar-starter-data.version>20250813</tinkar-starter-data.version>
         
         <medicalSpecialtyFlag>N</medicalSpecialtyFlag>
 
