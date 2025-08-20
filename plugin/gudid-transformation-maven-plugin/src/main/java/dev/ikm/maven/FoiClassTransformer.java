@@ -107,6 +107,10 @@ public class FoiClassTransformer extends AbstractTransformer {
                             skippedCount.incrementAndGet();
                         }
                     });
+
+            // Catch-all: Unknown FDA Product Code
+            createFdaProductCodeConcept(session, "UNKNOWN", "UNKNOWN", "Unknown FDA Product Code");
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading foiclass.txt file: " + inputFile.getAbsolutePath(), e);
         }

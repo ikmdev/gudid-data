@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,6 +60,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
         // Group productCodes by PrimaryDI
         Map<String, Set<String>> primaryDiToProductCodes = new HashMap<>();
+        List<String> unknownDeviceIds = new ArrayList<>(gudidUtility.getFilteredDeviceIds());
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) // skip header line
@@ -82,7 +84,18 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         primaryDiToProductCodes
                                 .computeIfAbsent(primaryDi, _ -> new HashSet<>())
                                 .add(productCode);
+
+                        unknownDeviceIds.remove(primaryDi);
                     });
+
+            if (!unknownDeviceIds.isEmpty()) {
+                LOG.info("Unknown product code for {} devices", unknownDeviceIds.size());
+                final Set<String> unknownProductCode = Set.of("UNKNOWN");
+                unknownDeviceIds.forEach(primaryDi -> {
+                    primaryDiToProductCodes.put(primaryDi, unknownProductCode);
+                });
+            }
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading ProductCodes.txt file: " + inputFile.getAbsolutePath(), e);
         }
