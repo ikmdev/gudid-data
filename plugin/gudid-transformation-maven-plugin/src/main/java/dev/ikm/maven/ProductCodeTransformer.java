@@ -112,7 +112,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
                 // Get FDA product code concept UUIDs from mapping
                 List<UUID> fdaProductCodeUuids = productCodes.stream()
-                        .map(productCode -> UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_" + productCode))
+                        .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
                         .toList();
 
                 // Create session
