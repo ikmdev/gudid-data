@@ -75,8 +75,10 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         String primaryDi = data[PRIMARY_DI];
                         String productCode = data[PRODUCT_CODE];
 
-                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)) {
-                            LOG.warn("Empty PrimaryDI or productCode found in row: {}", String.join("|", data));
+                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)
+                                || gudidUtility.getConceptByProductCode(productCode).isEmpty()) {
+                            LOG.warn("No valid FDA product code mappings found for PrimaryDI - defaulting to UNKNOWN: {}",
+                                    primaryDi);
                             return;
                         }
 
@@ -84,6 +86,8 @@ public class ProductCodeTransformer extends AbstractTransformer {
                                 .computeIfAbsent(primaryDi, _ -> new HashSet<>())
                                 .add(productCode);
                     });
+
+            LOG.info("Grouped {} unique PrimaryDIs with product codes", primaryDiToProductCodes.size());
 
             Set<String> unmappedDeviceIds = new HashSet<>(gudidUtility.getIncludedDeviceIds());
             unmappedDeviceIds.removeAll(primaryDiToProductCodes.keySet());
@@ -100,8 +104,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
             throw new RuntimeException("Error reading ProductCodes.txt file: " + inputFile.getAbsolutePath(), e);
         }
 
-        LOG.info("Grouped {} unique PrimaryDIs with product codes", primaryDiToProductCodes.size());
-
         // Process each PrimaryDI group
         primaryDiToProductCodes.forEach((primaryDi, productCodes) -> {
             try {
@@ -112,12 +114,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
                 List<UUID> fdaProductCodeUuids = productCodes.stream()
                         .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
                         .toList();
-
-                if (fdaProductCodeUuids.isEmpty()) {
-                    LOG.warn("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
-                    skippedCount.incrementAndGet();
-                    return;
-                }
 
                 // Create session
                 Session session = composer.open(State.ACTIVE, author, module, path);
