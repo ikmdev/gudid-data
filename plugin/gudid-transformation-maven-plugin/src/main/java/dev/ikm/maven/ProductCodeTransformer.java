@@ -60,7 +60,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
         // Group productCodes by PrimaryDI
         Map<String, Set<String>> primaryDiToProductCodes = new HashMap<>();
-        List<String> unknownDeviceIds = new ArrayList<>(gudidUtility.getFilteredDeviceIds());
 
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) // skip header line
@@ -84,9 +83,10 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         primaryDiToProductCodes
                                 .computeIfAbsent(primaryDi, _ -> new HashSet<>())
                                 .add(productCode);
-
-                        unknownDeviceIds.remove(primaryDi);
                     });
+
+            List<String> unknownDeviceIds = new ArrayList<>(gudidUtility.getFilteredDeviceIds());
+            unknownDeviceIds.removeAll(primaryDiToProductCodes.keySet());
 
             if (!unknownDeviceIds.isEmpty()) {
                 LOG.info("Unknown product code for {} devices", unknownDeviceIds.size());
