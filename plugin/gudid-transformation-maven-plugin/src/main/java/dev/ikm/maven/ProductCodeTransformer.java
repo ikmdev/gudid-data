@@ -54,6 +54,8 @@ public class ProductCodeTransformer extends AbstractTransformer {
         EntityProxy.Concept author = gudidUtility.getAuthorConcept();
         EntityProxy.Concept path = TinkarTerm.DEVELOPMENT_PATH;
         EntityProxy.Concept module = gudidUtility.getModuleConcept();
+        Set<String> unknownProductCode = Set.of("UNKNOWN");
+        UUID unknownProductCodeUuid = UuidT5Generator.get(namespace, "FDA_PRODUCT_CODE_UNKNOWN");
 
         AtomicInteger processedCount = new AtomicInteger(0);
         AtomicInteger skippedCount = new AtomicInteger(0);
@@ -75,8 +77,7 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         String primaryDi = data[PRIMARY_DI];
                         String productCode = data[PRODUCT_CODE];
 
-                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)
-                                || gudidUtility.getConceptByProductCode(productCode).isEmpty()) {
+                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)) {
                             LOG.warn("No valid FDA product code mappings found for PrimaryDI - defaulting to UNKNOWN: {}",
                                     primaryDi);
                             return;
@@ -94,7 +95,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
 
             if (!unmappedDeviceIds.isEmpty()) {
                 LOG.info("Unknown product code for {} devices", unmappedDeviceIds.size());
-                final Set<String> unknownProductCode = Set.of("UNKNOWN");
                 unmappedDeviceIds.forEach(primaryDi -> {
                     primaryDiToProductCodes.put(primaryDi, unknownProductCode);
                 });
@@ -114,6 +114,10 @@ public class ProductCodeTransformer extends AbstractTransformer {
                 List<UUID> fdaProductCodeUuids = productCodes.stream()
                         .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
                         .toList();
+
+                if (fdaProductCodeUuids.isEmpty()) {
+                    fdaProductCodeUuids = List.of(unknownProductCodeUuid);
+                }
 
                 // Create session
                 Session session = composer.open(State.ACTIVE, author, module, path);
