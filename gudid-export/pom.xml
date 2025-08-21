@@ -37,25 +37,25 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>dev.ikm.maven.tinkar</groupId>-->
-<!--                <artifactId>tinkar-maven-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    &lt;!&ndash; Export reasoned data as a protocol buffers zip file (package) &ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <id>${project.artifactId}-reasoned-export</id>-->
-<!--                        <goals>-->
-<!--                            <goal>export-tinkar-data</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <exportDirectory>${project.build.directory}</exportDirectory>-->
-<!--                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>-->
-<!--                            <fileName>${data-artifact.filename}-reasoned-pb.zip</fileName>-->
-<!--                            <isolate>false</isolate>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>dev.ikm.maven.tinkar</groupId>
+                <artifactId>tinkar-maven-plugin</artifactId>
+                <executions>
+                    <!-- Export reasoned data as a protocol buffers zip file (package) -->
+                    <execution>
+                        <id>${project.artifactId}-reasoned-export</id>
+                        <goals>
+                            <goal>export-tinkar-data</goal>
+                        </goals>
+                        <configuration>
+                            <exportDirectory>${project.build.directory}</exportDirectory>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileName>${data-artifact.filename}-reasoned-pb.zip</fileName>
+                            <isolate>false</isolate>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -161,24 +161,24 @@
                                     <classifier>reasoned-sa</classifier>
                                 </configuration>
                             </execution>
-<!--                            <execution>-->
-<!--                                <id>deploy-reasoned-pb</id>-->
-<!--                                <phase>deploy</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>deploy-file</goal>-->
-<!--                                </goals>-->
-<!--                                <configuration>-->
-<!--                                    <repositoryId>nexus</repositoryId>-->
-<!--                                    <url>${deployNexusURL}</url>-->
-<!--                                    <groupId>${data-artifact.groupId}</groupId>-->
-<!--                                    <artifactId>${data-artifact.artifactId}</artifactId>-->
-<!--                                    <version>${data-artifact.version}</version>-->
-<!--                                    <pomFile>${project.build.directory}/gudid-export-pom.xml</pomFile>-->
-<!--                                    <file>${data-artifact.filename}-reasoned-pb.zip</file>-->
-<!--                                    <packaging>zip</packaging>-->
-<!--                                    <classifier>reasoned-pb</classifier>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
+                            <execution>
+                                <id>deploy-reasoned-pb</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy-file</goal>
+                                </goals>
+                                <configuration>
+                                    <repositoryId>nexus</repositoryId>
+                                    <url>${deployNexusURL}</url>
+                                    <groupId>${data-artifact.groupId}</groupId>
+                                    <artifactId>${data-artifact.artifactId}</artifactId>
+                                    <version>${data-artifact.version}</version>
+                                    <pomFile>${project.build.directory}/gudid-export-pom.xml</pomFile>
+                                    <file>${data-artifact.filename}-reasoned-pb.zip</file>
+                                    <packaging>zip</packaging>
+                                    <classifier>reasoned-pb</classifier>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>

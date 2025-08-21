@@ -5,6 +5,7 @@ import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.template.AxiomSyntax;
+import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import dev.ikm.tinkar.terms.TinkarTerm;
@@ -110,6 +111,12 @@ public class ProductCodeTransformer extends AbstractTransformer {
                 // Get device concept UUID from mapping (created by Device.txt transformer)
                 EntityProxy.Concept deviceConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, primaryDi)));
 
+                if (EntityService.get().getEntity(deviceConcept.nid()).isEmpty()) {
+                    LOG.warn("Device with PrimaryDI does not exist: {}", primaryDi);
+                    skippedCount.incrementAndGet();
+                    return;
+                }
+
                 // Get FDA product code concept UUIDs from mapping
                 List<UUID> fdaProductCodeUuids = productCodes.stream()
                         .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
@@ -148,7 +155,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
                             .semantic(axiomSemantic)
                             .text(owlExpression),
                     deviceConcept);
-
 
             LOG.debug("Created stated definition semantic for device concept: {} with {} FDA product codes",
                     deviceConcept, fdaProductCodeUuids.size());
