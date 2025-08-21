@@ -85,13 +85,13 @@ public class ProductCodeTransformer extends AbstractTransformer {
                                 .add(productCode);
                     });
 
-            List<String> unknownDeviceIds = new ArrayList<>(gudidUtility.getFilteredDeviceIds());
-            unknownDeviceIds.removeAll(primaryDiToProductCodes.keySet());
+            Set<String> unmappedDeviceIds = new HashSet<>(gudidUtility.getIncludedDeviceIds());
+            unmappedDeviceIds.removeAll(primaryDiToProductCodes.keySet());
 
-            if (!unknownDeviceIds.isEmpty()) {
-                LOG.info("Unknown product code for {} devices", unknownDeviceIds.size());
+            if (!unmappedDeviceIds.isEmpty()) {
+                LOG.info("Unknown product code for {} devices", unmappedDeviceIds.size());
                 final Set<String> unknownProductCode = Set.of("UNKNOWN");
-                unknownDeviceIds.forEach(primaryDi -> {
+                unmappedDeviceIds.forEach(primaryDi -> {
                     primaryDiToProductCodes.put(primaryDi, unknownProductCode);
                 });
             }

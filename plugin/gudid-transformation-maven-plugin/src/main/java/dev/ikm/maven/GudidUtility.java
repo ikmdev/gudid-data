@@ -90,7 +90,7 @@ public class GudidUtility {
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
-    private List<String> filteredDeviceIds = Collections.emptyList();
+    private Set<String> includedDeviceIds;
 
     public GudidUtility(UUID namespace, String basePath) {
         this(namespace, basePath, null);
@@ -107,12 +107,12 @@ public class GudidUtility {
             initializeDeviceProductCodeMap();
             LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
         }
+        initializeIncludedDeviceIds();
     }
 
     private void initializeDeviceProductCodeMap() {
         try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
-             Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"));
-             Stream<String> devices = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "device.txt"));) {
+             Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
 
             devicesByProductCode = productCodes.map(row -> row.split("\\|"))
                     .collect(Collectors.groupingBy(row -> row[0],
@@ -122,11 +122,18 @@ public class GudidUtility {
                     .filter(row -> row[1].isBlank() || includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
 
-            filteredDeviceIds = devices.map(row -> row.split("\\|"))
-                    .map(row -> row[0]).distinct()
-                    .filter(this::isDeviceIncluded)
-                    .toList();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
+    private void initializeIncludedDeviceIds() {
+        try (Stream<String> devices = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "device.txt"))) {
+            includedDeviceIds = devices.map(row -> row.split("\\|"))
+                    .map(row -> row[0])
+                    .filter(this::isDeviceIncluded)
+                    .collect(Collectors.toSet());
+            LOG.info("includedDeviceIds: {}", includedDeviceIds.size());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -164,8 +171,8 @@ public class GudidUtility {
         return includedMedicalSpecialties.isEmpty();
     }
 
-    public List<String> getFilteredDeviceIds() {
-        return filteredDeviceIds;
+    public Set<String> getIncludedDeviceIds() {
+        return includedDeviceIds;
     }
 
     public UUID getNamespace() {
