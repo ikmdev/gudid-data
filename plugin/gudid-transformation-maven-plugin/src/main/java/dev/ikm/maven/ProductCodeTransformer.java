@@ -115,6 +115,12 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
                         .toList();
 
+                if (fdaProductCodeUuids.isEmpty()) {
+                    LOG.warn("No valid FDA product code mappings found for PrimaryDI: {} " + productCodes, primaryDi);
+                    skippedCount.incrementAndGet();
+                    return;
+                }
+
                 // Create session
                 Session session = composer.open(State.ACTIVE, author, module, path);
 
