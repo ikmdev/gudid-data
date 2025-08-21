@@ -114,11 +114,11 @@ public class GudidUtility {
         try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
              Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
 
-            devicesByProductCode = productCodes.map(row -> row.split("\\|"))
+            devicesByProductCode = productCodes.skip(1).map(row -> row.split("\\|"))
                     .collect(Collectors.groupingBy(row -> row[0],
                             Collectors.mapping(row -> row[1], Collectors.toSet())));
 
-            productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
+            productCodeToMedicalSpecialty = foiClass.skip(1).map(row -> row.split("\\|"))
                     .filter(row -> row[1].isBlank() || includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
 
@@ -129,7 +129,7 @@ public class GudidUtility {
 
     private void initializeIncludedDeviceIds() {
         try (Stream<String> devices = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "device.txt"))) {
-            includedDeviceIds = devices.map(row -> row.split("\\|"))
+            includedDeviceIds = devices.skip(1).map(row -> row.split("\\|"))
                     .map(row -> row[0])
                     .filter(this::isDeviceIncluded)
                     .collect(Collectors.toSet());
