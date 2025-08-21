@@ -90,7 +90,7 @@ public class GudidUtility {
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
-    private List<String> filteredDeviceIds;
+    private List<String> filteredDeviceIds = Collections.emptyList();
 
     public GudidUtility(UUID namespace, String basePath) {
         this(namespace, basePath, null);
