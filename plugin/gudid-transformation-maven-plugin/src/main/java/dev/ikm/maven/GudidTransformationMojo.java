@@ -48,9 +48,9 @@ public class GudidTransformationMojo extends AbstractMojo {
     // Define processing order based on dependencies
     private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
             "foi/foiclass.txt",
+            "gudid/device.txt",
             "gudid/productCodes.txt",
             "gudid/identifiers.txt",
-            "gudid/device.txt",
             "gudid/premarketSubmissions.txt",
             "gudid/gmdnTerms.txt"
     );

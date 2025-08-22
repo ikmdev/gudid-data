@@ -41,7 +41,7 @@
         <jupiter.version>5.12.0</jupiter.version>
         <!-- origin -->
         <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>
-        <source.version>20250501</source.version>
+        <source.version>20250804</source.version>
         <source.zip>${user.home}/Downloads/AccessGUDID_Delimited_Full_Release_${source.version}.zip</source.zip>
         <foi.source.zip>${user.home}/Downloads/foiclass.zip</foi.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
@@ -59,8 +59,9 @@
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
         <tinkar-starter-data.classifier>unreasoned-pb</tinkar-starter-data.classifier>
         <tinkar-starter-data.version>20250813</tinkar-starter-data.version>
-        
-        <medicalSpecialtyFlag>N</medicalSpecialtyFlag>
+
+        <!-- Override to ALL for full GUDID -->
+        <medicalSpecialtyFlag>subset</medicalSpecialtyFlag>
 
         <reasoner-type>ElkSnomedReasoner</reasoner-type>
     </properties>
