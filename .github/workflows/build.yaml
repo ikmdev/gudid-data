@@ -22,9 +22,6 @@ jobs:
     name: Build Job
     runs-on: ubuntu-24.04
     steps:          
-      - name: Make Maven Wrapper executable
-        run: chmod +x ./mvnw
-        
       - name: Build IKMDEV Code
         uses: ikmdev/maven-clean-install-build-action@v3.5.0
         with:
