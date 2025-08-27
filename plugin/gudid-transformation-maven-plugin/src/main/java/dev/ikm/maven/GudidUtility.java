@@ -54,7 +54,7 @@ public class GudidUtility {
         MEDICAL_SPECIALTY_MAPPINGS.put("RA", "Radiology");
         MEDICAL_SPECIALTY_MAPPINGS.put("SU", "General & Plastic Surgery");
         MEDICAL_SPECIALTY_MAPPINGS.put("TX", "Clinical Toxicology");
-        MEDICAL_SPECIALTY_MAPPINGS.put("", "Unknown Medical Specialty");
+        MEDICAL_SPECIALTY_MAPPINGS.put("UNKNOWN", "Unknown Medical Specialty"); // NOTE 'Unknown' is mapped to empty string in source file
 
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Anesthesiology", GudidTerm.GUDID_ANESTHESIOLOGY);
         MEDICAL_SPECIALTY_CONCEPT_UUIDS.put("Cardiovascular", GudidTerm.GUDID_CARDIOVASCULAR);
@@ -90,6 +90,7 @@ public class GudidUtility {
 
     private Map<String, Set<String>> devicesByProductCode;
     private Map<String, String> productCodeToMedicalSpecialty;
+    private Set<String> includedDeviceIds;
 
     public GudidUtility(UUID namespace, String basePath) {
         this(namespace, basePath, null);
@@ -106,20 +107,33 @@ public class GudidUtility {
             initializeDeviceProductCodeMap();
             LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
         }
+        initializeIncludedDeviceIds();
     }
 
     private void initializeDeviceProductCodeMap() {
         try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
              Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
 
-            devicesByProductCode = productCodes.map(row -> row.split("\\|"))
+            devicesByProductCode = productCodes.skip(1).map(row -> row.split("\\|"))
                     .collect(Collectors.groupingBy(row -> row[0],
                             Collectors.mapping(row -> row[1], Collectors.toSet())));
 
-            productCodeToMedicalSpecialty = foiClass.map(row -> row.split("\\|"))
-                    .filter(row -> includedMedicalSpecialties.contains(row[1]))
+            productCodeToMedicalSpecialty = foiClass.skip(1).map(row -> row.split("\\|"))
+                    .filter(row -> row[1].isBlank() || includedMedicalSpecialties.contains(row[1]))
                     .collect(Collectors.toMap(row -> row[2], row -> row[1]));
 
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void initializeIncludedDeviceIds() {
+        try (Stream<String> devices = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "device.txt"))) {
+            includedDeviceIds = devices.skip(1).map(row -> row.split("\\|"))
+                    .map(row -> row[0])
+                    .filter(this::isDeviceIncluded)
+                    .collect(Collectors.toSet());
+            LOG.info("includedDeviceIds: {}", includedDeviceIds.size());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -133,20 +147,20 @@ public class GudidUtility {
     }
 
     public boolean isDeviceIncluded(String primaryDi) {
-        if (isUnfilteredMode()) {
+        if (isUnfilteredMode() || !devicesByProductCode.containsKey(primaryDi)) {
             return true;
         }
-        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+        long count = devicesByProductCode.get(primaryDi).stream()
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
         return count > 0;
     }
 
     public boolean isDeviceIncluded(String primaryDi, String productCode) {
-        if (isUnfilteredMode()) {
+        if (isUnfilteredMode() || !devicesByProductCode.containsKey(primaryDi)) {
             return true;
         }
-        long count = devicesByProductCode.getOrDefault(primaryDi, Collections.emptySet()).stream()
+        long count = devicesByProductCode.get(primaryDi).stream()
                 .filter(code -> code.equals(productCode))
                 .map(productCodeToMedicalSpecialty::get).filter(Objects::nonNull)
                 .distinct().count();
@@ -157,15 +171,19 @@ public class GudidUtility {
         return includedMedicalSpecialties.isEmpty();
     }
 
+    public Set<String> getIncludedDeviceIds() {
+        return includedDeviceIds;
+    }
+
     public UUID getNamespace() {
         return namespace;
     }
 
     public String getMedicalSpecialtyFullName(String abbreviation) {
-        String fullName = MEDICAL_SPECIALTY_MAPPINGS.get(abbreviation == null ? "" : abbreviation.trim());
+        String fullName = MEDICAL_SPECIALTY_MAPPINGS.get(abbreviation == null ? "UNKNOWN" : abbreviation.trim());
         if (fullName == null) {
             LOG.warn("Unknown medical specialty abbreviation: '{}', defaulting to Unknown Medical Specialty", abbreviation);
-            return MEDICAL_SPECIALTY_MAPPINGS.get("");
+            return MEDICAL_SPECIALTY_MAPPINGS.get("UNKNOWN");
         }
         return fullName;
     }

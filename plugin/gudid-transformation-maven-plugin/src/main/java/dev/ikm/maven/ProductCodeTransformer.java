@@ -5,6 +5,7 @@ import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.template.AxiomSyntax;
+import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import dev.ikm.tinkar.terms.TinkarTerm;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,8 +76,10 @@ public class ProductCodeTransformer extends AbstractTransformer {
                         String primaryDi = data[PRIMARY_DI];
                         String productCode = data[PRODUCT_CODE];
 
-                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)) {
-                            LOG.warn("Empty PrimaryDI or productCode found in row: {}", String.join("|", data));
+                        if (gudidUtility.isEmptyOrNull(primaryDi) || gudidUtility.isEmptyOrNull(productCode)
+                                || gudidUtility.getConceptByProductCode(productCode).isEmpty()) {
+                            LOG.warn("No valid FDA product code mappings found for PrimaryDI - defaulting to UNKNOWN: {}",
+                                    primaryDi);
                             return;
                         }
 
@@ -83,11 +87,23 @@ public class ProductCodeTransformer extends AbstractTransformer {
                                 .computeIfAbsent(primaryDi, _ -> new HashSet<>())
                                 .add(productCode);
                     });
+
+            LOG.info("Grouped {} unique PrimaryDIs with product codes", primaryDiToProductCodes.size());
+
+            Set<String> unmappedDeviceIds = new HashSet<>(gudidUtility.getIncludedDeviceIds());
+            unmappedDeviceIds.removeAll(primaryDiToProductCodes.keySet());
+
+            if (!unmappedDeviceIds.isEmpty()) {
+                LOG.info("Unknown product code for {} devices", unmappedDeviceIds.size());
+                final Set<String> unknownProductCode = Set.of("UNKNOWN");
+                unmappedDeviceIds.forEach(primaryDi -> {
+                    primaryDiToProductCodes.put(primaryDi, unknownProductCode);
+                });
+            }
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading ProductCodes.txt file: " + inputFile.getAbsolutePath(), e);
         }
-
-        LOG.info("Grouped {} unique PrimaryDIs with product codes", primaryDiToProductCodes.size());
 
         // Process each PrimaryDI group
         primaryDiToProductCodes.forEach((primaryDi, productCodes) -> {
@@ -95,16 +111,16 @@ public class ProductCodeTransformer extends AbstractTransformer {
                 // Get device concept UUID from mapping (created by Device.txt transformer)
                 EntityProxy.Concept deviceConcept = EntityProxy.Concept.make(PublicIds.of(UuidT5Generator.get(namespace, primaryDi)));
 
+                if (EntityService.get().getEntity(deviceConcept.nid()).isEmpty()) {
+                    LOG.warn("Device with PrimaryDI does not exist: {}", primaryDi);
+                    skippedCount.incrementAndGet();
+                    return;
+                }
+
                 // Get FDA product code concept UUIDs from mapping
                 List<UUID> fdaProductCodeUuids = productCodes.stream()
                         .flatMap(productCode -> gudidUtility.getConceptByProductCode(productCode).stream())
                         .toList();
-
-                if (fdaProductCodeUuids.isEmpty()) {
-                    LOG.warn("No valid FDA product code mappings found for PrimaryDI: {}", primaryDi);
-                    skippedCount.incrementAndGet();
-                    return;
-                }
 
                 // Create session
                 Session session = composer.open(State.ACTIVE, author, module, path);
@@ -139,7 +155,6 @@ public class ProductCodeTransformer extends AbstractTransformer {
                             .semantic(axiomSemantic)
                             .text(owlExpression),
                     deviceConcept);
-
 
             LOG.debug("Created stated definition semantic for device concept: {} with {} FDA product codes",
                     deviceConcept, fdaProductCodeUuids.size());

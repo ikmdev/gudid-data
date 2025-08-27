@@ -10,6 +10,7 @@ import dev.ikm.tinkar.composer.template.Identifier;
 import dev.ikm.tinkar.composer.template.StatedAxiom;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
+import dev.ikm.tinkar.terms.TinkarTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,6 @@ import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_PATTERN;
 import static dev.ikm.tinkar.terms.TinkarTerm.DEVELOPMENT_PATH;
 import static dev.ikm.tinkar.terms.TinkarTerm.ENGLISH_LANGUAGE;
 import static dev.ikm.tinkar.terms.TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE;
-import static dev.ikm.tinkar.terms.TinkarTerm.REGULAR_NAME_DESCRIPTION_TYPE;
 import static dev.ikm.tinkar.terms.TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER;
 
 public class FoiClassTransformer extends AbstractTransformer {
@@ -107,6 +107,10 @@ public class FoiClassTransformer extends AbstractTransformer {
                             skippedCount.incrementAndGet();
                         }
                     });
+
+            // Catch-all: Unknown FDA Product Code
+            createFdaProductCodeConcept(session, "UNKNOWN", "UNKNOWN", "Unknown FDA Product Code");
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading foiclass.txt file: " + inputFile.getAbsolutePath(), e);
         }
@@ -136,12 +140,10 @@ public class FoiClassTransformer extends AbstractTransformer {
         createStatedAxiom(session, fdaProductCodeConcept, medicalSpecialty);
 
         // Create Fully Qualified Name semantic (DEVICENAME)
-        createDescriptionSemantic(session, fdaProductCodeConcept, deviceName,
-                FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE);
+        createDescriptionSemantic(session, fdaProductCodeConcept, deviceName);
 
-        // Create Regular Name semantic (PRODUCTCODE)
-        createDescriptionSemantic(session, fdaProductCodeConcept, productCode,
-                REGULAR_NAME_DESCRIPTION_TYPE);
+        // Create identifier semantic (PRODUCTCODE)
+        createIdentifierSemantic(session, fdaProductCodeConcept, productCode);
 
         LOG.debug("Created FDA Product Code concept: '{}' ({}), Parent: {}",
                 deviceName, productCode, getParentConceptName(medicalSpecialty));
@@ -161,14 +163,11 @@ public class FoiClassTransformer extends AbstractTransformer {
         }
     }
 
-    private void createDescriptionSemantic(Session session, EntityProxy.Concept concept,
-                                           String description, EntityProxy.Concept descriptionType) {
-        String typeStr = descriptionType.equals(FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE) ? "FQN" :
-                descriptionType.equals(REGULAR_NAME_DESCRIPTION_TYPE) ? "Regular" : "Definition";
+    private void createDescriptionSemantic(Session session, EntityProxy.Concept concept, String description) {
 
         EntityProxy.Semantic semantic = EntityProxy.Semantic.make(
                 PublicIds.of(UuidT5Generator.get(namespace,
-                        concept.publicId().asUuidArray()[0] + description + typeStr + "DESC")));
+                        concept.publicId().asUuidArray()[0] + description + "FQN")));
 
         try {
             session.compose((SemanticAssembler semanticAssembler) -> semanticAssembler
@@ -179,11 +178,25 @@ public class FoiClassTransformer extends AbstractTransformer {
                             .with(ENGLISH_LANGUAGE)
                             .with(description)
                             .with(DESCRIPTION_NOT_CASE_SENSITIVE)
-                            .with(descriptionType)
+                            .with(FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE)
                     ));
         } catch (Exception e) {
-            LOG.error("Error creating " + typeStr + " description semantic for concept: " + concept, e);
+            LOG.error("Error creating description semantic for concept: " + concept, e);
         }
+    }
+
+    private void createIdentifierSemantic(Session session, EntityProxy.Concept concept, String productCode) {
+        EntityProxy.Semantic semantic = EntityProxy.Semantic.make(
+                PublicIds.of(UuidT5Generator.get(namespace, concept.publicId().asUuidArray()[0] + productCode)));
+
+        session.compose((SemanticAssembler assembler) -> assembler
+                .semantic(semantic)
+                .pattern(TinkarTerm.IDENTIFIER_PATTERN)
+                .reference(concept)
+                .fieldValues(fieldValues -> fieldValues
+                        .with(GudidTerm.GUDID_FDA_PRODUCT_CODE)
+                        .with(productCode)
+                ));
     }
 
     private String getParentConceptName(String medicalSpecialty) {

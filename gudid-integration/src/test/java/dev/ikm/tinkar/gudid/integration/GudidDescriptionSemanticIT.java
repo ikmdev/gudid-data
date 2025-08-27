@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
-import static dev.ikm.tinkar.terms.TinkarTerm.REGULAR_NAME_DESCRIPTION_TYPE;
+import static dev.ikm.tinkar.terms.TinkarTerm.FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
@@ -46,6 +46,7 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
     protected boolean assertLine(String[] columns) {
         String medicalSpecialty = columns[1];
         String productCode = columns[2];
+        String deviceName = normalizeString(columns[3]);
         if (!gudidUtility.isMedicalSpecialtyIncluded(medicalSpecialty, productCode)) {
             return true;
         }
@@ -59,18 +60,17 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
 
         AtomicBoolean descriptionValue = new AtomicBoolean(false);
 
-        //NOTE. This only covers the method createDescriptionSemantic() that 'Creates Regular Name semantic (PRODUCTCODE)'
         EntityService.get().forEachSemanticForComponentOfPattern(fdaProductCodeConcept.nid(), TinkarTerm.DESCRIPTION_PATTERN.nid(), semanticEntity -> {
             Latest<SemanticEntityVersion> latestActive = stampCalcActive.latest(semanticEntity);
 
             if (latestActive.isPresent()) {
-                String description = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.TEXT_FOR_DESCRIPTION, latestActive.get());
+                String description = normalizeString(latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.TEXT_FOR_DESCRIPTION, latestActive.get()));
                 Component descriptionNotCaseSensitive = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_CASE_SIGNIFICANCE, latestActive.get());
                 Component descriptionType = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_TYPE, latestActive.get());
 
-                if (description.equals(productCode)
+                if (description.equals(deviceName)
                         && descriptionNotCaseSensitive.equals(DESCRIPTION_NOT_CASE_SENSITIVE)
-                        && descriptionType.equals(REGULAR_NAME_DESCRIPTION_TYPE)) {
+                        && descriptionType.equals(FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE)) {
                     descriptionValue.set(true);
                 }
             }
@@ -78,6 +78,10 @@ public class GudidDescriptionSemanticIT extends AbstractIntegrationTest {
         });
 
         return descriptionValue.get();
+    }
+
+    private String normalizeString(String str) {
+        return str.replaceAll("[^a-zA-Z0-9]", "");
     }
 
 }
