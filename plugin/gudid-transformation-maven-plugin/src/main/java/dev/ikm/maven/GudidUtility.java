@@ -103,7 +103,9 @@ public class GudidUtility {
             this.includedMedicalSpecialties = Collections.emptySet();
             LOG.info("includedMedicalSpecialties: ALL");
         } else {
-            this.includedMedicalSpecialties = Set.of(medicalSpecialtiesFilter);
+            this.includedMedicalSpecialties = Stream.of(medicalSpecialtiesFilter)
+                    .filter(MEDICAL_SPECIALTY_MAPPINGS::containsKey)
+                    .collect(Collectors.toSet());
             initializeDeviceProductCodeMap();
             LOG.info("includedMedicalSpecialties: {}", includedMedicalSpecialties);
         }
@@ -111,8 +113,8 @@ public class GudidUtility {
     }
 
     private void initializeDeviceProductCodeMap() {
-        try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "productCodes.txt"));
-             Stream<String> foiClass = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
+        try (Stream<String> productCodes = Files.lines(Path.of(basePath, "gudid", "productCodes.txt"));
+             Stream<String> foiClass = Files.lines(Path.of(basePath, "foi", "foiclass.txt"), Charset.forName("windows-1252"))) {
 
             devicesByProductCode = productCodes.skip(1).map(row -> row.split("\\|"))
                     .collect(Collectors.groupingBy(row -> row[0],
@@ -128,7 +130,7 @@ public class GudidUtility {
     }
 
     private void initializeIncludedDeviceIds() {
-        try (Stream<String> devices = Files.lines(Path.of(basePath, "gudid-origin", "target", "origin-sources", "gudid", "device.txt"))) {
+        try (Stream<String> devices = Files.lines(Path.of(basePath, "gudid", "device.txt"))) {
             includedDeviceIds = devices.skip(1).map(row -> row.split("\\|"))
                     .map(row -> row[0])
                     .filter(this::isDeviceIncluded)
