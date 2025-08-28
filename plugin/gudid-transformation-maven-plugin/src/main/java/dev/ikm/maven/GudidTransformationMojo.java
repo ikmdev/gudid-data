@@ -44,6 +44,7 @@ public class GudidTransformationMojo extends AbstractMojo {
     private String[] medicalSpecialties;
 
     private UUID namespace;
+    private GudidUtility gudidUtility;
 
     // Define processing order based on dependencies
     private static final List<String> FILE_PROCESSING_ORDER = Arrays.asList(
@@ -71,6 +72,7 @@ public class GudidTransformationMojo extends AbstractMojo {
             }
             LOG.info("inputFileOrDirectory: " + inputFileOrDirectory);
 
+            gudidUtility = new GudidUtility(namespace, inputFileOrDirectory.getAbsolutePath(), medicalSpecialties);
             transformFiles(datastore, inputFileOrDirectory);
         } catch (IllegalArgumentException e) {
             throw new MojoExecutionException("Invalid namespace for UUID formatting");
@@ -121,7 +123,6 @@ public class GudidTransformationMojo extends AbstractMojo {
 
         EntityService.get().beginLoadPhase();
         try {
-            GudidUtility gudidUtility = new GudidUtility(namespace, ".", medicalSpecialties);
             Composer composer = new Composer("GUDID Transformer Composer");
             processFilesInOrder(inputDirectory, composer, gudidUtility);
             composer.commitAllSessions();

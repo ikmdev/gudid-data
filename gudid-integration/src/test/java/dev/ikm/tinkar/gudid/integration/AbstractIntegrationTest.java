@@ -41,7 +41,7 @@ public abstract class AbstractIntegrationTest {
         CachingService.clearAll();
         //Note. Dataset needed to be generated within repo, with command 'mvn clean install'
         namespaceString = System.getProperty("origin.namespace"); // property set in pom.xml
-        gudidUtility = new GudidUtility(UUID.fromString(namespaceString), "..", INCLUDED_MEDICAL_SPECIALTIES);
+        gudidUtility = new GudidUtility(UUID.fromString(namespaceString), "../gudid-origin/target/origin-sources", INCLUDED_MEDICAL_SPECIALTIES);
         File datastore = new File(System.getProperty("datastorePath")); // property set in pom.xml
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
