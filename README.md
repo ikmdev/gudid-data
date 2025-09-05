@@ -20,7 +20,7 @@ git clone [Rep URL]
 4. Place the downloaded AccessGUDID_Delimited_Full_Release_*_.zip in your local Downloads directory.
 
 5. Ensure the gudid-data/pom.xml contains the proper tags containing source filename for the downloaded files such as:
-   <source.zip>, <source.version>, <foi.source.zip>, <starterSet>, <changeSet>, <fieldCategoriesStarterSet>, etc.
+   <source.zip>, <source.version>, <foi.source.zip>, <starterSet>, <changeSet>, etc.
 
 6. Create a ~/Solor directory and ensure ~/Solor/generated-data does not exist or is empty.
 
