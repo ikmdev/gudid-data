@@ -15,7 +15,7 @@ git clone [Rep URL]
 
 2. Change local directory to `gudid-data`
 
-3. Download AccessGUDID_Delimited_Full_Release File from SNOMED CT/ACCESS GUDID: (https://www.nlm.nih.gov/healthit/snomedct/index.html / https://accessgudid.nlm.nih.gov)
+3. Download AccessGUDID File from ACCESS GUDID/FDA Product Code Classification Files: (https://accessgudid.nlm.nih.gov/download / https://www.fda.gov/medical-devices/classify-your-medical-device/download-product-code-classification-files)
 
 4. Place the downloaded AccessGUDID_Delimited_Full_Release_*_.zip in your local Downloads directory.
 
@@ -37,5 +37,4 @@ mvn clean install -U "-DMaven.build.cache.enable=false"
 ```bash
 mvn deploy -f gudid-export "-DdeployToNexus=true" "-Dmaven.deploy.skip=true" "-Dmaven.build.cache.enabled=false"
 ```
-
 
