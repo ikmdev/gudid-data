@@ -36,6 +36,6 @@ mvn deploy -f gudid-origin -DdeployToNexus=true -Dmaven.deploy.skip=true -Dmaven
 <dependency>
   <groupId>dev.ikm.data.gudid</groupId>
   <artifactId>gudid-origin</artifactId>
-  <version>Pilot-Defined-gudid-2024-04-10+1.0.0-SNAPSHOT</version>
+  <version>AccessGUDID_Delimited_Full_Release_20250804+1.0.0-SNAPSHOT</version>
 </dependency>
 ```
