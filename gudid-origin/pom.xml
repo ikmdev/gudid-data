@@ -9,17 +9,15 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>${data-artifact.groupId}</groupId>
-    <artifactId>${data-artifact.artifactId}</artifactId>
-    <version>${data-artifact.version}</version>
+    <groupId>dev.ikm.data.gudid</groupId>
+    <artifactId>gudid-origin</artifactId>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>gudid-origin</name>
 
     <properties>
-        <data-artifact.groupId>dev.ikm.data.gudid</data-artifact.groupId>
-        <data-artifact.artifactId>gudid-origin</data-artifact.artifactId>
-        <data-artifact.version>${dataStore}-${source.version}+1.0.0-SNAPSHOT</data-artifact.version>
+        <revision>${dataStore}-${source.version}+1.0.0-SNAPSHOT</revision>
     </properties>
 
     <profiles>
