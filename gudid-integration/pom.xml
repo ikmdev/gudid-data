@@ -67,7 +67,6 @@
         <dependency>
             <groupId>dev.ikm.gudid</groupId>
             <artifactId>gudid-transformation-maven-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -77,9 +76,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.2</version>
                 <configuration>
                     <reuseForks>false</reuseForks>
+                    <forkCount>1</forkCount>
                     <systemPropertyVariables>
                         <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
                         <source.zip>${source.zip}</source.zip>

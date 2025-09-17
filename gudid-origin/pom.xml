@@ -7,13 +7,54 @@
         <groupId>dev.ikm.gudid</groupId>
         <artifactId>gudid-data</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>gudid-origin</artifactId>
+    <groupId>${data-artifact.groupId}</groupId>
+    <artifactId>${data-artifact.artifactId}</artifactId>
+    <version>${data-artifact.version}</version>
     <packaging>pom</packaging>
 
     <name>gudid-origin</name>
+
+    <properties>
+        <data-artifact.groupId>dev.ikm.data.gudid</data-artifact.groupId>
+        <data-artifact.artifactId>gudid-origin</data-artifact.artifactId>
+        <data-artifact.version>${dataStore}-${source.version}+1.0.0-SNAPSHOT</data-artifact.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>generateDataLocal</id>
+            <activation>
+                <property>
+                    <name>altDeploymentRepository</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>flatten-test</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                                <configuration>
+                                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                                    <updatePomFile>true</updatePomFile>
+                                    <keepCommentsInPom>true</keepCommentsInPom>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
