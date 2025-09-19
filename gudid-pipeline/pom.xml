@@ -57,7 +57,7 @@
                 <configuration>
                     <namespaceString>${origin.namespace}</namespaceString>
                     <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
-                    <inputDirectoryPath>${user.home}/.m2/repository/dev/ikm/gudid/gudid-origin/${project.version}/gudid-origin-${project.version}-data.zip</inputDirectoryPath>
+                    <inputDirectoryPath>${dataStoreLocation}/input-data/gudid-origin.zip</inputDirectoryPath>-->
                     <dataOutputPath>${project.build.directory}</dataOutputPath>
                 </configuration>
                 <executions>
