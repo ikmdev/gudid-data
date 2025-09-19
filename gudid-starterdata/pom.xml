@@ -129,26 +129,9 @@
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
-                                <directory>${starterSetLocation}</directory>
+                                <directory>${maven.multiModuleProjectDirectory}/starter-data</directory>
                                 <includes>
-                                    <include>**/${starterSet}</include>
-                                </includes>
-                            </fileset>
-                            <isolate>false</isolate>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>load-data-gudid-change-set</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>load-data</goal>
-                        </goals>
-                        <configuration>
-                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                            <fileset>
-                                <directory>${starterSetLocation}</directory>
-                                <includes>
-                                    <include>**/${changeSet}</include>
+                                    <include>*.zip</include>
                                 </includes>
                             </fileset>
                             <isolate>false</isolate>

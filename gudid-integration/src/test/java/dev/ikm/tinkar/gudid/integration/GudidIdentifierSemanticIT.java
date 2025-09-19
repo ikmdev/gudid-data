@@ -32,7 +32,7 @@ public class GudidIdentifierSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testGudidIdentifierSemantics() throws IOException {
-        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String sourceFilePath = "../gudid-pipeline/target/src";
         String errorFile = "target/failsafe-reports/gudid_identifier_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "identifiers.txt");

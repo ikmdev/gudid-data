@@ -17,7 +17,7 @@
     <name>gudid-export</name>
 
     <properties>
-        <revision>{source.version}-${medicalSpecialtyFlag}+1.0.0-SNAPSHOT</revision>
+        <revision>${source.version}-${medicalSpecialtyFlag}+1.0.0-SNAPSHOT</revision>
     </properties>
 
     <profiles>
