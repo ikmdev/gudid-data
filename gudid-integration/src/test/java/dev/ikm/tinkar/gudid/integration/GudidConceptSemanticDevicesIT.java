@@ -25,7 +25,7 @@ public class GudidConceptSemanticDevicesIT extends AbstractIntegrationTest {
      */
     @Test
     public void testGudidConceptSemanticsDevices() throws IOException {
-        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String sourceFilePath = "../gudid-pipeline/target/src";
         String errorFile = "target/failsafe-reports/gudid_concepts_devices_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "device.txt");

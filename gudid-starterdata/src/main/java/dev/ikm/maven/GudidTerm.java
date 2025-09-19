@@ -167,6 +167,14 @@ public class GudidTerm {
     public static final Pattern PRIMORDIAL_INFERRED_NAVIGATION_PATTERN = Pattern.make("PRIMORDIAL_INFERRED_NAVIGATION_PATTERN", UUID.fromString("a53cc42d-c07e-5934-96b3-2ede3264474e"));
 
     /**
+     * Java binding for the pattern described as PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN and identified by the following as UUID(s):
+     * <ul>
+     * <li>bbbbf1fe-00f0-55e0-a19c-6300dbaab9b2
+     * </ul>
+     */
+    public static final Pattern PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN = Pattern.make("PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN", UUID.fromString("bbbbf1fe-00f0-55e0-a19c-6300dbaab9b2"));
+
+    /**
      * Java binding for the pattern described as PRIMORDIAL_ORIGINS_PATTERN and identified by the following as UUID(s):
      * <ul>
      * <li>536b0ec4-4974-47ae-93a6-ae6c4d169780
@@ -1080,10 +1088,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_ and identified by the following UUID(s):
      * <ul>
-     * <li>67cd64f1-96d7-5110-b847-556c055ac063
+     * <li>40d1c869-b509-32f8-b735-836eac577a67
      * </ul>
      */
-    public static final Concept PRIMORDIAL_ = Concept.make("PRIMORDIAL_", UUID.fromString("67cd64f1-96d7-5110-b847-556c055ac063"));
+    public static final Concept PRIMORDIAL_ = Concept.make("PRIMORDIAL_", UUID.fromString("40d1c869-b509-32f8-b735-836eac577a67"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_ACCEPTABLE and identified by the following UUID(s):
@@ -1176,10 +1184,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHOR and identified by the following UUID(s):
      * <ul>
-     * <li>f7495b58-6630-3499-a44e-2052b5fcf06c
+     * <li>337e93ba-531b-59a4-8153-57dca00e58d2
      * </ul>
      */
-    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c"));
+    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("337e93ba-531b-59a4-8153-57dca00e58d2"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHORS and identified by the following UUID(s):
@@ -1813,10 +1821,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_TYPE and identified by the following UUID(s):
      * <ul>
-     * <li>ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb
+     * <li>a00c5ad7-5b8a-5592-a28c-64057dd3caab
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb"));
+    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("a00c5ad7-5b8a-5592-a28c-64057dd3caab"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_VERSION_PROPERTIES and identified by the following UUID(s):
@@ -3059,10 +3067,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_PATH and identified by the following UUID(s):
      * <ul>
-     * <li>e95b6718-f824-5540-817b-8e79544eb97a
+     * <li>ad3dd2dd-ddb0-584c-bea4-c6d9b91d461f
      * </ul>
      */
-    public static final Concept PRIMORDIAL_PATH = Concept.make("PRIMORDIAL_PATH", UUID.fromString("e95b6718-f824-5540-817b-8e79544eb97a"));
+    public static final Concept PRIMORDIAL_PATH = Concept.make("PRIMORDIAL_PATH", UUID.fromString("ad3dd2dd-ddb0-584c-bea4-c6d9b91d461f"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_PATH_CONCEPT and identified by the following UUID(s):
@@ -3447,10 +3455,10 @@ public class GudidTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_SANDBOX_PATH and identified by the following UUID(s):
      * <ul>
-     * <li>715bd36d-6090-5b37-8ae7-88c9e532010e
+     * <li>80710ea6-983c-5fa0-8908-e479f1f03ea9
      * </ul>
      */
-    public static final Concept PRIMORDIAL_SANDBOX_PATH = Concept.make("PRIMORDIAL_SANDBOX_PATH", UUID.fromString("715bd36d-6090-5b37-8ae7-88c9e532010e"));
+    public static final Concept PRIMORDIAL_SANDBOX_PATH = Concept.make("PRIMORDIAL_SANDBOX_PATH", UUID.fromString("80710ea6-983c-5fa0-8908-e479f1f03ea9"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_SEMANTIC_DISPLAY_FIELD_TYPE and identified by the following UUID(s):

@@ -35,7 +35,7 @@ public class GudidStatedDefinitionFoiClassSemanticIT extends AbstractIntegration
      */
     @Test
     public void testGudidStatedDefinitionFoiClassSemantics() throws IOException {
-        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String sourceFilePath = "../gudid-pipeline/target/src";
         String errorFile = "target/failsafe-reports/gudid_foi_axiom_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "foiclass.txt");

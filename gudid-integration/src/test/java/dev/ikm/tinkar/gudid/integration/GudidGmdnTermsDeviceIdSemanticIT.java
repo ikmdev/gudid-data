@@ -30,7 +30,7 @@ public class GudidGmdnTermsDeviceIdSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testGudidGmdnTermDeviceIdSemantics() throws IOException {
-        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String sourceFilePath = "../gudid-pipeline/target/src";
         String errorFile = "target/failsafe-reports/gudid_gmdn_terms_device_id_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "gmdnTerms.txt");

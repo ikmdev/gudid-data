@@ -32,7 +32,7 @@ public class GudidPremarketSubmissionSemanticIT extends AbstractIntegrationTest 
      */
     @Test
     public void testGudidPremarketSubmissionSemantics() throws IOException {
-        String sourceFilePath = "../gudid-origin/target/origin-sources";
+        String sourceFilePath = "../gudid-pipeline/target/src";
         String errorFile = "target/failsafe-reports/gudid_premarket_submission_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "premarketSubmissions.txt");

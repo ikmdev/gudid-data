@@ -38,7 +38,7 @@ public class GudidStatedDefinitionSemanticIT extends AbstractIntegrationTest {
 	 */
 	@Test
 	public void testGudidStatedDefinitionSemantics() throws IOException {
-		String sourceFilePath = "../gudid-origin/target/origin-sources";
+		String sourceFilePath = "../gudid-pipeline/target/src";
 		String errorFile = "target/failsafe-reports/gudid_axiom_not_found.txt";
 
 //        String absolutePath = gudIdFileName; //Unable to find 2932991 device.txt semantics. Details written to target/failsafe-reports/gudid_concepts_not_found.txt ==> expected: <0> but was: <2932991>

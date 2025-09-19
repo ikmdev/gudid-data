@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>dev.ikm.build</groupId>
+        <artifactId>java-parent</artifactId>
+        <version>1.64.0</version>
+        <relativePath/>
+    </parent>
+
     <groupId>dev.ikm.gudid</groupId>
     <artifactId>gudid-data</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -23,11 +30,14 @@
     </modules>
 
     <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <java.version>23</java.version>
+
         <!-- maven plugins -->
         <maven-artifacts.version>1.35.0</maven-artifacts.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
-        <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
         <tinkar-core.version>1.117.0</tinkar-core.version>
         <maven-plugin-api.version>3.9.7</maven-plugin-api.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -45,8 +55,6 @@
         <source.zip>${user.home}/Downloads/AccessGUDID_Delimited_Full_Release_${source.version}.zip</source.zip>
         <foi.source.zip>${user.home}/Downloads/foiclass.zip</foi.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
-        <starterSet>GUDID_StarterData_1-52.zip</starterSet>
-        <changeSet>GUDID_SD_Incremental_20250723.zip</changeSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>gudid</dataStore>
 
@@ -58,7 +66,7 @@
         <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
         <tinkar-starter-data.classifier>unreasoned-pb</tinkar-starter-data.classifier>
-        <tinkar-starter-data.version>20250813</tinkar-starter-data.version>
+        <tinkar-starter-data.version>20250915</tinkar-starter-data.version>
 
         <!-- Override to ALL for full GUDID -->
         <medicalSpecialtyFlag>subset</medicalSpecialtyFlag>
@@ -67,6 +75,16 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>dev.ikm.gudid</groupId>
+                <artifactId>gudid-transformation-maven-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.maven</groupId>
+                <artifactId>gudid-starterdata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>dev.ikm.tinkar</groupId>
                 <artifactId>entity-provider</artifactId>
@@ -168,6 +186,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>dev.ikm.gudid</groupId>
+                    <artifactId>gudid-transformation-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>dev.ikm.maven.tinkar</groupId>
                     <artifactId>manifest-maven-plugin</artifactId>
                     <version>${maven-artifacts.version}</version>
@@ -192,11 +215,6 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>${exec-maven-plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven-dependency-plugin.version}</version>
-                </plugin>
                 <!-- Skip Staging Plugin -->
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
@@ -205,5 +223,25 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- Skip Enforcer Rule -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-no-bad-sections</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Don't enforce SemVer for this project -->
+                            <rulesToSkip>requireProperty</rulesToSkip>
+                            <failIfNoRules>false</failIfNoRules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
