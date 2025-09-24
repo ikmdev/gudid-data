@@ -37,12 +37,12 @@ More information can be found on: https://accessgudid.nlm.nih.gov and https://ww
 
    To deploy origin artifact to a shared Nexus repository, run the following command, specifying the repository ID and URL in `-DaltDeploymentRepository`
    ```
-   mvn clean deploy -f gudid-origin -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
+   mvn --projects gudid-origin --also-make clean deploy -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
    ```
 
    To install origin artifact to a local M2 repository, run the following command:
    ```
-   mvn clean install -f gudid-origin -Ptinkarbuild,generateDataLocal -Dmaven.build.cache.enabled=false
+   mvn --projects gudid-origin --also-make clean install -Ptinkarbuild,generateDataLocal -Dmaven.build.cache.enabled=false
    ```
 
 **Run Transformation Pipeline**
@@ -56,6 +56,6 @@ The transformation pipeline can be built after origin data is available in Nexus
 
 2. Deploy transformed data artifacts to Nexus, run the following command:
    ```
-   mvn deploy -f gudid-export -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
+   mvn --projects gudid-export --also-make deploy -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
    ```
    
